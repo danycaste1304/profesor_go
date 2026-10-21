@@ -1,0 +1,25 @@
+# Release signing for Profesor GO (Android).
+#
+# Copy this file to android/key.properties and fill in the four keys below.
+# android/key.properties is gitignored (see android/.gitignore) and must NEVER be
+# committed, together with the .jks/.keystore file it points at.
+#
+# Without android/key.properties the release build falls back to the debug keystore:
+# that is fine for local `flutter build apk --release` / sideloading, but such an APK
+# cannot be published (Play Store rejects debug-signed uploads).
+#
+# Generate an upload keystore once (keep the file and the passwords in the team's
+# password manager -- losing them means the app can never be updated again):
+#
+#   keytool -genkeypair -v -keystore ~/profesor-go-upload.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias profesor-go
+#
+# storeFile      Path to the keystore. Absolute, or relative to apps/mobile/android/.
+# storePassword  Password of the keystore file.
+# keyAlias       Alias of the key inside the keystore (`-alias` above).
+# keyPassword    Password of that key (often the same as storePassword).
+
+storeFile=/absolute/path/to/profesor-go-upload.jks
+storePassword=change-me
+keyAlias=profesor-go
+keyPassword=change-me

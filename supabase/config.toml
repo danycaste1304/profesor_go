@@ -1,0 +1,98 @@
+# Profesor GO — local Supabase configuration.
+# Reference: https://supabase.com/docs/guides/local-development/cli/config
+# Only settings that differ from (or are important for) local development are listed;
+# everything else uses the CLI defaults.
+
+project_id = "profesor-go"
+
+[api]
+enabled = true
+# REST / Auth / Storage gateway (SUPABASE_URL = http://127.0.0.1:54321).
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+# Direct Postgres access: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+port = 54322
+# Used by `supabase db diff` for the shadow database.
+shadow_port = 54320
+major_version = 17
+
+[db.pooler]
+enabled = false
+
+[db.migrations]
+# supabase/migrations/*.sql are applied in filename order.
+enabled = true
+
+[db.seed]
+# Loaded after migrations by `supabase db reset` (demo professors, tags, users).
+enabled = true
+sql_paths = ["./seed.sql"]
+
+[realtime]
+enabled = true
+
+[studio]
+enabled = true
+# Supabase Studio: http://127.0.0.1:54323
+port = 54323
+api_url = "http://127.0.0.1"
+
+[local_smtp]
+# Inbucket-style mail catcher; emails are never delivered outside this machine.
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+# Buckets `professor-sprites` and `game-assets` are created by a migration, not here.
+
+[auth]
+enabled = true
+# Admin panel (Next.js) runs on :3000 during development.
+site_url = "http://127.0.0.1:3000"
+# Exact URLs allowed as redirect targets (admin dev server + mobile deep link).
+additional_redirect_urls = [
+  "http://127.0.0.1:3000",
+  "http://localhost:3000",
+  "http://127.0.0.1:3000/**",
+  "http://localhost:3000/**",
+  "profesorgo://login-callback",
+]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+enable_anonymous_sign_ins = false
+minimum_password_length = 8
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = false
+# Local dev: sign up and sign in immediately, no confirmation email required.
+enable_confirmations = false
+secure_password_change = false
+max_frequency = "1s"
+
+[auth.sms]
+enable_signup = false
+enable_confirmations = false
+
+[auth.mfa.totp]
+enroll_enabled = false
+verify_enabled = false
+
+[edge_runtime]
+# `supabase functions serve` — used by supabase/functions/* (start-encounter, resolve-capture, admin-register-nfc).
+enabled = true
+policy = "per_worker"
+inspector_port = 8083
+deno_version = 2
+
+[analytics]
+# Logflare is not needed locally; disabling it saves a container and startup time.
+enabled = false

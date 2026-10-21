@@ -1,0 +1,64 @@
+name: profesor_go
+description: "Profesor GO - juego de captura de profesores para la feria universitaria (Flutter + Supabase)."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.3
+
+# NOTE: no freezed / json_serializable / build_runner on purpose. Feature agents
+# work in parallel and cannot share a codegen step, so every model is a plain
+# immutable Dart class with hand-written fromJson / toJson / copyWith
+# (see lib/core/models/). Keep it that way.
+dependencies:
+  audioplayers: ^6.8.1
+  cached_network_image: ^4.0.0
+  connectivity_plus: ^7.3.1
+  flutter:
+    sdk: flutter
+  flutter_animate: ^4.5.2
+  flutter_riverpod: ^3.4.3
+  geolocator: ^14.0.3
+  go_router: ^18.0.1
+  nfc_manager: ^4.2.1
+  shared_preferences: ^2.5.5
+  supabase_flutter: ^2.17.2
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.5
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/map/campus_map.png
+    - assets/audio/campus_loop.wav
+    - assets/audio/battle_loop.wav
+    - assets/audio/victory.wav
+    - assets/audio/throw.wav
+    - assets/audio/impact.wav
+    - assets/audio/shake.wav
+    - assets/audio/success.wav
+    - assets/audio/escape.wav
+    - assets/sprites/daniel_riofrio_full.png
+    - assets/sprites/daniel_riofrio_portrait.png
+    - assets/sprites/erick_naunay_full.png
+    - assets/sprites/erick_naunay_portrait.png
+    - assets/sprites/noel_perez_full.png
+    - assets/sprites/noel_perez_portrait.png
+    - assets/sprites/pavel_alba_full.png
+    - assets/sprites/pavel_alba_portrait.png
+    - assets/sprites/ricardo_flores_full.png
+    - assets/sprites/ricardo_flores_portrait.png
+    - assets/sprites/jose_david_vega_full.png
+    - assets/sprites/jose_david_vega_portrait.png
+    - assets/sprites/felipe_grijalva_full.png
+    - assets/sprites/felipe_grijalva_portrait.png
+    - assets/sprites/henry_carvajal_full.png
+    - assets/sprites/henry_carvajal_portrait.png
+    - assets/sprites/diego_morales_full.png
+    - assets/sprites/diego_morales_portrait.png
+    - assets/sprites/roberto_andrade_full.png
+    - assets/sprites/roberto_andrade_portrait.png

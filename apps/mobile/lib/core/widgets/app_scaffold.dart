@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+
+import '../../app/theme.dart';
+
+/// Scaffold with the app background, safe area and consistent padding.
+class AppScaffold extends StatelessWidget {
+  const AppScaffold({
+    super.key,
+    required this.body,
+    this.title,
+    this.actions,
+    this.leading,
+    this.showAppBar = true,
+    this.padding = const EdgeInsets.all(16),
+    this.bottomBar,
+    this.floatingActionButton,
+    this.backgroundColor,
+    this.resizeToAvoidBottomInset,
+  });
+
+  final Widget body;
+  final String? title;
+  final List<Widget>? actions;
+  final Widget? leading;
+  final bool showAppBar;
+  final EdgeInsetsGeometry padding;
+
+  /// Optional bar pinned under the body (e.g. primary actions).
+  final Widget? bottomBar;
+  final Widget? floatingActionButton;
+  final Color? backgroundColor;
+  final bool? resizeToAvoidBottomInset;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: backgroundColor ?? AppColors.background,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+      appBar: showAppBar
+          ? AppBar(
+              title: title == null ? null : Text(title!.toUpperCase()),
+              actions: actions,
+              leading: leading,
+            )
+          : null,
+      floatingActionButton: floatingActionButton,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(child: Padding(padding: padding, child: body)),
+            if (bottomBar != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: bottomBar,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}

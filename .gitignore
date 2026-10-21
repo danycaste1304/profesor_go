@@ -1,0 +1,38 @@
+# env
+.env
+.env.local
+.env.*.local
+apps/mobile/.env
+apps/admin/.env.local
+
+# node
+node_modules/
+.next/
+out/
+*.log
+npm-debug.log*
+
+# flutter/dart
+apps/mobile/.dart_tool/
+apps/mobile/build/
+apps/mobile/.flutter-plugins
+apps/mobile/.flutter-plugins-dependencies
+apps/mobile/.packages
+apps/mobile/pubspec.lock.bak
+apps/mobile/android/.gradle/
+apps/mobile/android/local.properties
+apps/mobile/ios/Pods/
+apps/mobile/coverage/
+
+# supabase
+supabase/.branches
+supabase/.temp
+supabase/.env
+
+# misc
+.DS_Store
+.idea/
+.vscode/
+
+# IDE
+*.iml

@@ -1,0 +1,6 @@
+# Declares the tags used by the test suite so `flutter test` does not warn.
+tags:
+  # test/live/**: opt-in tests that talk to a running Supabase backend. They
+  # skip themselves unless SUPABASE_LIVE_URL / SUPABASE_LIVE_ANON_KEY are
+  # passed with --dart-define, so `flutter test` stays offline by default.
+  live:

@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="450" height="600" viewBox="0 0 450 600" shape-rendering="crispEdges">
+  <defs>
+    <pattern id="grass" width="32" height="32" patternUnits="userSpaceOnUse">
+      <rect width="32" height="32" fill="#8fd6a6"/>
+      <path d="M0 0h16v16H0zM16 16h16v16H16z" fill="#9fe0ad"/>
+      <path d="M5 8h3v3H5zM25 3h3v4h-3zM12 25h4v3h-4z" fill="#64ba88"/>
+      <path d="M21 12h3v2h-3zM2 27h4v2H2z" fill="#b9e9ac"/>
+    </pattern>
+    <pattern id="walk" width="24" height="24" patternUnits="userSpaceOnUse">
+      <rect width="24" height="24" fill="#e9dfb6"/>
+      <path d="M0 11h24M11 0v11M3 11v13" stroke="#d8cda1" stroke-width="2"/>
+      <path d="M2 2h4v2H2zM17 16h3v2h-3z" fill="#faf0c9"/>
+    </pattern>
+    <pattern id="roofPurple" width="12" height="12" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" fill="#a66fc0"/>
+      <rect width="4" height="12" fill="#b888ca"/>
+      <rect x="9" width="3" height="12" fill="#805da0"/>
+    </pattern>
+    <pattern id="roofBlue" width="12" height="12" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" fill="#5b9bc5"/>
+      <rect width="4" height="12" fill="#80bed8"/>
+      <rect x="9" width="3" height="12" fill="#3e81b2"/>
+    </pattern>
+    <pattern id="roofCoral" width="12" height="12" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" fill="#de8c81"/>
+      <rect width="4" height="12" fill="#eda799"/>
+      <rect x="9" width="3" height="12" fill="#ba6f72"/>
+    </pattern>
+    <pattern id="roofTeal" width="12" height="12" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" fill="#54a99b"/>
+      <rect width="4" height="12" fill="#7bc6ae"/>
+      <rect x="9" width="3" height="12" fill="#3a8c83"/>
+    </pattern>
+    <g id="tree">
+      <rect x="10" y="25" width="14" height="17" fill="#8a6955"/>
+      <rect x="6" y="4" width="24" height="30" fill="#2e815d"/>
+      <rect x="2" y="10" width="32" height="18" fill="#339267"/>
+      <rect x="9" y="0" width="18" height="28" fill="#4bac72"/>
+      <rect x="7" y="9" width="11" height="9" fill="#78cc83"/>
+      <rect x="23" y="16" width="7" height="7" fill="#78cc83"/>
+      <rect x="3" y="28" width="5" height="5" fill="#1d684d"/>
+    </g>
+    <g id="flower">
+      <rect x="2" y="0" width="4" height="4" fill="#ffef9a"/>
+      <rect x="0" y="3" width="3" height="3" fill="#f7829b"/>
+      <rect x="5" y="3" width="3" height="3" fill="#f7829b"/>
+      <rect x="3" y="6" width="2" height="5" fill="#338e65"/>
+    </g>
+  </defs>
+
+  <rect width="450" height="600" fill="url(#grass)"/>
+  <!-- Square stone lanes keep the campus traversable and readable. -->
+  <rect x="199" y="0" width="56" height="600" fill="#72b98d"/>
+  <rect x="203" y="0" width="48" height="600" fill="url(#walk)"/>
+  <rect x="0" y="136" width="450" height="55" fill="#72b98d"/>
+  <rect x="0" y="141" width="450" height="45" fill="url(#walk)"/>
+  <rect x="0" y="330" width="450" height="56" fill="#72b98d"/>
+  <rect x="0" y="335" width="450" height="46" fill="url(#walk)"/>
+  <rect x="57" y="145" width="46" height="438" fill="#72b98d"/>
+  <rect x="61" y="145" width="38" height="438" fill="url(#walk)"/>
+  <rect x="361" y="145" width="46" height="438" fill="#72b98d"/>
+  <rect x="365" y="145" width="38" height="438" fill="url(#walk)"/>
+
+  <!-- Raised corners and stairs evoke a handheld RPG route. -->
+  <path d="M140 0h168v36H140zM0 566h175v34H0zM280 566h170v34H280z" fill="#725b62"/>
+  <path d="M140 0h168v12H140zM0 566h175v11H0zM280 566h170v11H280z" fill="#9b7770"/>
+  <path d="M145 18h8v8h-8zm25 0h8v8h-8zm105 0h8v8h-8zm19 0h8v8h-8zM10 583h8v8h-8zm34 0h8v8h-8zm72 0h8v8h-8zm191 0h8v8h-8zm95 0h8v8h-8z" fill="#ad8b79"/>
+  <rect x="197" y="0" width="58" height="37" fill="#dde2d4"/>
+  <path d="M197 6h58M197 14h58M197 22h58M197 30h58" stroke="#aebdb8" stroke-width="3"/>
+  <rect x="174" y="565" width="106" height="35" fill="#dde2d4"/>
+  <path d="M174 572h106M174 580h106M174 588h106" stroke="#aebdb8" stroke-width="3"/>
+
+  <!-- Campus buildings are tile-built, with doors and roof ridges. -->
+  <g stroke="#416679" stroke-width="3">
+    <rect x="23" y="29" width="141" height="100" fill="#f4dfb6"/>
+    <rect x="286" y="29" width="142" height="100" fill="#f4dfb6"/>
+    <rect x="17" y="210" width="132" height="110" fill="#f4dfb6"/>
+    <rect x="300" y="210" width="132" height="110" fill="#f4dfb6"/>
+    <rect x="17" y="408" width="135" height="111" fill="#f4dfb6"/>
+    <rect x="298" y="408" width="135" height="111" fill="#f4dfb6"/>
+  </g>
+  <g stroke="#405772" stroke-width="3">
+    <rect x="16" y="18" width="155" height="58" fill="url(#roofPurple)"/>
+    <rect x="279" y="18" width="156" height="58" fill="url(#roofBlue)"/>
+    <rect x="10" y="199" width="146" height="65" fill="url(#roofCoral)"/>
+    <rect x="293" y="199" width="146" height="65" fill="url(#roofPurple)"/>
+    <rect x="10" y="397" width="149" height="67" fill="url(#roofTeal)"/>
+    <rect x="291" y="397" width="149" height="67" fill="url(#roofBlue)"/>
+  </g>
+  <g fill="#83c5dd" stroke="#365c79" stroke-width="3">
+    <rect x="38" y="89" width="33" height="25"/><rect x="113" y="89" width="33" height="25"/>
+    <rect x="301" y="89" width="35" height="25"/><rect x="381" y="89" width="35" height="25"/>
+    <rect x="31" y="276" width="29" height="27"/><rect x="108" y="276" width="29" height="27"/>
+    <rect x="312" y="276" width="29" height="27"/><rect x="388" y="276" width="29" height="27"/>
+    <rect x="33" y="477" width="32" height="27"/><rect x="107" y="477" width="32" height="27"/>
+    <rect x="312" y="477" width="32" height="27"/><rect x="387" y="477" width="32" height="27"/>
+  </g>
+  <g fill="#f5cb72" stroke="#6b6d65" stroke-width="3">
+    <rect x="82" y="86" width="24" height="42"/><rect x="344" y="86" width="24" height="42"/>
+    <rect x="70" y="277" width="25" height="42"/><rect x="350" y="277" width="25" height="42"/>
+    <rect x="73" y="478" width="26" height="40"/><rect x="350" y="478" width="26" height="40"/>
+  </g>
+  <g font-family="monospace" font-size="11" font-weight="900" text-anchor="middle" fill="#254660" stroke="none">
+    <text x="94" y="69">RECTORADO</text><text x="357" y="69">PABELLON</text>
+    <text x="83" y="255">AULARIO</text><text x="367" y="255">BIBLIOTECA</text>
+    <text x="84" y="452">LABORATORIOS</text><text x="365" y="452">CAFETERIA</text>
+  </g>
+
+  <!-- Central plaza, pond and tiny details. -->
+  <rect x="161" y="224" width="129" height="97" fill="#e9dda7"/>
+  <rect x="171" y="234" width="109" height="77" fill="#f7ecc0"/>
+  <rect x="192" y="244" width="67" height="57" fill="#3d9eb8"/>
+  <rect x="199" y="250" width="53" height="45" fill="#79d1d7"/>
+  <path d="M213 257h20v7h-20zM205 271h18v5h-18z" fill="#c2eff0"/>
+  <rect x="313" y="342" width="43" height="32" fill="#4aabc2"/>
+  <rect x="318" y="347" width="33" height="22" fill="#8de0de"/>
+  <use href="#tree" x="10" y="156"/><use href="#tree" x="107" y="150"/>
+  <use href="#tree" x="334" y="160"/><use href="#tree" x="406" y="173"/>
+  <use href="#tree" x="7" y="343"/><use href="#tree" x="111" y="342"/>
+  <use href="#tree" x="412" y="348"/><use href="#tree" x="247" y="342"/>
+  <use href="#tree" x="7" y="534"/><use href="#tree" x="410" y="531"/>
+  <use href="#flower" x="161" y="199"/><use href="#flower" x="273" y="203"/>
+  <use href="#flower" x="274" y="390"/><use href="#flower" x="164" y="392"/>
+  <use href="#flower" x="14" y="137"/><use href="#flower" x="430" y="385"/>
+
+  <!-- Fair stands are placed at the southern entrance. -->
+  <rect x="116" y="534" width="58" height="30" fill="#fff2d1" stroke="#4d6173" stroke-width="2"/>
+  <path d="M112 534h66l-8-17h-50z" fill="#f26f73" stroke="#4d6173" stroke-width="2"/>
+  <path d="M130 518v16M153 518v16" stroke="#fff2d1" stroke-width="9"/>
+  <rect x="280" y="534" width="58" height="30" fill="#fff2d1" stroke="#4d6173" stroke-width="2"/>
+  <path d="M276 534h66l-8-17h-50z" fill="#f2c268" stroke="#4d6173" stroke-width="2"/>
+  <path d="M294 518v16M317 518v16" stroke="#fff2d1" stroke-width="9"/>
+  <rect x="181" y="524" width="86" height="27" fill="#fff0ac" stroke="#4d6173" stroke-width="2"/>
+  <text x="224" y="542" font-family="monospace" font-size="12" font-weight="900" text-anchor="middle" fill="#314a5c">FERIA GO</text>
+</svg>
