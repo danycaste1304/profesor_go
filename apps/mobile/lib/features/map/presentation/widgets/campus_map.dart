@@ -124,12 +124,12 @@ class _CampusMapState extends State<CampusMap> {
       ),
     );
 
-    // The height is pinned to the panel and the width follows the art's ratio:
-    // narrower panels crop the sides, wider ones leave lawn-colored bars. It is
-    // never stretched.
+    // The width is pinned to the panel and the height follows the art's ratio:
+    // taller panels leave lawn-colored bars above and below, shorter ones crop
+    // top and bottom. It is never stretched.
     final fitted = SizedBox.expand(
       child: FittedBox(
-        fit: BoxFit.fitHeight,
+        fit: BoxFit.fitWidth,
         clipBehavior: Clip.hardEdge,
         child: map,
       ),

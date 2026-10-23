@@ -4,7 +4,7 @@ Resumen corto de lo que cambió en `apps/mobile`. Todos los tests pasan (277) y 
 
 ## Mapa
 - Lienzo de **720×1290** (9:16), igual que `assets/map/campus_map.png`. Antes era 900×1200 y la imagen se veía aplastada. Está en `CampusConfig.mapWidth/mapHeight`.
-- La imagen se ajusta por **alto** (`BoxFit.fitHeight`); en pantallas angostas se recortan los lados.
+- La imagen se ajusta por **ancho** (`BoxFit.fitWidth`); si el panel es más alto sobran franjas de césped arriba y abajo, y si es más bajo se recorta arriba y abajo.
 - Ruta del avatar en modo demo (`CampusConfig.demoPath`) rehecha sobre los caminos del arte nuevo.
 
 ## Estilo pixel art (bloques de 4 px, misma paleta `AppColors`)
