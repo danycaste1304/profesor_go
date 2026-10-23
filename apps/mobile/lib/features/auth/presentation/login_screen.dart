@@ -91,7 +91,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 if (AppConfig.isDemoMode) ...[
                   PixelCard(
                     borderColor: AppColors.accentAlt,
-                    shadow: false,
                     padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

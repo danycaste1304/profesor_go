@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../app/router.dart';
 import '../../app/theme.dart';
 
 /// Scaffold with the app background, safe area and consistent padding.
@@ -11,6 +13,7 @@ class AppScaffold extends StatelessWidget {
     this.actions,
     this.leading,
     this.showAppBar = true,
+    this.homeFallback = false,
     this.padding = const EdgeInsets.all(16),
     this.bottomBar,
     this.floatingActionButton,
@@ -23,6 +26,10 @@ class AppScaffold extends StatelessWidget {
   final List<Widget>? actions;
   final Widget? leading;
   final bool showAppBar;
+
+  /// When the screen was reached with `go` (empty back stack) the AppBar has no
+  /// automatic back arrow; this adds one that returns to the map.
+  final bool homeFallback;
   final EdgeInsetsGeometry padding;
 
   /// Optional bar pinned under the body (e.g. primary actions).
@@ -33,6 +40,9 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fallbackLeading = leading == null && homeFallback && !context.canPop()
+        ? BackButton(onPressed: () => context.go(AppRoutes.map))
+        : leading;
     return Scaffold(
       backgroundColor: backgroundColor ?? AppColors.background,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
@@ -40,7 +50,7 @@ class AppScaffold extends StatelessWidget {
           ? AppBar(
               title: title == null ? null : Text(title!.toUpperCase()),
               actions: actions,
-              leading: leading,
+              leading: fallbackLeading,
             )
           : null,
       floatingActionButton: floatingActionButton,

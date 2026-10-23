@@ -51,7 +51,7 @@ void main() {
     expect(find.text(CompletionScreen.title), findsOneWidget);
     expect(find.text(formatDateTime(completedAt)), findsOneWidget);
     expect(find.text('Completada el'), findsOneWidget);
-    expect(find.text('10 / 10'), findsOneWidget);
+    expect(find.text('100 %'), findsOneWidget);
     expect(find.text('LOGRO DESBLOQUEADO'), findsOneWidget);
     expect(find.text(CompletionScreen.achievementTitle), findsOneWidget);
     expect(find.text('VOLVER AL MAPA'), findsOneWidget);
@@ -111,7 +111,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
     expect(find.text(CompletionScreen.achievementTitle), findsOneWidget);
-    expect(find.text('VER MI COLECCIÓN'), findsOneWidget);
+    expect(find.text('VER MI PROFEDEX'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -129,8 +129,8 @@ void main() {
 
     expect(find.text('Aún quedan profesores por descubrir'), findsOneWidget);
     expect(find.text('LOGRO DESBLOQUEADO'), findsNothing);
-    expect(find.text('0 / 10'), findsOneWidget);
-    await tester.tap(find.text('VER COLECCIÓN'));
+    expect(find.text('0 %'), findsOneWidget);
+    await tester.tap(find.text('VER PROFEDEX'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.byType(CompletionScreen), findsNothing);

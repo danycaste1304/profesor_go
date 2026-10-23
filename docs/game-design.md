@@ -146,8 +146,8 @@ Cada punto está comprobado contra `apps/mobile/lib/core/widgets/` y `lib/app/th
   sobre `accent`) 13.2:1. En las chapas de rareza el texto va sobre su propio color al 18 %
   encima de `surface`: de 4.6:1 (épica) a 6.5:1 (legendaria). Todos los pares cumplen AA para
   texto normal (≥ 4.5:1), varios sin llegar a AAA.
-- **Háptica.** Hay un único punto de vibración en toda la app: `PixelButton._handleTap`
-  dispara `HapticFeedback.lightImpact()` al pulsar. No hay vibraciones largas ni patrones, y
+- **Háptica.** Hay un único punto de vibración en toda la app: `_PixelButtonState._handleTap`
+  (en `PixelButton`) dispara `HapticFeedback.lightImpact()` al pulsar. No hay vibraciones largas ni patrones, y
   **no existe un interruptor dentro de la app**: depende de los ajustes de vibración del
   sistema. Si en el futuro se quiere hacer opcional, ese método es el único sitio que tocar.
 - **Tamaños de letra.** Tema base: cuerpo 17 (`bodyLarge`) y 15 (`bodyMedium`) con

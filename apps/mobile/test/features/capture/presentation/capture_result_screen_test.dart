@@ -67,17 +67,17 @@ void main() {
         ),
       ),
     );
-    expect(find.text('¡Capturaste a Prof. Erick!'), findsOneWidget);
+    expect(find.text('Prof. Erick'), findsOneWidget);
     expect(find.text('LEGENDARIA'), findsOneWidget);
     expect(find.byType(ProfessorSprite), findsOneWidget);
     expect(find.byType(ProgressBar), findsOneWidget);
-    expect(find.text('3 / 8'), findsOneWidget);
+    expect(find.text('38 %'), findsOneWidget);
     expect(find.text('Lanzamiento: Genial'), findsOneWidget);
-    expect(find.text('VER COLECCIÓN'), findsOneWidget);
+    expect(find.text('VER PROFEDEX'), findsOneWidget);
     expect(find.text('VOLVER AL MAPA'), findsOneWidget);
-    expect(find.text('¡COLECCIÓN COMPLETADA!'), findsNothing);
+    expect(find.text('¡PROFEDEX COMPLETADA!'), findsNothing);
 
-    await tester.tap(find.text('VER COLECCIÓN'));
+    await tester.tap(find.text('VER PROFEDEX'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
     expect(find.text('COLLECTION'), findsOneWidget);
@@ -98,8 +98,8 @@ void main() {
         ),
       ),
     );
-    expect(find.text('¡COLECCIÓN COMPLETADA!'), findsOneWidget);
-    await tester.tap(find.text('¡COLECCIÓN COMPLETADA!'));
+    expect(find.text('¡PROFEDEX COMPLETADA!'), findsOneWidget);
+    await tester.tap(find.text('¡PROFEDEX COMPLETADA!'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
     expect(find.text('COMPLETION'), findsOneWidget);
@@ -125,7 +125,7 @@ void main() {
     );
     expect(find.text('Lanzamiento: Fallo'), findsOneWidget);
     expect(find.byType(ProgressBar), findsNothing);
-    expect(find.text('VER COLECCIÓN'), findsNothing);
+    expect(find.text('VER PROFEDEX'), findsNothing);
     await tester.pump(const Duration(seconds: 1));
     expect(
       tester

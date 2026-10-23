@@ -64,7 +64,7 @@ class CollectionHeader extends StatelessWidget {
           ProgressBar(
             value: progress.captured,
             total: progress.total,
-            label: 'Profedex',
+            label: 'Profes Capturados',
             color: progress.completed ? AppColors.success : AppColors.accent,
           ),
           const SizedBox(height: 14),
@@ -90,9 +90,8 @@ class RarityMiniBar extends StatelessWidget {
     final color = AppTheme.rarityColor(rarity);
     final labelStyle = TextStyle(
       color: color,
-      fontSize: 11,
-      fontWeight: FontWeight.w900,
-      letterSpacing: 1,
+      fontSize: 18,
+      letterSpacing: 0,
     );
     return Semantics(
       label: '${rarity.label}: ${progress.captured} de ${progress.total}',
@@ -115,7 +114,7 @@ class RarityMiniBar extends StatelessWidget {
               total: progress.total,
               color: color,
               height: 12,
-              showCount: false,
+              showPercent: false,
             ),
           ),
           const SizedBox(width: 10),
@@ -133,7 +132,8 @@ class RarityMiniBar extends StatelessWidget {
   }
 }
 
-/// Retro "chip" for the rarity filter row. `rarity == null` means "Todos".
+/// Pixel-art button for the rarity filter row. `rarity == null` means "Todos".
+/// The selected filter reads as pressed in (sunken) and tinted with its color.
 class RarityFilterChip extends StatelessWidget {
   const RarityFilterChip({
     super.key,
@@ -151,46 +151,61 @@ class RarityFilterChip extends StatelessWidget {
     final r = rarity;
     final color = r == null ? AppColors.accent : AppTheme.rarityColor(r);
     final label = (r?.label ?? 'Todos').toUpperCase();
+    // Accent yellow is too light for text on white; use its darker text tone.
+    final textColor = r == null ? AppColors.accentText : color;
+    final face = selected
+        ? Color.alphaBlend(color.withValues(alpha: 0.22), AppColors.surface)
+        : AppColors.surface;
+    const block = PixelFramePainter.defaultPixel;
     return Semantics(
       button: true,
       selected: selected,
       label: 'Filtro: ${r?.label ?? 'Todos'}',
       excludeSemantics: true,
-      child: Material(
-        color: selected ? color.withValues(alpha: 0.22) : AppColors.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radius),
-          side: BorderSide(
-            color: selected ? color : AppColors.border,
-            width: selected ? AppTheme.borderWidth : 2,
-          ),
+      child: CustomPaint(
+        painter: PixelFramePainter(
+          face: face,
+          outline: AppColors.text,
+          highlight: Color.lerp(face, Colors.white, 0.5)!,
+          shade: Color.lerp(face, AppColors.text, 0.3)!,
+          pressed: selected,
         ),
-        child: InkWell(
-          onTap: onSelected,
-          borderRadius: BorderRadius.circular(AppTheme.radius),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    r == null ? Icons.grid_view : AppTheme.rarityIcon(r),
-                    size: 16,
-                    color: selected ? color : AppColors.textMuted,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    label,
-                    style: TextStyle(
-                      color: selected ? color : AppColors.text,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 1.1,
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: onSelected,
+            splashFactory: NoSplash.splashFactory,
+            overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
+              child: Padding(
+                // Keeps the content centered in the face, not in the slab.
+                padding: EdgeInsets.fromLTRB(
+                  14,
+                  selected ? block : 0,
+                  14,
+                  selected ? 0 : block,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      r == null ? Icons.grid_view : AppTheme.rarityIcon(r),
+                      size: 16,
+                      color: selected ? textColor : AppColors.textMuted,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 6),
+                    Text(
+                      label,
+                      style: TextStyle(
+                        color: selected ? textColor : AppColors.text,
+                        fontFamily: AppTheme.bodyFontFamily,
+                        fontSize: 18,
+                        letterSpacing: 0,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

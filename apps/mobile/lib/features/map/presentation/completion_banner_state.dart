@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Whether the "¡Colección completada!" banner on the map has already been
+/// Whether the "¡Profedex completada!" banner on the map has already been
 /// acknowledged in this session (dismissed or opened).
 final completionBannerSeenProvider =
     NotifierProvider<CompletionBannerSeen, bool>(CompletionBannerSeen.new);

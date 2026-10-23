@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../app/theme.dart';
+import 'pixel_frame_painter.dart';
 
 enum PixelButtonVariant { primary, secondary, danger }
 
-/// Big, high-contrast button (min height 56) with haptic feedback and a
-/// loading state. Disabled when [onPressed] is null or [loading] is true.
-class PixelButton extends StatelessWidget {
+/// Big, high-contrast pixel-art button (min height 56) with haptic feedback
+/// and a loading state. Disabled when [onPressed] is null or [loading] is true.
+///
+/// The frame is drawn by [PixelFramePainter]; the face colors come from
+/// [AppColors] and the bevel tones are derived from them.
+class PixelButton extends StatefulWidget {
   const PixelButton({
     super.key,
     required this.label,
@@ -29,37 +33,30 @@ class PixelButton extends StatelessWidget {
   final bool expand;
   final double minHeight;
 
-  bool get _enabled => onPressed != null && !loading;
+  @override
+  State<PixelButton> createState() => _PixelButtonState();
+}
+
+class _PixelButtonState extends State<PixelButton> {
+  bool _pressed = false;
+
+  bool get _enabled => widget.onPressed != null && !widget.loading;
 
   @override
   Widget build(BuildContext context) {
-    final (
-      Color background,
-      Color foreground,
-      Color border,
-    ) = switch (variant) {
-      PixelButtonVariant.primary => (
-        AppColors.accent,
-        AppColors.onAccent,
-        AppColors.accent,
-      ),
-      PixelButtonVariant.secondary => (
-        AppColors.surface,
-        AppColors.text,
-        AppColors.border,
-      ),
-      PixelButtonVariant.danger => (
-        AppColors.dangerFill,
-        Colors.white,
-        AppColors.dangerFill,
-      ),
+    final variant = widget.variant;
+    final (Color face, Color foreground) = switch (variant) {
+      PixelButtonVariant.primary => (AppColors.accent, AppColors.onAccent),
+      PixelButtonVariant.secondary => (AppColors.surface, AppColors.text),
+      PixelButtonVariant.danger => (AppColors.dangerFill, Colors.white),
     };
+    final secondary = variant == PixelButtonVariant.secondary;
 
     final child = Row(
-      mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
+      mainAxisSize: widget.expand ? MainAxisSize.max : MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (loading)
+        if (widget.loading)
           SizedBox(
             width: 22,
             height: 22,
@@ -68,52 +65,71 @@ class PixelButton extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(foreground),
             ),
           )
-        else if (icon != null)
-          Icon(
-            icon,
-            color: foreground,
-            size: variant == PixelButtonVariant.secondary ? 20 : 24,
-          ),
-        if (loading || icon != null)
-          SizedBox(width: variant == PixelButtonVariant.secondary ? 7 : 12),
+        else if (widget.icon != null)
+          Icon(widget.icon, color: foreground, size: secondary ? 20 : 24),
+        if (widget.loading || widget.icon != null)
+          SizedBox(width: secondary ? 7 : 12),
         Flexible(
           child: Text(
-            label.toUpperCase(),
+            widget.label.toUpperCase(),
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
+            // Family and weight come from the theme's labelLarge (pixel font).
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: foreground,
-              fontSize: variant == PixelButtonVariant.secondary ? 13 : 16,
+              letterSpacing: 0,
+              fontSize: secondary ? 20 : 22,
             ),
           ),
         ),
       ],
     );
 
+    // The face sinks by one block when pressed; padding keeps the total
+    // height constant so neighbors do not move.
+    const block = PixelFramePainter.defaultPixel;
+    final pressed = _enabled && _pressed;
+    final horizontal = secondary ? 11.0 : 20.0;
+
     return Semantics(
       button: true,
       enabled: _enabled,
-      label: label,
+      label: widget.label,
       child: Opacity(
         opacity: _enabled ? 1 : 0.55,
-        child: Material(
-          color: background,
-          shadowColor: AppColors.shadow,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTheme.radius),
-            side: BorderSide(color: border, width: AppTheme.borderWidth),
+        child: CustomPaint(
+          painter: PixelFramePainter(
+            face: face,
+            outline: AppColors.text,
+            highlight: Color.lerp(face, Colors.white, 0.5)!,
+            shade: Color.lerp(face, AppColors.text, 0.3)!,
+            pressed: pressed,
           ),
-          child: InkWell(
-            onTap: _enabled ? _handleTap : null,
-            borderRadius: BorderRadius.circular(AppTheme.radius),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: minHeight, minWidth: 48),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: variant == PixelButtonVariant.secondary ? 11 : 20,
-                  vertical: 12,
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              onTap: _enabled ? _handleTap : null,
+              onHighlightChanged: (value) => setState(() => _pressed = value),
+              // The frame itself is the press feedback; no ripple.
+              splashFactory: NoSplash.splashFactory,
+              overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: widget.minHeight,
+                  minWidth: 48,
                 ),
-                child: Center(widthFactor: expand ? null : 1, child: child),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    horizontal,
+                    12 + (pressed ? block : 0),
+                    horizontal,
+                    12 + (pressed ? 0 : block),
+                  ),
+                  child: Center(
+                    widthFactor: widget.expand ? null : 1,
+                    child: child,
+                  ),
+                ),
               ),
             ),
           ),
@@ -124,6 +140,6 @@ class PixelButton extends StatelessWidget {
 
   void _handleTap() {
     HapticFeedback.lightImpact();
-    onPressed?.call();
+    widget.onPressed?.call();
   }
 }

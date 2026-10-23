@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import 'pixel_frame_painter.dart';
 
-/// Framed panel with a crisp shadow inspired by portable RPGs.
+/// Pixel-art framed panel (stepped corners, no shadow). The outline is drawn
+/// by [PixelFramePainter.flat]; pass [borderColor] to tint it.
 class PixelCard extends StatelessWidget {
   const PixelCard({
     super.key,
@@ -11,7 +13,6 @@ class PixelCard extends StatelessWidget {
     this.color,
     this.borderColor,
     this.onTap,
-    this.shadow = true,
     this.semanticLabel,
   });
 
@@ -20,40 +21,34 @@ class PixelCard extends StatelessWidget {
   final Color? color;
   final Color? borderColor;
   final VoidCallback? onTap;
-  final bool shadow;
   final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
-    final border = borderColor ?? AppColors.border;
-    final content = Container(
-      decoration: BoxDecoration(
-        color: color ?? AppColors.surface,
-        borderRadius: BorderRadius.circular(AppTheme.radius),
-        border: Border.all(color: border, width: AppTheme.borderWidth),
-        boxShadow: shadow
-            ? const [BoxShadow(color: AppColors.shadow, offset: Offset(3, 3))]
-            : null,
-      ),
-      child: Padding(padding: padding, child: child),
+    // The outline is painted inside the bounds, so content is inset by it.
+    final content = Padding(
+      padding: padding.add(const EdgeInsets.all(PixelFramePainter.defaultPixel)),
+      child: child,
     );
 
-    final wrapped = onTap == null
-        ? content
-        : Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(AppTheme.radius),
-              child: content,
+    final framed = CustomPaint(
+      painter: PixelFramePainter.flat(
+        face: color ?? AppColors.surface,
+        outline: borderColor ?? AppColors.text,
+      ),
+      child: onTap == null
+          ? content
+          : Material(
+              type: MaterialType.transparency,
+              child: InkWell(onTap: onTap, child: content),
             ),
-          );
+    );
 
-    if (semanticLabel == null) return wrapped;
+    if (semanticLabel == null) return framed;
     return Semantics(
       label: semanticLabel,
       button: onTap != null,
-      child: wrapped,
+      child: framed,
     );
   }
 }

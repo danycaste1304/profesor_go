@@ -62,3 +62,15 @@ flutter:
     - assets/sprites/diego_morales_portrait.png
     - assets/sprites/roberto_andrade_full.png
     - assets/sprites/roberto_andrade_portrait.png
+
+  # Silkscreen = display font (h1, buttons); VT323 = body font.
+  # Both SIL OFL, licenses in assets/fonts/OFL-*.txt.
+  fonts:
+    - family: VT323
+      fonts:
+        - asset: assets/fonts/VT323-Regular.ttf
+    - family: Silkscreen
+      fonts:
+        - asset: assets/fonts/Silkscreen-Regular.ttf
+        - asset: assets/fonts/Silkscreen-Bold.ttf
+          weight: 700

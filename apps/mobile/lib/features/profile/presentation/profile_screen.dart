@@ -127,6 +127,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     return AppScaffold(
       title: 'Perfil',
+      homeFallback: true,
       body: ListView(
         children: [
           PixelCard(
@@ -400,7 +401,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('MI COLECCIÓN', style: textTheme.titleMedium),
+                Text('MI PROFEDEX', style: textTheme.titleMedium),
                 const SizedBox(height: 12),
                 progressAsync.when(
                   data: (p) => Column(
@@ -423,7 +424,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                '¡Colección completa!',
+                                '¡Profedex completa!',
                                 style: textTheme.bodyLarge?.copyWith(
                                   color: AppColors.success,
                                 ),
@@ -438,7 +439,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     value: 0,
                     total: 0,
                     label: 'Profesores capturados',
-                    showCount: false,
+                    showPercent: false,
                   ),
                   error: (e, _) => _InlineError(
                     message: AppException.from(e).message,
@@ -448,7 +449,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 const SizedBox(height: 16),
                 PixelButton(
                   key: ProfileScreen.collectionKey,
-                  label: 'Ver colección',
+                  label: 'Ver Profedex',
                   icon: Icons.grid_view,
                   variant: PixelButtonVariant.secondary,
                   onPressed: () => context.go(AppRoutes.collection),
@@ -469,7 +470,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             const SizedBox(height: 24),
             PixelCard(
               borderColor: AppColors.accentAlt,
-              shadow: false,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -546,7 +546,7 @@ class _AvatarChoices extends StatelessWidget {
         Text(
           title,
           style: Theme.of(context).textTheme.labelLarge
-              ?.copyWith(fontSize: 13, color: AppColors.textMuted),
+              ?.copyWith(fontSize: 20, color: AppColors.textMuted),
         ),
         const SizedBox(height: 6),
         Row(
@@ -615,7 +615,7 @@ class _AvatarChoice extends StatelessWidget {
                     label,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.labelLarge
-                        ?.copyWith(fontSize: 13, color: AppColors.text),
+                        ?.copyWith(fontSize: 20, color: AppColors.text),
                   ),
                 ],
               ),
@@ -655,9 +655,9 @@ class _Badge extends StatelessWidget {
               label.toUpperCase(),
               style: TextStyle(
                 color: color,
-                fontSize: 12,
+                fontSize: 20,
                 fontWeight: FontWeight.w900,
-                letterSpacing: 1.2,
+                letterSpacing: 0,
               ),
             ),
           ],

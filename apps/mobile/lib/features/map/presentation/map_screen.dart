@@ -180,7 +180,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                                 children: [
                                   Expanded(
                                     child: PixelButton(
-                                      label: 'Colección',
+                                      label: 'Profedex',
                                       icon: Icons.menu_book,
                                       variant: PixelButtonVariant.secondary,
                                       onPressed: () =>
@@ -248,7 +248,7 @@ class _Header extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            'MAPA DEL CAMPUS',
+            'Campus USFQ',
             style: Theme.of(context).textTheme.titleLarge
                 ?.copyWith(color: AppColors.text),
           ),
@@ -278,7 +278,7 @@ class _Header extends StatelessWidget {
                     color: color,
                     fontSize: 12,
                     fontWeight: FontWeight.w900,
-                    letterSpacing: 1.1,
+                    letterSpacing: 0,
                   ),
                 ),
               ],
@@ -312,8 +312,8 @@ class _ProgressChip extends StatelessWidget {
       child = ProgressBar(
         value: p.captured,
         total: p.total,
-        label: 'Colección',
-        height: 14,
+        label: 'Profes Capturados',
+        height: 20,
         color: p.completed ? AppColors.success : AppColors.accent,
       );
     } else if (progressAsync.hasError) {
@@ -330,12 +330,11 @@ class _ProgressChip extends StatelessWidget {
         ],
       );
     } else {
-      child = Text('Cargando tu colección…', style: muted);
+      child = Text('Cargando tu Profedex…', style: muted);
     }
 
     return PixelCard(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
-      shadow: false,
       child: child,
     );
   }
@@ -357,14 +356,14 @@ class _CompletionBanner extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 8, 4, 8),
       borderColor: AppColors.accent,
       color: AppColors.surfaceAlt,
-      semanticLabel: 'Colección completada',
+      semanticLabel: 'Profedex completada',
       child: Row(
         children: [
           const Icon(Icons.emoji_events, color: AppColors.accentText, size: 28),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              '¡Colección completada!',
+              '¡Profedex completada!',
               style: Theme.of(context).textTheme.titleMedium
                   ?.copyWith(color: AppColors.accentText),
             ),
@@ -408,7 +407,6 @@ class _LocationNotice extends StatelessWidget {
     return PixelCard(
       padding: const EdgeInsets.all(12),
       borderColor: AppColors.danger,
-      shadow: false,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -516,85 +514,32 @@ class _MapPanel extends ConsumerWidget {
             Positioned(
               right: 8,
               bottom: state.canSimulate ? 222 : 164,
-              child: _MusicToggle(
-                enabled: music.enabled,
-                busy: music.busy,
-                onTap: () async {
-                  try {
-                    await ref
-                        .read(gameMusicControllerProvider.notifier)
-                        .toggle();
-                  } catch (_) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('No se pudo reproducir la música.'),
-                        ),
-                      );
-                    }
-                  }
-                },
+              child: PixelIconButton(
+                icon: music.enabled ? Icons.music_note : Icons.music_off,
+                semanticLabel: 'Música del juego',
+                toggled: music.enabled,
+                onPressed: music.busy
+                    ? null
+                    : () async {
+                        try {
+                          await ref
+                              .read(gameMusicControllerProvider.notifier)
+                              .toggle();
+                        } catch (_) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'No se pudo reproducir la música.',
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                      },
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _MusicToggle extends StatelessWidget {
-  const _MusicToggle({
-    required this.enabled,
-    required this.busy,
-    required this.onTap,
-  });
-
-  final bool enabled;
-  final bool busy;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final foreground = enabled ? Colors.white : AppColors.text;
-    return Semantics(
-      label: 'Música del juego',
-      button: true,
-      toggled: enabled,
-      enabled: !busy,
-      child: Material(
-        color: enabled
-            ? AppColors.accentAlt
-            : AppColors.background.withValues(alpha: 0.93),
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: AppColors.text, width: 2),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: InkWell(
-          onTap: busy ? null : onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  enabled ? Icons.music_note : Icons.music_off,
-                  color: foreground,
-                  size: 17,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  enabled ? 'MÚSICA SÍ' : 'MÚSICA NO',
-                  style: TextStyle(
-                    fontFamily: 'monospace',
-                    fontWeight: FontWeight.w900,
-                    fontSize: 12,
-                    color: foreground,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );
@@ -668,8 +613,7 @@ class _SimulationToggle extends StatelessWidget {
               'Simular movimiento',
               style: TextStyle(
                 color: AppColors.text,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
+                fontSize: 16,
               ),
             ),
             Switch(

@@ -204,6 +204,9 @@ Capture flow (capture agent):
 AppScaffold({required body, title?, actions?, leading?, showAppBar = true, padding = 16, bottomBar?, floatingActionButton?})
 PixelCard({required child, padding, color?, borderColor?, onTap?, shadow = true, semanticLabel?})
 PixelButton({required label, required onPressed, variant: PixelButtonVariant.primary|secondary|danger, loading = false, icon?, expand = true})
+                                                             // pixel art: frame by PixelFramePainter (4 px blocks); label font from theme (AppTheme.displayFontFamily)
+PixelIconButton({required icon, required semanticLabel, required onPressed, toggled?, size = 48, iconSize = 22})
+                                                             // circular pixel-art icon button, no label (music toggle); toggled: true = accent face
 RarityBadge(rarity, {compact = false})                       // icon + text + color
 ProfessorSprite({required professorId, spriteUrl?, size = 96, silhouette = false, semanticLabel?})
 ProgressBar({required value, required total, label?, color?, height = 22, showCount = true})

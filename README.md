@@ -130,6 +130,7 @@ iOS necesita el entitlement *Near Field Communication Tag Reading* en el App ID.
 | [docs/privacy.md](docs/privacy.md)            | qué datos se guardan y cuáles no            |
 | [docs/setup.md](docs/setup.md)                | instalación paso a paso, builds, despliegue |
 | [docs/CONTRACTS.md](docs/CONTRACTS.md)        | contratos entre móvil, backend y admin      |
+| [docs/cambios-ui.md](docs/cambios-ui.md)      | cambios de UI pixel art (fuentes, componentes) |
 
 ## Información externa pendiente
 

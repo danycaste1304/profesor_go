@@ -208,6 +208,7 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
     });
     return AppScaffold(
       title: 'Leer tarjeta',
+      homeFallback: true,
       body: LayoutBuilder(
         builder: (context, constraints) => SingleChildScrollView(
           child: ConstrainedBox(
@@ -488,7 +489,6 @@ class _DemoTagPicker extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 8),
             child: PixelCard(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              shadow: false,
               semanticLabel: 'Tarjeta demo ${tag.label}',
               onTap: enabled ? () => unawaited(onPick(tag)) : null,
               child: Row(

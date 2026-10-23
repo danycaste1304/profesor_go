@@ -42,11 +42,8 @@ void main() {
     await pumpDetail(tester, repo, ada.id);
 
     expect(find.byType(ProfessorDetailScreen), findsOneWidget);
-    expect(
-      find.text('Prof. Henry'),
-      findsOneWidget,
-    ); // body (app bar is upper-case)
-    expect(find.text('PROF. HENRY'), findsOneWidget);
+    expect(find.text('Prof. Henry'), findsOneWidget); // body
+    expect(find.text('PROFESOR'), findsOneWidget); // app bar, same for everyone
     expect(find.text('Henry Carvajal'), findsOneWidget);
     expect(find.text(ada.description!), findsOneWidget);
     expect(find.text(ProfessorDetailScreen.undiscoveredHint), findsNothing);

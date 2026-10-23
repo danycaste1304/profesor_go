@@ -78,8 +78,8 @@ void main() {
     expect(find.text('ana@uni.edu'), findsOneWidget);
     expect(find.text('MODO DEMO'), findsOneWidget);
     expect(find.text('ADMIN'), findsNothing);
-    await scrollTo(tester, find.text('3 / 8'));
-    expect(find.text('3 / 8'), findsOneWidget);
+    await scrollTo(tester, find.text('38 %'));
+    expect(find.text('38 %'), findsOneWidget);
     expect(find.text('Profesores capturados'), findsOneWidget);
     await scrollTo(tester, find.text('Profesor GO v$kAppVersion'));
     expect(find.text('Profesor GO v$kAppVersion'), findsOneWidget);
@@ -177,9 +177,9 @@ void main() {
       ),
     );
 
-    await scrollTo(tester, find.text('8 / 8'));
-    expect(find.text('8 / 8'), findsOneWidget);
-    expect(find.text('¡Colección completa!'), findsOneWidget);
+    await scrollTo(tester, find.text('100 %'));
+    expect(find.text('100 %'), findsOneWidget);
+    expect(find.text('¡Profedex completa!'), findsOneWidget);
   });
 
   testWidgets('logout calls signOut on the repository', (tester) async {
@@ -191,7 +191,7 @@ void main() {
     verify(() => repo.signOut()).called(1);
   });
 
-  testWidgets('"Ver colección" navigates to /collection', (tester) async {
+  testWidgets('"Ver Profedex" navigates to /collection', (tester) async {
     await pumpProfile(tester);
 
     await scrollTo(tester, find.byKey(ProfileScreen.collectionKey));
@@ -242,8 +242,8 @@ void main() {
 
     expect(state.captures, isEmpty);
     expect(find.text('Profedex demo reiniciada'), findsOneWidget);
-    await scrollTo(tester, find.text('0 / ${demoProfessors.length}'));
-    expect(find.text('0 / ${demoProfessors.length}'), findsOneWidget);
+    await scrollTo(tester, find.text('0 %'));
+    expect(find.text('0 %'), findsOneWidget);
     expect(find.byType(Scaffold), findsOneWidget);
   });
 }

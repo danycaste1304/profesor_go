@@ -72,14 +72,8 @@ class _SuccessBody extends StatelessWidget {
 
     return Column(
       children: [
-        Text(
-          '¡Capturaste a ${professor.displayName}!',
-          textAlign: TextAlign.center,
-          style: textTheme.headlineMedium?.copyWith(color: AppColors.success),
-        ).animate().fadeIn(duration: 400.ms).slideY(begin: -0.2, end: 0),
-        const SizedBox(height: 14),
         RetroDialogue(
-          text: '¡${professor.displayName} se unió a tu colección!',
+          text: '¡${professor.displayName} se unió a tu Profedex!',
           minHeight: 42,
         ),
         const SizedBox(height: 20),
@@ -138,7 +132,7 @@ class _SuccessBody extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ProgressBar(
-                  label: 'Colección',
+                  label: 'Profedex',
                   value: collection.captured,
                   total: collection.total,
                   color: collection.completed
@@ -177,14 +171,14 @@ class _SuccessActions extends StatelessWidget {
       children: [
         if (args.collectionCompleted) ...[
           PixelButton(
-            label: '¡Colección completada!',
+            label: '¡Profedex completada!',
             icon: Icons.emoji_events,
             onPressed: () => context.go(AppRoutes.completion),
           ),
           const SizedBox(height: 10),
         ],
         PixelButton(
-          label: 'Ver colección',
+          label: 'Ver Profedex',
           icon: Icons.grid_view,
           variant: args.collectionCompleted
               ? PixelButtonVariant.secondary

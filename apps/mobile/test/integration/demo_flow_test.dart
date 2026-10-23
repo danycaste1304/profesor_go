@@ -3,7 +3,7 @@
 // so the outcome is deterministic.
 //
 //   login → map (CAPTURAR) → /scan (choose DEMO-TAG-01) → /encounter/:id
-//   → drag the ball onto the professor → /result "¡Capturaste…" → /collection
+//   → drag the ball onto the professor → /result "¡CAPTURADO!" → /collection
 //   shows 1 / 10 with Prof. Henry revealed.
 //
 // The throw is a real drag gesture (the encounter screen evaluates the
@@ -125,8 +125,8 @@ void main() {
       );
       await tester.tap(find.byKey(LoginScreen.submitKey));
       await settle(tester);
-      expect(find.text('MAPA DEL CAMPUS'), findsOneWidget);
-      expect(find.text('0 / 10'), findsOneWidget);
+      expect(find.text('Campus USFQ'), findsOneWidget);
+      expect(find.text('0 %'), findsOneWidget);
       final captureButton = find.widgetWithText(PixelButton, 'CAPTURAR');
       expect(captureButton, findsOneWidget);
       expect(tester.widget<PixelButton>(captureButton).onPressed, isNotNull);
@@ -167,19 +167,19 @@ void main() {
       // 5. Fly / absorb / drop / shake / burst animations, then /result.
       final onResult = await pumpUntilFound(
         tester,
-        find.text('¡Capturaste a Prof. Henry!'),
+        find.text('¡CAPTURADO!'),
       );
       expect(onResult, isTrue, reason: 'throw should end on the result screen');
       expect(find.text('¡CAPTURADO!'), findsOneWidget); // app bar title
       expect(find.text('Lanzamiento: Excelente'), findsOneWidget);
-      expect(find.text('1 / 10'), findsOneWidget);
+      expect(find.text('10 %'), findsOneWidget);
       expect(state.isCaptured(demoProfessors.first.id), isTrue);
 
-      // 6. "Ver colección" → /collection shows the capture.
-      await tester.tap(find.widgetWithText(PixelButton, 'VER COLECCIÓN'));
+      // 6. "Ver Profedex" → /collection shows the capture.
+      await tester.tap(find.widgetWithText(PixelButton, 'VER PROFEDEX'));
       await settle(tester);
-      expect(find.text('COLECCIÓN'), findsOneWidget);
-      expect(find.text('1 / 10'), findsOneWidget);
+      expect(find.text('PROFEDEX'), findsOneWidget);
+      expect(find.text('10 %'), findsOneWidget);
       expect(find.byType(ProfessorSprite), findsNWidgets(10));
       expect(find.text('Prof. Henry'), findsOneWidget);
       expect(find.text('???'), findsWidgets);

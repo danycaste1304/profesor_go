@@ -598,7 +598,15 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 6),
-                            RarityBadge(professor.rarity, compact: true),
+                            // Shrinks when the countdown leaves little room.
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: RarityBadge(
+                                professor.rarity,
+                                compact: true,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -753,9 +761,7 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
                           aimLabel,
                           style: textTheme.labelLarge?.copyWith(
                             color: aimColor,
-                            fontFamily: 'monospace',
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 0.6,
+                            letterSpacing: 0,
                           ),
                         ),
                       ),
@@ -853,8 +859,6 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
                     textAlign: TextAlign.center,
                     style: textTheme.headlineMedium?.copyWith(
                       color: _statusColor,
-                      fontFamily: 'monospace',
-                      fontWeight: FontWeight.w900,
                       shadows: const [
                         Shadow(color: Colors.white, blurRadius: 6),
                       ],
@@ -1042,9 +1046,8 @@ class _EncounterTimeBar extends StatelessWidget {
             'TIEMPO',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: AppColors.textMuted,
-              fontFamily: 'monospace',
               fontWeight: FontWeight.w900,
-              letterSpacing: 1,
+              letterSpacing: 0,
             ),
           ),
           const SizedBox(width: 9),

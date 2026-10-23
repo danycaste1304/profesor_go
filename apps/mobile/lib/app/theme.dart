@@ -26,7 +26,15 @@ abstract final class AppColors {
 }
 
 abstract final class AppTheme {
-  static const fontFamily = 'Roboto';
+  /// Body font: paragraphs and every header below the page title.
+  /// VT323 (license in `assets/fonts/OFL-VT323.txt`).
+  static const bodyFontFamily = 'VT323';
+
+  /// Pixel font: page titles (h1) and button labels. Silkscreen (license in
+  /// `assets/fonts/OFL-Silkscreen.txt`) is wide and uppercase-only; sizes in
+  /// multiples of 8 keep its pixel grid crisp.
+  static const displayFontFamily = 'VT323';
+
   static const fontFamilyFallback = <String>[
     'SF Pro Text',
     'Arial',
@@ -53,6 +61,33 @@ abstract final class AppTheme {
     Rarity.legendary => Icons.auto_awesome,
   };
 
+  /// Material's default tracking (0.1 to 0.5 px) widens the pixel fonts, so
+  /// every style of the text theme is flattened to 0.
+  static TextTheme _flat(TextTheme t) => t.copyWith(
+    displayLarge: t.displayLarge?.copyWith(letterSpacing: 0),
+    displayMedium: t.displayMedium?.copyWith(letterSpacing: 0),
+    displaySmall: t.displaySmall?.copyWith(letterSpacing: 0),
+    headlineLarge: t.headlineLarge?.copyWith(letterSpacing: 0),
+    headlineMedium: t.headlineMedium?.copyWith(letterSpacing: 0),
+    headlineSmall: t.headlineSmall?.copyWith(letterSpacing: 0),
+    titleLarge: t.titleLarge?.copyWith(letterSpacing: 0),
+    titleMedium: t.titleMedium?.copyWith(letterSpacing: 0),
+    titleSmall: t.titleSmall?.copyWith(letterSpacing: 0),
+    bodyLarge: t.bodyLarge?.copyWith(letterSpacing: 0),
+    bodyMedium: t.bodyMedium?.copyWith(letterSpacing: 0),
+    bodySmall: t.bodySmall?.copyWith(letterSpacing: 0),
+    labelLarge: t.labelLarge?.copyWith(letterSpacing: 0),
+    labelMedium: t.labelMedium?.copyWith(letterSpacing: 0),
+    labelSmall: t.labelSmall?.copyWith(letterSpacing: 0),
+  );
+
+  static TextStyle? _display(TextStyle? base, double size) => base?.copyWith(
+    fontFamily: displayFontFamily,
+    fontWeight: FontWeight.w400,
+    fontSize: size,
+    letterSpacing: 0,
+  );
+
   static ThemeData light() {
     const colorScheme = ColorScheme(
       brightness: Brightness.light,
@@ -72,45 +107,33 @@ abstract final class AppTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: colorScheme,
-      fontFamily: fontFamily,
+      fontFamily: bodyFontFamily,
       fontFamilyFallback: fontFamilyFallback,
       scaffoldBackgroundColor: AppColors.background,
     );
 
-    final textTheme = base.textTheme.apply(
-      bodyColor: AppColors.text,
-      displayColor: AppColors.text,
-      fontFamily: fontFamily,
-      fontFamilyFallback: fontFamilyFallback,
+    final textTheme = _flat(
+      base.textTheme.apply(
+        bodyColor: AppColors.text,
+        displayColor: AppColors.text,
+        fontFamily: bodyFontFamily,
+        fontFamilyFallback: fontFamilyFallback,
+      ),
     );
 
     return base.copyWith(
       textTheme: textTheme.copyWith(
-        headlineLarge: textTheme.headlineLarge?.copyWith(
-          fontWeight: FontWeight.w900,
-          letterSpacing: -0.5,
-        ),
-        headlineMedium: textTheme.headlineMedium?.copyWith(
-          fontWeight: FontWeight.w800,
-          letterSpacing: -0.3,
-        ),
-        titleLarge: textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.w800,
-          fontFamily: 'monospace',
-          letterSpacing: 0.3,
-        ),
+        // h1 and button labels: pixel font.
+        headlineLarge: _display(textTheme.headlineLarge, 40),
+        headlineMedium: _display(textTheme.headlineMedium, 24),
+        titleLarge: _display(textTheme.titleLarge, 30),
+        labelLarge: _display(textTheme.labelLarge, 22),
+        // Other headers and paragraphs: body font.
         titleMedium: textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.w700,
-          fontFamily: 'monospace',
+          fontSize: 20,
         ),
-        bodyLarge: textTheme.bodyLarge?.copyWith(fontSize: 17, height: 1.35),
-        bodyMedium: textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
-        labelLarge: textTheme.labelLarge?.copyWith(
-          fontWeight: FontWeight.w800,
-          fontFamily: 'monospace',
-          letterSpacing: 0.2,
-          fontSize: 16,
-        ),
+        bodyLarge: textTheme.bodyLarge?.copyWith(fontSize: 22, height: 1.1),
+        bodyMedium: textTheme.bodyMedium?.copyWith(fontSize: 22, height: 1),
       ),
       appBarTheme: const AppBarThemeData(
         backgroundColor: AppColors.background,
@@ -118,10 +141,10 @@ abstract final class AppTheme {
         elevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
-          fontFamily: 'monospace',
+          fontFamily: displayFontFamily,
           fontFamilyFallback: fontFamilyFallback,
-          fontSize: 20,
-          fontWeight: FontWeight.w900,
+          fontSize: 22,
+          fontWeight: FontWeight.w400,
           letterSpacing: 0,
           color: AppColors.text,
         ),
@@ -171,10 +194,10 @@ abstract final class AppTheme {
             borderRadius: BorderRadius.all(Radius.circular(radius)),
           ),
           textStyle: const TextStyle(
-            fontFamily: fontFamily,
+            fontFamily: displayFontFamily,
             fontFamilyFallback: fontFamilyFallback,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 0.4,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 0,
             fontSize: 16,
           ),
         ),
@@ -184,9 +207,11 @@ abstract final class AppTheme {
           foregroundColor: AppColors.accentAlt,
           minimumSize: const Size(48, 48),
           textStyle: const TextStyle(
-            fontFamily: fontFamily,
+            fontFamily: displayFontFamily,
             fontFamilyFallback: fontFamilyFallback,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 0,
+            fontSize: 20,
           ),
         ),
       ),
@@ -194,7 +219,7 @@ abstract final class AppTheme {
         backgroundColor: AppColors.surfaceAlt,
         contentTextStyle: TextStyle(
           color: AppColors.text,
-          fontFamily: fontFamily,
+          fontFamily: bodyFontFamily,
           fontFamilyFallback: fontFamilyFallback,
         ),
         behavior: SnackBarBehavior.floating,

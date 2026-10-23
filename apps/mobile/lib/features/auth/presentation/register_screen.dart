@@ -93,7 +93,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 8),
-                const PixelLogo(fontSize: 28, tagline: 'Nuevo jugador'),
+                const PixelLogo(tagline: 'Nuevo jugador'),
                 const SizedBox(height: 24),
                 if (auth.error != null) ...[
                   AuthMessageBanner(

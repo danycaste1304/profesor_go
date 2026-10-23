@@ -139,7 +139,7 @@ class ProfessorSprite extends StatelessWidget {
       color: AppColors.accent,
       fontSize: size * 0.28,
       fontWeight: FontWeight.w900,
-      letterSpacing: 2,
+      letterSpacing: 0,
     ),
   );
 }
@@ -258,7 +258,7 @@ class PixelFacePainter extends CustomPainter {
             color: Colors.white,
             fontSize: 6,
             fontWeight: FontWeight.w900,
-            letterSpacing: .3,
+            letterSpacing: 0,
           ),
         ),
         textDirection: TextDirection.ltr,

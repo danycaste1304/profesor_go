@@ -22,7 +22,8 @@ class CollectionScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(collectionViewProvider);
     return AppScaffold(
-      title: 'Colección',
+      title: 'Profedex',
+      homeFallback: true,
       padding: EdgeInsets.zero,
       body: switch (state) {
         CollectionLoading() => const LoadingView(message: 'Cargando Profedex…'),
@@ -268,14 +269,14 @@ class _CompletedCard extends StatelessWidget {
       borderColor: AppColors.success,
       padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
       onTap: onTap,
-      semanticLabel: 'Colección completa. Ver logro',
+      semanticLabel: 'Profedex completa. Ver logro',
       child: Row(
         children: [
           const Icon(Icons.emoji_events, color: AppColors.success, size: 28),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              '¡Colección completa!',
+              '¡Profedex completa!',
               style: Theme.of(context).textTheme.titleMedium
                   ?.copyWith(color: AppColors.success),
             ),
@@ -286,7 +287,7 @@ class _CompletedCard extends StatelessWidget {
               color: AppColors.accentAlt,
               fontWeight: FontWeight.w900,
               fontSize: 12,
-              letterSpacing: 1,
+              letterSpacing: 0,
             ),
           ),
           const Icon(Icons.chevron_right, color: AppColors.accentAlt),

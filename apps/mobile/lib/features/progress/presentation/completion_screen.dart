@@ -15,7 +15,7 @@ import '../../collection/domain/date_format.dart';
 class CompletionScreen extends ConsumerStatefulWidget {
   const CompletionScreen({super.key});
 
-  static const title = '¡Colección completada!';
+  static const title = '¡Profedex completada!';
   static const achievementTitle = 'Maestro del campus';
 
   @override
@@ -65,12 +65,14 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen>
     if (progressAsync.isLoading) {
       return const AppScaffold(
         title: 'Logro',
-        body: LoadingView(message: 'Comprobando tu colección…'),
+        homeFallback: true,
+        body: LoadingView(message: 'Comprobando tu Profedex…'),
       );
     }
     if (progressAsync.hasError) {
       return AppScaffold(
         title: 'Logro',
+        homeFallback: true,
         body: ErrorView.fromError(
           progressAsync.error!,
           onRetry: () => ref.invalidate(collectionProgressProvider),
@@ -81,6 +83,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen>
     if (!progress.completed) {
       return AppScaffold(
         title: 'Logro',
+        homeFallback: true,
         body: Center(
           child: PixelCard(
             child: Column(
@@ -101,14 +104,14 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen>
                 ProgressBar(
                   value: progress.captured,
                   total: progress.total,
-                  label: 'Tu colección',
+                  label: 'Tu Profedex',
                 ),
               ],
             ),
           ),
         ),
         bottomBar: PixelButton(
-          label: 'Ver colección',
+          label: 'Ver Profedex',
           icon: Icons.grid_view,
           onPressed: () => context.go(AppRoutes.collection),
         ),
@@ -130,7 +133,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen>
           ),
           const SizedBox(height: 10),
           PixelButton(
-            label: 'Ver mi colección',
+            label: 'Ver mi Profedex',
             icon: Icons.grid_view,
             variant: PixelButtonVariant.secondary,
             onPressed: () => context.go(AppRoutes.collection),
@@ -333,7 +336,7 @@ class _AchievementSection extends StatelessWidget {
             textAlign: TextAlign.center,
             style: theme.textTheme.labelLarge?.copyWith(
               color: AppColors.accentText,
-              letterSpacing: 1.3,
+              letterSpacing: 0,
             ),
           ),
           const SizedBox(height: 18),

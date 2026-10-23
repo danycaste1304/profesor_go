@@ -30,7 +30,6 @@ class AuthMessageBanner extends StatelessWidget {
       child: PixelCard(
         borderColor: color,
         color: color.withValues(alpha: 0.12),
-        shadow: false,
         padding: const EdgeInsets.fromLTRB(12, 10, 4, 10),
         child: Row(
           children: [

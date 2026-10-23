@@ -96,11 +96,9 @@ class _RetroDialogueState extends State<RetroDialogue>
                   visible,
                   style: const TextStyle(
                     color: Color(0xFFFFFAE8),
-                    fontFamily: 'monospace',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    height: 1.35,
-                    letterSpacing: .1,
+                    fontSize: 20,
+                    height: 1,
+                    letterSpacing: 0,
                   ),
                 );
               },

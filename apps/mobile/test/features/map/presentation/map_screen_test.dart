@@ -16,6 +16,7 @@ import 'package:profesor_go/core/models/models.dart';
 import 'package:profesor_go/core/repositories/mock_professor_repository.dart';
 import 'package:profesor_go/core/repositories/professor_repository.dart';
 import 'package:profesor_go/core/widgets/pixel_button.dart';
+import 'package:profesor_go/core/widgets/pixel_icon_button.dart';
 import 'package:profesor_go/features/map/domain/campus_map_config.dart';
 import 'package:profesor_go/features/map/presentation/map_controller.dart';
 import 'package:profesor_go/features/map/presentation/map_screen.dart';
@@ -156,17 +157,17 @@ void main() {
     await tester.pumpWidget(h.build());
     await settle(tester);
 
-    expect(find.text('MAPA DEL CAMPUS'), findsOneWidget);
+    expect(find.text('Campus USFQ'), findsOneWidget);
     expect(find.text('CAPTURAR'), findsOneWidget);
     expect(captureButton(tester).onPressed, isNotNull);
-    expect(find.text('COLECCIÓN'), findsOneWidget);
+    expect(find.text('PROFEDEX'), findsOneWidget);
     expect(find.text('PERFIL'), findsOneWidget);
-    expect(find.text('Colección'), findsOneWidget);
-    expect(find.text('3 / 10'), findsOneWidget);
+    expect(find.text('Profes Capturados'), findsOneWidget);
+    expect(find.text('30 %'), findsOneWidget);
     expect(find.text('EN LÍNEA'), findsOneWidget);
     expect(find.byType(CampusMap), findsOneWidget);
     expect(find.text('Simular movimiento'), findsOneWidget);
-    expect(find.text('¡Colección completada!'), findsNothing);
+    expect(find.text('¡Profedex completada!'), findsNothing);
     expect(find.text(MapScreen.offlineCaptureMessage), findsNothing);
 
     await tester.tap(find.text('CAPTURAR'));
@@ -187,15 +188,15 @@ void main() {
     await tester.pumpWidget(h.build());
     await settle(tester);
 
-    expect(find.text('MÚSICA NO'), findsOneWidget);
-    await tester.tap(find.text('MÚSICA NO'));
+    expect(find.byIcon(Icons.music_off), findsOneWidget);
+    await tester.tap(find.byType(PixelIconButton));
     await settle(tester);
-    expect(find.text('MÚSICA SÍ'), findsOneWidget);
+    expect(find.byIcon(Icons.music_note), findsOneWidget);
     expect(music.plays, 1);
 
-    await tester.tap(find.text('MÚSICA SÍ'));
+    await tester.tap(find.byType(PixelIconButton));
     await settle(tester);
-    expect(find.text('MÚSICA NO'), findsOneWidget);
+    expect(find.byIcon(Icons.music_off), findsOneWidget);
     expect(music.pauses, 1);
     await tearDownTree(tester, h);
   });
@@ -310,8 +311,8 @@ void main() {
     await tester.pumpWidget(h.build());
     await settle(tester);
 
-    expect(find.text('10 / 10'), findsOneWidget);
-    expect(find.text('¡Colección completada!'), findsOneWidget);
+    expect(find.text('100 %'), findsOneWidget);
+    expect(find.text('¡Profedex completada!'), findsOneWidget);
 
     await tester.tap(find.text('VER'));
     await tester.pumpAndSettle();
@@ -320,7 +321,7 @@ void main() {
     h.router.pop();
     await tester.pumpAndSettle();
     expect(find.text('CAPTURAR'), findsOneWidget);
-    expect(find.text('¡Colección completada!'), findsNothing);
+    expect(find.text('¡Profedex completada!'), findsNothing);
     await tearDownTree(tester, h);
   });
 
@@ -331,7 +332,7 @@ void main() {
     await tester.pumpWidget(h.build());
     await settle(tester);
 
-    await tester.tap(find.text('COLECCIÓN'));
+    await tester.tap(find.text('PROFEDEX'));
     await tester.pumpAndSettle();
     expect(find.text('COLLECTION SCREEN'), findsOneWidget);
     h.router.pop();

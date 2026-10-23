@@ -7,7 +7,7 @@ import '../../../../core/widgets/capture_ball.dart';
 class PixelLogo extends StatelessWidget {
   const PixelLogo({
     super.key,
-    this.fontSize = 36,
+    this.fontSize = 40,
     this.tagline,
     this.showBall = true,
   });
@@ -21,11 +21,11 @@ class PixelLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final base = TextStyle(
-      fontFamily: AppTheme.fontFamily,
+      fontFamily: AppTheme.displayFontFamily,
       fontFamilyFallback: AppTheme.fontFamilyFallback,
       fontSize: fontSize,
-      fontWeight: FontWeight.w900,
-      letterSpacing: -fontSize / 35,
+      fontWeight: FontWeight.w700,
+      letterSpacing: -0.4,
       height: 1.1,
     );
     return Semantics(
@@ -35,7 +35,7 @@ class PixelLogo extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (showBall) ...[
-            const CaptureBall(size: 76),
+            const CaptureBall(size: 84),
             const SizedBox(height: 12),
           ],
           Text.rich(
@@ -55,15 +55,11 @@ class PixelLogo extends StatelessWidget {
           ),
           if (tagline != null) ...[
             SizedBox(height: fontSize / 4),
+            // Same style as the rest of the body text, just muted.
             Text(
-              tagline!.toUpperCase(),
+              tagline!,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: AppTheme.fontFamily,
-                fontFamilyFallback: AppTheme.fontFamilyFallback,
-                fontSize: (fontSize / 3).clamp(11.0, 16.0),
-                fontWeight: FontWeight.w700,
-                letterSpacing: 2,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppColors.textMuted,
               ),
             ),

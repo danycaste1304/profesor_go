@@ -75,7 +75,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             // `Animate.delay` would leave a Timer pending if the router
             // redirects before it fires.
             const PixelLogo(
-                  fontSize: 40,
                   tagline: 'Captura a los profes de la feria',
                   showBall: false,
                 )
@@ -90,7 +89,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             Text(
                   status.toUpperCase(),
                   style: Theme.of(context).textTheme.labelLarge
-                      ?.copyWith(color: AppColors.textMuted, letterSpacing: 3),
+                      ?.copyWith(color: AppColors.textMuted, letterSpacing: 0),
                 )
                 .animate(onPlay: (c) => c.repeat(reverse: true))
                 .fade(begin: 0.25, end: 1, duration: 650.ms),
@@ -102,7 +101,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                   color: AppColors.accentAlt,
                   fontSize: 12,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: 2,
+                  letterSpacing: 0,
                 ),
               ).animate().fadeIn(delay: 900.ms, duration: 300.ms),
             ],

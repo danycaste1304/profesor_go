@@ -30,10 +30,10 @@ class ProfessorDetailScreen extends ConsumerWidget {
     final capture = state is CollectionData
         ? state.captureOf(professorId)
         : null;
-    final captured = capture != null;
 
     return AppScaffold(
-      title: professor != null && captured ? professor.displayName : 'Profesor',
+      title: 'Profesor',
+      homeFallback: true,
       padding: EdgeInsets.zero,
       body: switch (state) {
         CollectionLoading() => const LoadingView(),
