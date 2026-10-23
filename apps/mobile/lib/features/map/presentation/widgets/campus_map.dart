@@ -8,8 +8,8 @@ import 'avatar.dart';
 /// Illustrated campus map with the player's avatar layered on top.
 ///
 /// The map is laid out in logical units ([CampusMapConfig.mapWidth] x
-/// [CampusMapConfig.mapHeight]), scaled with a [FittedBox] so the whole
-/// campus fits the available space, and wrapped in an [InteractiveViewer]
+/// [CampusMapConfig.mapHeight]), scaled with a [FittedBox] so the campus
+/// covers the available space, and wrapped in an [InteractiveViewer]
 /// for pinch-zoom and panning. [avatarOffset] is expressed in those logical
 /// units (use [CampusMapConfig.toMapOffset]); `null` hides the avatar.
 ///
@@ -124,13 +124,22 @@ class _CampusMapState extends State<CampusMap> {
       ),
     );
 
-    final fitted = Center(child: FittedBox(child: map));
+    // The height is pinned to the panel and the width follows the art's ratio:
+    // narrower panels crop the sides, wider ones leave lawn-colored bars. It is
+    // never stretched.
+    final fitted = SizedBox.expand(
+      child: FittedBox(
+        fit: BoxFit.fitHeight,
+        clipBehavior: Clip.hardEdge,
+        child: map,
+      ),
+    );
 
     return Semantics(
       label: 'Mapa del campus',
       container: true,
       child: ColoredBox(
-        color: PixelCampusPainter.grassA,
+        color: PixelCampusPainter._water,
         child: widget.interactive
             ? InteractiveViewer(
                 minScale: 1,
@@ -160,7 +169,12 @@ class PixelCampusPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.save();
-    canvas.scale(size.width / 900, size.height / 1200);
+    // The drawing is authored on a 900 x 1200 sheet. The canvas is 9:16, so a
+    // uniform fit-to-width scale (centered vertically) avoids distorting it;
+    // the lawn color below fills the leftover bands.
+    final scale = size.width / 900;
+    canvas.translate(0, (size.height - 1200 * scale) / 2);
+    canvas.scale(scale);
     final paint = Paint()..isAntiAlias = true;
 
     void rounded(Rect rect, Color color, double radius) {

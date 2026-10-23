@@ -22,7 +22,7 @@ class CampusMapConfig {
   /// Bundled original pixel-art map; replace with final campus artwork.
   static const String defaultBackgroundAssetPath = 'assets/map/campus_map.png';
 
-  /// Core defaults: placeholder bounds, 900x1200 logical px, pixel-art map.
+  /// Core defaults: placeholder bounds, 720x1290 logical px (9:16), pixel-art map.
   static const CampusMapConfig defaults = CampusMapConfig();
 
   final CampusBounds bounds;

@@ -93,7 +93,7 @@ feature folder (`NotifierProvider`, `AsyncNotifierProvider`).
 AppConfig.isDemoMode        // bool (runtime-effective)
 AppConfig.debugToolsEnabled // kDebugMode → teleport / reset; tag picker in all demo builds
 CampusConfig.bounds         // CampusBounds {north,south,east,west}, .center, .contains(p), .clamp(p)
-CampusConfig.mapWidth / mapHeight / mapSize      // 900 x 1200 logical px
+CampusConfig.mapWidth / mapHeight / mapSize      // 720 x 1290 logical px (9:16, matches campus_map.png)
 CampusConfig.toMapOffset(LatLng) → Offset         // and fromMapOffset(Offset) → LatLng
 CampusConfig.demoPath       // List<LatLng>
 ```

@@ -41,37 +41,40 @@ abstract final class CampusConfig {
   );
 
   /// Logical size of the pixel-art map image / canvas (independent of screen).
-  static const double mapWidth = 900;
-  static const double mapHeight = 1200;
+  /// Must keep the ratio of `assets/map/campus_map.png` (768 x 1376, 9:16):
+  /// the image is drawn over this canvas, so any other ratio distorts it.
+  static const double mapWidth = 720;
+  static const double mapHeight = 1290;
   static const Size mapSize = Size(mapWidth, mapHeight);
 
-  /// Demo route in the pixel map's open lanes. Keeping it in map coordinates
-  /// prevents the avatar from walking across the illustrated rooftops.
+  /// Demo route over the stone paths of the campus art: up the central
+  /// walkway to the junction, out along the left diagonal and back, then out
+  /// along the right branch and back. Keeping it in map coordinates prevents
+  /// the avatar from walking across lawns or rooftops.
   static final List<LatLng> demoPath = List<LatLng>.unmodifiable(
     const <Offset>[
-      Offset(450, 340),
-      Offset(450, 300),
-      Offset(450, 245),
-      Offset(450, 180),
-      Offset(450, 100),
-      Offset(450, 180),
-      Offset(450, 260),
-      Offset(450, 320),
-      Offset(370, 320),
-      Offset(290, 320),
-      Offset(210, 320),
-      Offset(150, 320),
-      Offset(210, 320),
-      Offset(290, 320),
-      Offset(370, 320),
-      Offset(450, 320),
-      Offset(530, 320),
-      Offset(610, 320),
-      Offset(690, 320),
-      Offset(750, 320),
-      Offset(690, 320),
-      Offset(610, 320),
-      Offset(530, 320),
+      Offset(534, 1219),
+      Offset(469, 1031),
+      Offset(417, 844),
+      Offset(380, 656),
+      Offset(356, 553),
+      Offset(281, 530),
+      Offset(211, 544),
+      Offset(159, 638),
+      Offset(103, 750),
+      Offset(56, 844),
+      Offset(103, 750),
+      Offset(159, 638),
+      Offset(211, 544),
+      Offset(281, 530),
+      Offset(356, 553),
+      Offset(450, 525),
+      Offset(525, 553),
+      Offset(600, 609),
+      Offset(675, 675),
+      Offset(600, 609),
+      Offset(525, 553),
+      Offset(450, 525),
     ].map(fromMapOffset),
   );
 
