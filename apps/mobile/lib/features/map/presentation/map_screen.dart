@@ -480,7 +480,7 @@ class _MapPanel extends ConsumerWidget {
 
     return PixelCard(
       padding: EdgeInsets.zero,
-      borderColor: Colors.white,
+      borderColor: AppColors.onAccent,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppTheme.radius),
         child: Stack(

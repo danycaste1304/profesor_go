@@ -139,6 +139,10 @@ abstract final class AppTheme {
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.text,
         elevation: 0,
+        // Tint shown when content scrolls under the bar (M3 default is the
+        // yellow `primary`); a darker blue from the palette instead.
+        surfaceTintColor: AppColors.accentAlt,
+        scrolledUnderElevation: 11,
         centerTitle: true,
         titleTextStyle: TextStyle(
           fontFamily: displayFontFamily,
