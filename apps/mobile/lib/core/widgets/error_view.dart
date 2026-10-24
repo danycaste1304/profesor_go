@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../app/theme.dart';
 import '../errors/app_exception.dart';
 import 'pixel_button.dart';
+import 'pixel_icon.dart';
+import 'pixel_icons.dart';
 
 /// Friendly error message with an optional retry button.
 class ErrorView extends StatelessWidget {
@@ -11,7 +13,8 @@ class ErrorView extends StatelessWidget {
     required this.message,
     this.onRetry,
     this.retryLabel = 'Reintentar',
-    this.icon = Icons.error_outline,
+    this.retryIcon = PixelIcons.refresh,
+    this.icon = PixelIcons.error,
   });
 
   /// Maps any error to its Spanish user message (never shows stack traces).
@@ -20,13 +23,15 @@ class ErrorView extends StatelessWidget {
     super.key,
     this.onRetry,
     this.retryLabel = 'Reintentar',
-    this.icon = Icons.error_outline,
+    this.retryIcon = PixelIcons.refresh,
+    this.icon = PixelIcons.error,
   }) : message = AppException.from(error).message;
 
   final String message;
   final VoidCallback? onRetry;
   final String retryLabel;
-  final IconData icon;
+  final PixelIconData retryIcon;
+  final PixelIconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +41,7 @@ class ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 56, color: AppColors.danger),
+            PixelIcon(icon, color: AppColors.danger),
             const SizedBox(height: 16),
             Text(
               message,
@@ -48,7 +53,7 @@ class ErrorView extends StatelessWidget {
               PixelButton(
                 label: retryLabel,
                 onPressed: onRetry,
-                icon: Icons.refresh,
+                icon: retryIcon,
                 expand: false,
               ),
             ],

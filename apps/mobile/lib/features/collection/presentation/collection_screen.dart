@@ -106,7 +106,7 @@ class _CollectionBody extends ConsumerWidget {
                   SliverFillRemaining(
                     hasScrollBody: false,
                     child: ErrorView(
-                      icon: Icons.school_outlined,
+                      icon: PixelIcons.school,
                       message: 'Aún no hay profesores en la feria. Vuelve a intentarlo más tarde.',
                       onRetry: () => _refresh(ref),
                     ),
@@ -185,7 +185,7 @@ class _ProfessorGrid extends StatelessWidget {
             crossAxisCount: columns,
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            mainAxisExtent: 214,
+            mainAxisExtent: 219,
           ),
           delegate: SliverChildBuilderDelegate((context, index) {
             final professor = professors[index];
@@ -250,11 +250,7 @@ class ProfessorCard extends StatelessWidget {
           // Shrinks on narrow cells ("LEGENDARIA" in a 2-column grid).
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: RarityBadge(
-              professor.rarity,
-              compact: true,
-              tinted: false,
-            ),
+            child: RarityBadge(professor.rarity, compact: true, tinted: false),
           ),
         ],
       ),
@@ -276,7 +272,7 @@ class _CompletedCard extends StatelessWidget {
       semanticLabel: 'Profedex completa. Ver logro',
       child: Row(
         children: [
-          const Icon(Icons.emoji_events, color: AppColors.success, size: 28),
+          const PixelIcon(PixelIcons.trophy, color: AppColors.success),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -294,7 +290,7 @@ class _CompletedCard extends StatelessWidget {
               letterSpacing: 0,
             ),
           ),
-          const Icon(Icons.chevron_right, color: AppColors.accentAlt),
+          const PixelIcon(PixelIcons.chevronRight, color: AppColors.accentAlt),
         ],
       ),
     );
@@ -315,7 +311,7 @@ class _EmptyFilter extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.search_off, size: 48, color: AppColors.textMuted),
+            const PixelIcon(PixelIcons.searchOff, color: AppColors.textMuted),
             const SizedBox(height: 12),
             Text(
               'No hay profesores de rareza $label en la feria.',

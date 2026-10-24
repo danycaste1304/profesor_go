@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../app/theme.dart';
 import 'pixel_frame_painter.dart';
+import 'pixel_icon.dart';
 
 enum PixelButtonVariant { primary, secondary, danger }
 
@@ -27,7 +28,7 @@ class PixelButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final PixelButtonVariant variant;
   final bool loading;
-  final IconData? icon;
+  final PixelIconData? icon;
 
   /// Fill the available width (default) or size to content.
   final bool expand;
@@ -66,7 +67,7 @@ class _PixelButtonState extends State<PixelButton> {
             ),
           )
         else if (widget.icon != null)
-          Icon(widget.icon, color: foreground, size: secondary ? 20 : 24),
+          PixelIcon(widget.icon!, color: foreground),
         if (widget.loading || widget.icon != null)
           SizedBox(width: secondary ? 7 : 12),
         Flexible(

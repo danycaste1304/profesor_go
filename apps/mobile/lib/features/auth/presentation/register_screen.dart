@@ -6,12 +6,14 @@ import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/pixel_button.dart';
+import '../../../core/widgets/pixel_icons.dart';
 import '../domain/auth_validators.dart';
 import 'auth_controller.dart';
 import 'widgets/auth_message_banner.dart';
 import 'widgets/email_field.dart';
 import 'widgets/password_field.dart';
 import 'widgets/pixel_logo.dart';
+import '../../../core/widgets/pixel_icon.dart';
 
 /// Account creation: e-mail, password and an optional nickname. On success
 /// the user is signed in and the router redirects to `/map`.
@@ -80,7 +82,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       title: 'Crear cuenta',
       leading: IconButton(
         tooltip: 'Volver',
-        icon: const Icon(Icons.arrow_back),
+        icon: const PixelIcon(PixelIcons.arrowBack),
         onPressed: auth.loading ? null : _goToLogin,
       ),
       body: SingleChildScrollView(
@@ -143,8 +145,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Apodo (opcional)',
                     hintText: 'Cómo te verán en el juego',
-                    prefixIcon: Icon(
-                      Icons.badge_outlined,
+                    prefixIcon: PixelIcon(
+                      PixelIcons.badge,
                       color: AppColors.textMuted,
                     ),
                   ),
@@ -153,7 +155,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 PixelButton(
                   key: RegisterScreen.submitKey,
                   label: 'Crear cuenta',
-                  icon: Icons.person_add_alt_1,
+                  icon: PixelIcons.personAdd,
                   loading: auth.loading,
                   onPressed: _submit,
                 ),

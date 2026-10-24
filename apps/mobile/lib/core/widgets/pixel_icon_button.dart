@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/theme.dart';
 import 'pixel_circle_painter.dart';
 import 'pixel_frame_painter.dart';
+import 'pixel_icon.dart';
 
 /// Circular pixel-art icon button with no visible label (music, help, ...).
 ///
@@ -19,20 +20,18 @@ class PixelIconButton extends StatefulWidget {
     required this.onPressed,
     this.toggled,
     this.size = minSize,
-    this.iconSize = 22,
   });
 
   /// Minimum touch target.
   static const double minSize = 48;
 
-  final IconData icon;
+  final PixelIconData icon;
   final String semanticLabel;
   final VoidCallback? onPressed;
   final bool? toggled;
 
   /// Total square size, including the block reserved for the slab.
   final double size;
-  final double iconSize;
 
   @override
   State<PixelIconButton> createState() => _PixelIconButtonState();
@@ -88,11 +87,7 @@ class _PixelIconButtonState extends State<PixelIconButton> {
                     bottom: pressed ? 0 : block,
                   ),
                   child: Center(
-                    child: Icon(
-                      widget.icon,
-                      size: widget.iconSize,
-                      color: foreground,
-                    ),
+                    child: PixelIcon(widget.icon, color: foreground),
                   ),
                 ),
               ),

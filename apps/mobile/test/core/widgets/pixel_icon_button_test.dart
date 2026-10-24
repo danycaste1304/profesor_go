@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:profesor_go/app/theme.dart';
 import 'package:profesor_go/core/widgets/pixel_icon_button.dart';
+import 'package:profesor_go/core/widgets/pixel_icons.dart';
 
 void main() {
   Widget wrap(Widget child) => MaterialApp(
@@ -18,7 +19,7 @@ void main() {
     await tester.pumpWidget(
       wrap(
         PixelIconButton(
-          icon: Icons.music_note,
+          icon: PixelIcons.musicNote,
           semanticLabel: 'Música',
           onPressed: () => taps++,
         ),
@@ -34,7 +35,7 @@ void main() {
     await tester.pumpWidget(
       wrap(
         const PixelIconButton(
-          icon: Icons.music_note,
+          icon: PixelIcons.musicNote,
           semanticLabel: 'Música',
           onPressed: null,
         ),
@@ -50,7 +51,7 @@ void main() {
     await tester.pumpWidget(
       wrap(
         PixelIconButton(
-          icon: Icons.music_off,
+          icon: PixelIcons.musicOff,
           semanticLabel: 'Música',
           toggled: true,
           onPressed: () {},

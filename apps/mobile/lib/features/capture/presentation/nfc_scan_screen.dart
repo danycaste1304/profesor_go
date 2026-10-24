@@ -243,7 +243,7 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
         return const _ScanningView();
       case _ScanStatus.choosing:
         return const _MessageView(
-          icon: Icons.credit_card,
+          icon: PixelIcons.creditCard,
           iconColor: AppColors.accentAlt,
           title: 'Elige una tarjeta demo',
           message:
@@ -251,7 +251,7 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
         );
       case _ScanStatus.unsupported:
         return _MessageView(
-          icon: Icons.nfc,
+          icon: PixelIcons.nfc,
           title: 'Este dispositivo no tiene NFC',
           message: _showDemoPicker
               ? 'Elige una tarjeta de demostración para probar el juego.'
@@ -259,7 +259,7 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
         );
       case _ScanStatus.disabled:
         return _MessageView(
-          icon: Icons.settings,
+          icon: PixelIcons.settings,
           title: 'Activa el NFC en los ajustes',
           message: AppException.messages[AppException.nfcDisabled]!,
           onRetry: _begin,
@@ -270,14 +270,14 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
         );
       case _ScanStatus.offline:
         return _MessageView(
-          icon: Icons.wifi_off,
+          icon: PixelIcons.wifiOff,
           title: 'Sin conexión',
           message: AppException.messages[AppException.noInternet]!,
           onRetry: _begin,
         );
       case _ScanStatus.error:
         return _MessageView(
-          icon: Icons.error_outline,
+          icon: PixelIcons.error,
           title: 'No se pudo empezar',
           message:
               _errorMessage ?? AppException.messages[AppException.unknown]!,
@@ -349,7 +349,7 @@ class _ScanningViewState extends State<_ScanningView>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.nfc, color: AppColors.accentAlt),
+              const PixelIcon(PixelIcons.nfc, color: AppColors.accentAlt),
               const SizedBox(width: 8),
               Text(
                 'BUSCANDO TARJETA',
@@ -397,7 +397,7 @@ class _MessageView extends StatelessWidget {
     this.onOpenSettings,
   });
 
-  final IconData icon;
+  final PixelIconData icon;
   final String title;
   final String message;
   final Color iconColor;
@@ -416,7 +416,7 @@ class _MessageView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 56, color: iconColor),
+            PixelIcon(icon, color: iconColor),
             const SizedBox(height: 16),
             Text(
               title,
@@ -433,7 +433,7 @@ class _MessageView extends StatelessWidget {
               const SizedBox(height: 24),
               PixelButton(
                 label: 'Abrir ajustes de NFC',
-                icon: Icons.settings,
+                icon: PixelIcons.settings,
                 onPressed: () => unawaited(onOpenSettings!()),
               ),
             ],
@@ -441,7 +441,7 @@ class _MessageView extends StatelessWidget {
               SizedBox(height: onOpenSettings == null ? 24 : 12),
               PixelButton(
                 label: 'Reintentar',
-                icon: Icons.refresh,
+                icon: PixelIcons.refresh,
                 variant: onOpenSettings == null
                     ? PixelButtonVariant.primary
                     : PixelButtonVariant.secondary,
@@ -475,8 +475,6 @@ class _DemoTagPicker extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Icon(Icons.credit_card, color: AppColors.textMuted, size: 20),
-            const SizedBox(width: 8),
             Text(
               'TARJETAS DEMO',
               style: textTheme.labelLarge?.copyWith(color: AppColors.textMuted),
@@ -493,7 +491,10 @@ class _DemoTagPicker extends StatelessWidget {
               onTap: enabled ? () => unawaited(onPick(tag)) : null,
               child: Row(
                 children: [
-                  const Icon(Icons.credit_card, color: AppColors.accentAlt),
+                  const PixelIcon(
+                    PixelIcons.creditCard,
+                    color: AppColors.accentAlt,
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(tag.label, style: textTheme.titleMedium),

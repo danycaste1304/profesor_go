@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/widgets/pixel_card.dart';
+import '../../../../core/widgets/pixel_icon.dart';
+import '../../../../core/widgets/pixel_icons.dart';
 
 enum AuthBannerKind { error, info }
 
@@ -21,9 +23,9 @@ class AuthMessageBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (Color color, IconData icon) = switch (kind) {
-      AuthBannerKind.error => (AppColors.danger, Icons.error_outline),
-      AuthBannerKind.info => (AppColors.accentAlt, Icons.info_outline),
+    final (Color color, PixelIconData icon) = switch (kind) {
+      AuthBannerKind.error => (AppColors.danger, PixelIcons.error),
+      AuthBannerKind.info => (AppColors.accentAlt, PixelIcons.info),
     };
     return Semantics(
       liveRegion: true,
@@ -33,7 +35,7 @@ class AuthMessageBanner extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(12, 10, 4, 10),
         child: Row(
           children: [
-            Icon(icon, color: color, size: 26),
+            PixelIcon(icon, color: color),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
@@ -45,7 +47,7 @@ class AuthMessageBanner extends StatelessWidget {
               IconButton(
                 onPressed: onDismiss,
                 tooltip: 'Cerrar',
-                icon: const Icon(Icons.close),
+                icon: const PixelIcon(PixelIcons.close),
                 iconSize: 22,
                 constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
               ),

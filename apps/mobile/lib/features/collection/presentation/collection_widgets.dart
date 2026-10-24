@@ -20,20 +20,16 @@ class CachedDataBanner extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: const BoxDecoration(
           color: AppColors.surfaceAlt,
-          border: Border(
-            bottom: BorderSide(color: AppColors.border, width: 2),
-          ),
+          border: Border(bottom: BorderSide(color: AppColors.border, width: 2)),
         ),
         child: Row(
           children: [
-            const Icon(Icons.cloud_off, size: 18, color: AppColors.textMuted),
+            const PixelIcon(PixelIcons.cloudOff, color: AppColors.textMuted),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 text,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
+                style: Theme.of(context).textTheme.bodyMedium
                     ?.copyWith(color: AppColors.textMuted),
               ),
             ),
@@ -88,17 +84,13 @@ class RarityMiniBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final rarity = progress.rarity;
     final color = AppTheme.rarityColor(rarity);
-    final labelStyle = TextStyle(
-      color: color,
-      fontSize: 18,
-      letterSpacing: 0,
-    );
+    final labelStyle = TextStyle(color: color, fontSize: 18, letterSpacing: 0);
     return Semantics(
       label: '${rarity.label}: ${progress.captured} de ${progress.total}',
       excludeSemantics: true,
       child: Row(
         children: [
-          Icon(AppTheme.rarityIcon(rarity), size: 16, color: color),
+          PixelIcon(AppTheme.rarityIcon(rarity), color: color),
           const SizedBox(width: 6),
           SizedBox(
             width: 96,
@@ -189,9 +181,8 @@ class RarityFilterChip extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      r == null ? Icons.grid_view : AppTheme.rarityIcon(r),
-                      size: 16,
+                    PixelIcon(
+                      r == null ? PixelIcons.grid : AppTheme.rarityIcon(r),
                       color: selected ? textColor : AppColors.textMuted,
                     ),
                     const SizedBox(width: 6),

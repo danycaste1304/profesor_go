@@ -15,11 +15,13 @@ import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/pixel_button.dart';
 import '../../../core/widgets/pixel_card.dart';
 import '../../../core/widgets/pixel_frame_painter.dart';
+import '../../../core/widgets/pixel_icons.dart';
 import '../../../core/widgets/pixel_pill.dart';
 import '../../../core/widgets/progress_bar.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../avatar/avatar_style.dart';
 import '../../map/presentation/widgets/avatar.dart';
+import '../../../core/widgets/pixel_icon.dart';
 
 /// Keep in sync with `version:` in pubspec.yaml (no package_info_plus to
 /// avoid an extra dependency).
@@ -204,7 +206,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   if (isAdmin)
                                     const PixelPill(
                                       label: 'Admin',
-                                      icon: Icons.shield_outlined,
+                                      icon: PixelIcons.shield,
                                       color: AppColors.accentText,
                                       tinted: true,
                                       semanticLabel: 'Admin',
@@ -212,7 +214,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   if (AppConfig.isDemoMode)
                                     const PixelPill(
                                       label: 'Modo demo',
-                                      icon: Icons.science_outlined,
+                                      icon: PixelIcons.flask,
                                       color: AppColors.accentAlt,
                                       tinted: true,
                                       semanticLabel: 'Modo demo',
@@ -360,7 +362,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 PixelButton(
                   key: ProfileScreen.avatarSurpriseKey,
                   label: 'Sorpréndeme',
-                  icon: Icons.auto_awesome,
+                  icon: PixelIcons.sparkles,
                   variant: PixelButtonVariant.secondary,
                   onPressed: () => unawaited(
                     _updateAvatar(
@@ -392,8 +394,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         const SizedBox(height: 10),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.emoji_events,
+                            const PixelIcon(
+                              PixelIcons.trophy,
                               color: AppColors.success,
                             ),
                             const SizedBox(width: 8),
@@ -425,7 +427,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 PixelButton(
                   key: ProfileScreen.collectionKey,
                   label: 'Ver Profedex',
-                  icon: Icons.menu_book,
+                  icon: PixelIcons.book,
                   variant: PixelButtonVariant.secondary,
                   onPressed: () => context.go(AppRoutes.collection),
                 ),
@@ -436,7 +438,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           PixelButton(
             key: ProfileScreen.logoutKey,
             label: 'Cerrar sesión',
-            icon: Icons.logout,
+            icon: PixelIcons.logout,
             variant: PixelButtonVariant.danger,
             loading: auth.loading,
             onPressed: _signOut,
@@ -450,10 +452,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 children: [
                   Row(
                     children: [
-                      const Icon(
-                        Icons.build_outlined,
+                      const PixelIcon(
+                        PixelIcons.build,
                         color: AppColors.accentAlt,
-                        size: 20,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -477,7 +478,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   PixelButton(
                     key: ProfileScreen.resetDemoKey,
                     label: 'Reiniciar Profedex demo',
-                    icon: Icons.restart_alt,
+                    icon: PixelIcons.restart,
                     variant: PixelButtonVariant.secondary,
                     loading: _resetting,
                     onPressed: _resetDemoProgress,
@@ -633,7 +634,7 @@ class _InlineError extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Icon(Icons.error_outline, color: AppColors.danger),
+        const PixelIcon(PixelIcons.error, color: AppColors.danger),
         const SizedBox(width: 8),
         Expanded(
           child: Text(message, style: Theme.of(context).textTheme.bodyMedium),

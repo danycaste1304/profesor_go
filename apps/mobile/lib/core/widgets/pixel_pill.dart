@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
 import 'pixel_frame_painter.dart';
+import 'pixel_icon.dart';
 
 /// Pixel-art pill: icon + uppercase label on a [color] face, framed like
 /// [PixelCard] and [PixelButton] (stepped corners, no shadow). Solid by
@@ -31,7 +32,7 @@ class PixelPill extends StatelessWidget {
   static const bool tintedStyleEnabled = true;
 
   final String label;
-  final IconData icon;
+  final PixelIconData icon;
 
   /// Face color in the solid variant; frame, icon and label color in the
   /// tinted one.
@@ -79,7 +80,7 @@ class PixelPill extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: fontSize, color: foreground),
+            PixelIcon(icon, color: foreground),
             const SizedBox(width: 6),
             Text(
               label.toUpperCase(),

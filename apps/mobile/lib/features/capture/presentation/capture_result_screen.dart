@@ -172,14 +172,14 @@ class _SuccessActions extends StatelessWidget {
         if (args.collectionCompleted) ...[
           PixelButton(
             label: '¡Profedex completada!',
-            icon: Icons.emoji_events,
+            icon: PixelIcons.trophy,
             onPressed: () => context.go(AppRoutes.completion),
           ),
           const SizedBox(height: 10),
         ],
         PixelButton(
           label: 'Ver Profedex',
-          icon: Icons.menu_book,
+          icon: PixelIcons.book,
           variant: args.collectionCompleted
               ? PixelButtonVariant.secondary
               : PixelButtonVariant.primary,
@@ -188,7 +188,7 @@ class _SuccessActions extends StatelessWidget {
         const SizedBox(height: 10),
         PixelButton(
           label: 'Volver al mapa',
-          icon: Icons.map_outlined,
+          icon: PixelIcons.map,
           variant: PixelButtonVariant.secondary,
           onPressed: () => context.go(AppRoutes.map),
         ),
@@ -210,7 +210,8 @@ class _FailureBody extends StatelessWidget {
     return Column(
       children: [
         RetroDialogue(
-          text: '¡${professor.displayName} se escapó! Vuelve a leer la tarjeta.',
+          text:
+              '¡${professor.displayName} se escapó! Vuelve a leer la tarjeta.',
           minHeight: 42,
         ),
         const SizedBox(height: 20),
@@ -287,13 +288,13 @@ class _FailureActions extends StatelessWidget {
       children: [
         PixelButton(
           label: 'Volver al mapa',
-          icon: Icons.map_outlined,
+          icon: PixelIcons.map,
           onPressed: () => context.go(AppRoutes.map),
         ),
         const SizedBox(height: 10),
         PixelButton(
           label: 'Leer otra tarjeta',
-          icon: Icons.nfc,
+          icon: PixelIcons.nfc,
           variant: PixelButtonVariant.secondary,
           onPressed: () => context.go(AppRoutes.scan),
         ),

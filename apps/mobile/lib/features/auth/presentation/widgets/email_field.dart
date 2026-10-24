@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
+import '../../../../core/widgets/pixel_icon.dart';
+import '../../../../core/widgets/pixel_icons.dart';
 
 /// E-mail input with the right keyboard, autofill and no capitalization.
 class EmailField extends StatelessWidget {
@@ -32,7 +34,10 @@ class EmailField extends StatelessWidget {
       decoration: const InputDecoration(
         labelText: 'Correo',
         hintText: 'tu@correo.com',
-        prefixIcon: Icon(Icons.alternate_email, color: AppColors.textMuted),
+        prefixIcon: PixelIcon(
+          PixelIcons.alternateEmail,
+          color: AppColors.textMuted,
+        ),
       ),
     );
   }

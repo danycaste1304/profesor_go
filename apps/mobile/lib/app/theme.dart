@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../core/models/rarity.dart';
+import '../core/widgets/pixel_icon.dart';
+import '../core/widgets/pixel_icons.dart';
 
 /// Bright outdoor palette with the crisp frames of a handheld adventure.
 abstract final class AppColors {
@@ -54,11 +56,11 @@ abstract final class AppTheme {
   };
 
   /// Icon that accompanies the rarity color (never color-only).
-  static IconData rarityIcon(Rarity rarity) => switch (rarity) {
-    Rarity.common => Icons.circle_outlined,
-    Rarity.rare => Icons.star_border,
-    Rarity.epic => Icons.star,
-    Rarity.legendary => Icons.auto_awesome,
+  static PixelIconData rarityIcon(Rarity rarity) => switch (rarity) {
+    Rarity.common => PixelIcons.rarityCommon,
+    Rarity.rare => PixelIcons.rarityRare,
+    Rarity.epic => PixelIcons.rarityEpic,
+    Rarity.legendary => PixelIcons.rarityLegendary,
   };
 
   /// Material's default tracking (0.1 to 0.5 px) widens the pixel fonts, so
@@ -129,9 +131,7 @@ abstract final class AppTheme {
         titleLarge: _display(textTheme.titleLarge, 30),
         labelLarge: _display(textTheme.labelLarge, 22),
         // Other headers and paragraphs: body font.
-        titleMedium: textTheme.titleMedium?.copyWith(
-          fontSize: 20,
-        ),
+        titleMedium: textTheme.titleMedium?.copyWith(fontSize: 20),
         bodyLarge: textTheme.bodyLarge?.copyWith(fontSize: 22, height: 1.1),
         bodyMedium: textTheme.bodyMedium?.copyWith(fontSize: 22, height: 1),
       ),

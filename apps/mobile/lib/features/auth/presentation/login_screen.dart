@@ -8,12 +8,14 @@ import '../../../core/config/app_config.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/pixel_button.dart';
 import '../../../core/widgets/pixel_card.dart';
+import '../../../core/widgets/pixel_icons.dart';
 import '../domain/auth_validators.dart';
 import 'auth_controller.dart';
 import 'widgets/auth_message_banner.dart';
 import 'widgets/email_field.dart';
 import 'widgets/password_field.dart';
 import 'widgets/pixel_logo.dart';
+import '../../../core/widgets/pixel_icon.dart';
 
 /// E-mail + password sign-in. On success the router redirects to `/map`.
 class LoginScreen extends ConsumerStatefulWidget {
@@ -97,8 +99,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       children: [
                         Row(
                           children: [
-                            const Icon(
-                              Icons.science_outlined,
+                            const PixelIcon(
+                              PixelIcons.flask,
                               color: AppColors.accentAlt,
                             ),
                             const SizedBox(width: 10),
@@ -117,7 +119,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             onPressed: auth.loading
                                 ? null
                                 : _fillDemoCredentials,
-                            icon: const Icon(Icons.bolt, size: 20),
+                            icon: const PixelIcon(PixelIcons.bolt),
                             label: const Text('Usar jugador demo'),
                           ),
                         ),
@@ -159,7 +161,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 PixelButton(
                   key: LoginScreen.submitKey,
                   label: 'Entrar',
-                  icon: Icons.login,
+                  icon: PixelIcons.login,
                   loading: auth.loading,
                   onPressed: _submit,
                 ),

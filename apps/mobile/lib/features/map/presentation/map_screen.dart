@@ -152,7 +152,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                             children: [
                               PixelButton(
                                 label: 'Capturar',
-                                icon: Icons.nfc,
+                                icon: PixelIcons.nfc,
                                 onPressed: online
                                     ? () => context.push(AppRoutes.scan)
                                     : null,
@@ -175,7 +175,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                                   Expanded(
                                     child: PixelButton(
                                       label: 'Profedex',
-                                      icon: Icons.menu_book,
+                                      icon: PixelIcons.book,
                                       variant: PixelButtonVariant.secondary,
                                       onPressed: () =>
                                           context.push(AppRoutes.collection),
@@ -185,7 +185,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                                   Expanded(
                                     child: PixelButton(
                                       label: 'Perfil',
-                                      icon: Icons.person,
+                                      icon: PixelIcons.person,
                                       variant: PixelButtonVariant.secondary,
                                       onPressed: () =>
                                           context.push(AppRoutes.profile),
@@ -245,7 +245,7 @@ class _StatusPills extends StatelessWidget {
       children: [
         const PixelPill(
           label: 'Campus USFQ',
-          icon: Icons.location_on,
+          icon: PixelIcons.pin,
           color: AppColors.danger,
           tinted: true,
         ),
@@ -254,7 +254,7 @@ class _StatusPills extends StatelessWidget {
           liveRegion: true,
           child: PixelPill(
             label: label,
-            icon: online ? Icons.wifi : Icons.wifi_off,
+            icon: online ? PixelIcons.wifi : PixelIcons.wifiOff,
             color: color,
             tinted: true,
           ),
@@ -293,7 +293,7 @@ class _ProgressChip extends StatelessWidget {
     } else if (progressAsync.hasError) {
       child = Row(
         children: [
-          const Icon(Icons.error_outline, color: AppColors.danger, size: 20),
+          const PixelIcon(PixelIcons.error, color: AppColors.danger),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
@@ -333,7 +333,7 @@ class _CompletionBanner extends StatelessWidget {
       semanticLabel: 'Profedex completada',
       child: Row(
         children: [
-          const Icon(Icons.emoji_events, color: AppColors.accentText, size: 28),
+          const PixelIcon(PixelIcons.trophy, color: AppColors.accentText),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
@@ -350,7 +350,7 @@ class _CompletionBanner extends StatelessWidget {
           ),
           IconButton(
             tooltip: 'Cerrar',
-            icon: const Icon(Icons.close),
+            icon: const PixelIcon(PixelIcons.close),
             onPressed: onDismiss,
           ),
         ],
@@ -387,7 +387,7 @@ class _LocationNotice extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.location_off, color: AppColors.danger),
+              const PixelIcon(PixelIcons.locationOff, color: AppColors.danger),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -404,7 +404,7 @@ class _LocationNotice extends StatelessWidget {
                 Expanded(
                   child: PixelButton(
                     label: 'Abrir ajustes',
-                    icon: Icons.settings,
+                    icon: PixelIcons.settings,
                     variant: PixelButtonVariant.secondary,
                     onPressed: onOpenSettings,
                     minHeight: 48,
@@ -415,7 +415,7 @@ class _LocationNotice extends StatelessWidget {
               Expanded(
                 child: PixelButton(
                   label: 'Reintentar',
-                  icon: Icons.refresh,
+                  icon: PixelIcons.refresh,
                   variant: PixelButtonVariant.secondary,
                   onPressed: onRetry,
                   minHeight: 48,
@@ -470,7 +470,9 @@ class _MapPanel extends ConsumerWidget {
                 left: 8,
                 top: 150,
                 child: _OverlayChip(
-                  icon: state.isChecking ? Icons.gps_not_fixed : Icons.gps_off,
+                  icon: state.isChecking
+                      ? PixelIcons.gpsNotFixed
+                      : PixelIcons.gpsOff,
                   text: statusText,
                 ),
               ),
@@ -484,7 +486,7 @@ class _MapPanel extends ConsumerWidget {
                   // the demo path.
                   if (state.canSimulate) ...[
                     PixelIconButton(
-                      icon: Icons.directions_walk,
+                      icon: PixelIcons.walk,
                       semanticLabel: 'Simular movimiento',
                       toggled: state.simulating,
                       onPressed: () => ref
@@ -494,7 +496,9 @@ class _MapPanel extends ConsumerWidget {
                     const SizedBox(width: 8),
                   ],
                   PixelIconButton(
-                    icon: music.enabled ? Icons.music_note : Icons.music_off,
+                    icon: music.enabled
+                        ? PixelIcons.musicNote
+                        : PixelIcons.musicOff,
                     semanticLabel: 'Música del juego',
                     toggled: music.enabled,
                     onPressed: music.busy
@@ -530,7 +534,7 @@ class _MapPanel extends ConsumerWidget {
 class _OverlayChip extends StatelessWidget {
   const _OverlayChip({required this.icon, required this.text});
 
-  final IconData icon;
+  final PixelIconData icon;
   final String text;
 
   @override
@@ -545,7 +549,7 @@ class _OverlayChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: AppColors.accentAlt),
+          PixelIcon(icon, color: AppColors.accentAlt),
           const SizedBox(width: 6),
           Text(
             text,

@@ -89,11 +89,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.lock_outline,
-                  size: 64,
-                  color: AppColors.textMuted,
-                ),
+                const PixelIcon(PixelIcons.lock, color: AppColors.textMuted),
                 const SizedBox(height: 14),
                 Text(
                   'Aún quedan profesores por descubrir',
@@ -112,7 +108,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen>
         ),
         bottomBar: PixelButton(
           label: 'Ver Profedex',
-          icon: Icons.menu_book,
+          icon: PixelIcons.book,
           onPressed: () => context.go(AppRoutes.collection),
         ),
       );
@@ -128,13 +124,13 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen>
         children: [
           PixelButton(
             label: 'Volver al mapa',
-            icon: Icons.map,
+            icon: PixelIcons.map,
             onPressed: () => context.go(AppRoutes.map),
           ),
           const SizedBox(height: 10),
           PixelButton(
             label: 'Ver mi Profedex',
-            icon: Icons.menu_book,
+            icon: PixelIcons.book,
             variant: PixelButtonVariant.secondary,
             onPressed: () => context.go(AppRoutes.collection),
           ),
@@ -191,7 +187,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen>
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           _InfoRow(
-                            icon: Icons.event_available,
+                            icon: PixelIcons.eventAvailable,
                             label: 'Completada el',
                             value: _completedAt == null
                                 ? 'Fecha no disponible'
@@ -283,7 +279,7 @@ class _InfoRow extends StatelessWidget {
     required this.value,
   });
 
-  final IconData icon;
+  final PixelIconData icon;
   final String label;
   final String value;
 
@@ -293,7 +289,7 @@ class _InfoRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: AppColors.success, size: 22),
+        PixelIcon(icon, color: AppColors.success),
         const SizedBox(width: 10),
         // Wrap: the value drops to its own line on narrow screens.
         Expanded(
@@ -362,9 +358,8 @@ class _AchievementSection extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.workspace_premium_rounded,
-                  size: 68,
+                child: const PixelIcon(
+                  PixelIcons.premium,
                   color: AppColors.accentText,
                 ),
               ),

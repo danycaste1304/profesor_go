@@ -75,13 +75,14 @@ class _EncounterErrorScreen extends StatelessWidget {
       title: 'Encuentro',
       body: ErrorView(
         message: message,
-        icon: Icons.search_off,
+        icon: PixelIcons.searchOff,
         retryLabel: 'Leer otra tarjeta',
+        retryIcon: PixelIcons.nfc,
         onRetry: () => context.go(AppRoutes.scan),
       ),
       bottomBar: PixelButton(
         label: 'Volver al mapa',
-        icon: Icons.map_outlined,
+        icon: PixelIcons.map,
         variant: PixelButtonVariant.secondary,
         onPressed: () => context.go(AppRoutes.map),
       ),
@@ -517,7 +518,7 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
         actions: [
           PixelButton(
             label: 'Volver al mapa',
-            icon: Icons.map_outlined,
+            icon: PixelIcons.map,
             expand: false,
             onPressed: () {
               Navigator.of(dialogContext).pop();
@@ -573,7 +574,7 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
       padding: EdgeInsets.zero,
       leading: IconButton(
         tooltip: 'Salir',
-        icon: const Icon(Icons.close),
+        icon: const PixelIcon(PixelIcons.close),
         onPressed: state.phase == EncounterPhase.idle ? _confirmLeave : null,
       ),
       body: Column(
@@ -614,8 +615,8 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.timer_outlined,
+                            PixelIcon(
+                              PixelIcons.timer,
                               color: urgent
                                   ? AppColors.danger
                                   : AppColors.accentAlt,
@@ -846,10 +847,9 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
               child: IgnorePointer(
                 child: Column(
                   children: [
-                    Icon(
-                      Icons.keyboard_double_arrow_up,
+                    PixelIcon(
+                      PixelIcons.doubleArrowUp,
                       color: AppColors.accent,
-                      size: 32 + math.sin(_bob.value * 2 * math.pi) * 3,
                     ),
                     RetroDialogue(
                       text: _introLineVisible

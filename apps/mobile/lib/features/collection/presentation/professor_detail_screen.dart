@@ -44,7 +44,7 @@ class ProfessorDetailScreen extends ConsumerWidget {
         CollectionData() =>
           professor == null
               ? ErrorView(
-                  icon: Icons.person_search,
+                  icon: PixelIcons.personSearch,
                   message: 'No encontramos a este profesor.',
                   onRetry: () => invalidateCollection(ref),
                 )
@@ -129,10 +129,9 @@ class _ProfessorDetail extends StatelessWidget {
                 : Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(
-                        Icons.nfc,
+                      const PixelIcon(
+                        PixelIcons.nfc,
                         color: AppColors.accentAlt,
-                        size: 28,
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -165,19 +164,19 @@ class _ProfessorDetail extends StatelessWidget {
                   value: professor.rarity.label,
                 ),
                 _StatRow(
-                  icon: Icons.percent,
+                  icon: PixelIcons.percent,
                   label: 'Prob. base de captura',
                   value: '${(professor.baseCaptureRate * 100).round()} %',
                 ),
                 if (capture case final c?) ...[
                   _StatRow(
-                    icon: Icons.event_available,
+                    icon: PixelIcons.eventAvailable,
                     iconColor: AppColors.success,
                     label: 'Capturado el',
                     value: formatDateTime(c.capturedAt),
                   ),
                   _StatRow(
-                    icon: Icons.sports_baseball,
+                    icon: PixelIcons.baseball,
                     iconColor: AppColors.success,
                     label: 'Lanzamiento',
                     value: c.throwQuality.label,
@@ -200,7 +199,7 @@ class _StatRow extends StatelessWidget {
     this.iconColor = AppColors.accentAlt,
   });
 
-  final IconData icon;
+  final PixelIconData icon;
   final Color iconColor;
   final String label;
   final String value;
@@ -213,7 +212,7 @@ class _StatRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: iconColor),
+          PixelIcon(icon, color: iconColor),
           const SizedBox(width: 10),
           // Wrap: the value drops to its own line on narrow screens.
           Expanded(

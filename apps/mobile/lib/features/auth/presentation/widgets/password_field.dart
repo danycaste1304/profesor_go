@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
+import '../../../../core/widgets/pixel_icon.dart';
+import '../../../../core/widgets/pixel_icons.dart';
 
 /// Password input with a show / hide toggle (min 48x48 target).
 class PasswordField extends StatefulWidget {
@@ -45,13 +47,14 @@ class _PasswordFieldState extends State<PasswordField> {
       style: const TextStyle(fontSize: 17, color: AppColors.text),
       decoration: InputDecoration(
         labelText: widget.label,
-        prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textMuted),
+        prefixIcon: const PixelIcon(
+          PixelIcons.lock,
+          color: AppColors.textMuted,
+        ),
         suffixIcon: IconButton(
           tooltip: _obscure ? 'Mostrar contraseña' : 'Ocultar contraseña',
-          icon: Icon(
-            _obscure
-                ? Icons.visibility_outlined
-                : Icons.visibility_off_outlined,
+          icon: PixelIcon(
+            _obscure ? PixelIcons.visibility : PixelIcons.visibilityOff,
             color: AppColors.textMuted,
           ),
           constraints: const BoxConstraints(minWidth: 48, minHeight: 48),

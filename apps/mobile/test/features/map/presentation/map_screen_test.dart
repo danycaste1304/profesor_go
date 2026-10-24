@@ -16,7 +16,9 @@ import 'package:profesor_go/core/models/models.dart';
 import 'package:profesor_go/core/repositories/mock_professor_repository.dart';
 import 'package:profesor_go/core/repositories/professor_repository.dart';
 import 'package:profesor_go/core/widgets/pixel_button.dart';
+import 'package:profesor_go/core/widgets/pixel_icon.dart';
 import 'package:profesor_go/core/widgets/pixel_icon_button.dart';
+import 'package:profesor_go/core/widgets/pixel_icons.dart';
 import 'package:profesor_go/features/map/domain/campus_map_config.dart';
 import 'package:profesor_go/features/map/presentation/map_controller.dart';
 import 'package:profesor_go/features/map/presentation/map_screen.dart';
@@ -144,6 +146,15 @@ Future<void> tearDownTree(WidgetTester tester, Harness h) async {
   h.router.dispose();
 }
 
+/// The [PixelIconButton] that draws [glyph] (buttons no longer use Material
+/// icons, so `find.byIcon` cannot see them).
+Finder iconButton(PixelIconData glyph) => find.ancestor(
+  of: find.byWidgetPredicate(
+    (widget) => widget is PixelIcon && widget.data == glyph,
+  ),
+  matching: find.byType(PixelIconButton),
+);
+
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
@@ -166,10 +177,7 @@ void main() {
     expect(find.text('30 %'), findsOneWidget);
     expect(find.text('EN LÍNEA'), findsOneWidget);
     expect(find.byType(CampusMap), findsOneWidget);
-    expect(
-      find.widgetWithIcon(PixelIconButton, Icons.directions_walk),
-      findsOneWidget,
-    );
+    expect(iconButton(PixelIcons.walk), findsOneWidget);
     expect(find.text('¡Profedex completada!'), findsNothing);
     expect(find.text(MapScreen.offlineCaptureMessage), findsNothing);
 
@@ -191,15 +199,15 @@ void main() {
     await tester.pumpWidget(h.build());
     await settle(tester);
 
-    expect(find.byIcon(Icons.music_off), findsOneWidget);
-    await tester.tap(find.widgetWithIcon(PixelIconButton, Icons.music_off));
+    expect(iconButton(PixelIcons.musicOff), findsOneWidget);
+    await tester.tap(iconButton(PixelIcons.musicOff));
     await settle(tester);
-    expect(find.byIcon(Icons.music_note), findsOneWidget);
+    expect(iconButton(PixelIcons.musicNote), findsOneWidget);
     expect(music.plays, 1);
 
-    await tester.tap(find.widgetWithIcon(PixelIconButton, Icons.music_note));
+    await tester.tap(iconButton(PixelIcons.musicNote));
     await settle(tester);
-    expect(find.byIcon(Icons.music_off), findsOneWidget);
+    expect(iconButton(PixelIcons.musicOff), findsOneWidget);
     expect(music.pauses, 1);
     await tearDownTree(tester, h);
   });
@@ -293,7 +301,7 @@ void main() {
     await tester.pumpWidget(h.build());
     await settle(tester);
 
-    final toggle = find.widgetWithIcon(PixelIconButton, Icons.directions_walk);
+    final toggle = iconButton(PixelIcons.walk);
     expect(h.location.isWalking, isFalse);
     await tester.tap(toggle);
     await settle(tester);
