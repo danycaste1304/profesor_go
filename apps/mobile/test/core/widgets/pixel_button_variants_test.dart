@@ -15,6 +15,8 @@ void main() {
       const Color.fromARGB(255, 209, 232, 243),
     );
     expect(PixelButtonVariant.secondary.style.foreground, AppColors.text);
+    expect(PixelButtonVariant.neutral.style.face, AppColors.surface);
+    expect(PixelButtonVariant.neutral.style.foreground, AppColors.text);
     expect(PixelButtonVariant.tertiary.style.face, AppColors.accent);
     expect(PixelButtonVariant.danger.style.face, AppColors.dangerFill);
     for (final variant in PixelButtonVariant.values) {
@@ -34,6 +36,7 @@ void main() {
               PixelButton(label: 'Default', onPressed: () {}),
               PixelButton.primary(label: 'Primary', onPressed: () {}),
               PixelButton.secondary(label: 'Secondary', onPressed: () {}),
+              PixelButton.neutral(label: 'Neutral', onPressed: () {}),
               PixelButton.danger(label: 'Danger', onPressed: () {}),
             ],
           ),
@@ -48,6 +51,7 @@ void main() {
       PixelButtonVariant.tertiary,
       PixelButtonVariant.primary,
       PixelButtonVariant.secondary,
+      PixelButtonVariant.neutral,
       PixelButtonVariant.danger,
     ]);
   });

@@ -171,8 +171,21 @@ void main() {
     expect(find.text('CAMPUS USFQ'), findsOneWidget);
     expect(find.text('CAPTURAR'), findsOneWidget);
     expect(captureButton(tester).onPressed, isNotNull);
+    expect(captureButton(tester).variant, PixelButtonVariant.tertiary);
     expect(find.text('PROFEDEX'), findsOneWidget);
+    expect(
+      tester
+          .widget<PixelButton>(find.widgetWithText(PixelButton, 'PROFEDEX'))
+          .variant,
+      PixelButtonVariant.neutral,
+    );
     expect(find.text('PERFIL'), findsOneWidget);
+    expect(
+      tester
+          .widget<PixelButton>(find.widgetWithText(PixelButton, 'PERFIL'))
+          .variant,
+      PixelButtonVariant.neutral,
+    );
     expect(find.text('PROFES CAPTURADOS'), findsOneWidget);
     expect(find.text('30 %'), findsOneWidget);
     expect(find.text('EN LÍNEA'), findsOneWidget);

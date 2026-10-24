@@ -34,7 +34,7 @@ class PixelButtonStyle {
   final double iconGap;
 }
 
-/// The four kinds of [PixelButton]. To restyle a kind, edit its
+/// The kinds of [PixelButton]. To restyle a kind, edit its
 /// [PixelButtonStyle] below: every button of that kind updates.
 enum PixelButtonVariant {
   /// Main action of a screen (e.g. start a capture).
@@ -50,6 +50,18 @@ enum PixelButtonVariant {
   secondary(
     PixelButtonStyle(
       face: Color.fromARGB(255, 209, 232, 243),
+      outline: AppColors.onAccent,
+      foreground: AppColors.text,
+      fontSize: 20,
+      horizontalPadding: 11,
+      iconGap: 7,
+    ),
+  ),
+
+  /// White action used beside the highlighted map action.
+  neutral(
+    PixelButtonStyle(
+      face: AppColors.surface,
       outline: AppColors.onAccent,
       foreground: AppColors.text,
       fontSize: 20,
@@ -86,7 +98,8 @@ enum PixelButtonVariant {
 ///
 /// The frame is drawn by [PixelFramePainter]; colors and sizes come from the
 /// [variant]'s [PixelButtonStyle]. Use [PixelButton.primary], [.secondary],
-/// [.tertiary] or [.danger] to pick the kind, or pass [variant] directly.
+/// [.tertiary], [.neutral] or [.danger] to pick the kind, or pass [variant]
+/// directly.
 class PixelButton extends StatefulWidget {
   const PixelButton({
     super.key,
@@ -118,6 +131,16 @@ class PixelButton extends StatefulWidget {
     this.expand = true,
     this.minHeight = AppTheme.minButtonHeight,
   }) : variant = PixelButtonVariant.secondary;
+
+  const PixelButton.neutral({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.loading = false,
+    this.icon,
+    this.expand = true,
+    this.minHeight = AppTheme.minButtonHeight,
+  }) : variant = PixelButtonVariant.neutral;
 
   const PixelButton.tertiary({
     super.key,

@@ -153,7 +153,6 @@ class _MapScreenState extends ConsumerState<MapScreen>
                               PixelButton(
                                 label: 'Capturar',
                                 icon: PixelIcons.nfc,
-                                variant: PixelButtonVariant.primary,
                                 onPressed: online
                                     ? () => context.push(AppRoutes.scan)
                                     : null,
@@ -177,6 +176,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                                     child: PixelButton(
                                       label: 'Profedex',
                                       icon: PixelIcons.book,
+                                      variant: PixelButtonVariant.neutral,
                                       onPressed: () =>
                                           context.push(AppRoutes.collection),
                                     ),
@@ -186,7 +186,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                                     child: PixelButton(
                                       label: 'Perfil',
                                       icon: PixelIcons.person,
-                                      variant: PixelButtonVariant.secondary,
+                                      variant: PixelButtonVariant.neutral,
                                       onPressed: () =>
                                           context.push(AppRoutes.profile),
                                     ),
