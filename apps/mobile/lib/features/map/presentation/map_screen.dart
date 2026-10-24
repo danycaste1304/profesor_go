@@ -447,7 +447,7 @@ class _MapPanel extends ConsumerWidget {
     } else if (state.isAvailable && state.current == null) {
       statusText = 'Esperando señal GPS…';
     } else if (state.isAvailable && !state.isInsideCampus) {
-      statusText = 'Estás fuera del campus';
+      statusText = 'Ubicación fuera del mapa actual';
     } else {
       statusText = null;
     }

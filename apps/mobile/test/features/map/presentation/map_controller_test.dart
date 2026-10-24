@@ -62,8 +62,7 @@ void main() {
     state = container.read(mapControllerProvider);
     expect(state.current, outside);
     expect(state.isInsideCampus, isFalse);
-    expect(state.mapOffset!.dx, inInclusiveRange(0, CampusConfig.mapWidth));
-    expect(state.mapOffset!.dy, inInclusiveRange(0, CampusConfig.mapHeight));
+    expect(state.mapOffset, isNull);
   });
 
   test('denied / deniedForever / serviceDisabled expose Spanish messages',

@@ -1,17 +1,22 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
+import '../../../../core/widgets/pixel_icon_button.dart';
+import '../../../../core/widgets/pixel_icons.dart';
 import '../../../avatar/avatar_style.dart';
 import '../../domain/campus_map_config.dart';
 import 'avatar.dart';
+import 'fair_landmarks_painter.dart';
 
 /// Illustrated campus map with the player's avatar layered on top.
 ///
 /// The map is laid out in logical units ([CampusMapConfig.mapWidth] x
-/// [CampusMapConfig.mapHeight]), scaled with a [FittedBox] so the campus
-/// covers the available space, and wrapped in an [InteractiveViewer]
-/// for pinch-zoom and panning. [avatarOffset] is expressed in those logical
-/// units (use [CampusMapConfig.toMapOffset]); `null` hides the avatar.
+/// [CampusMapConfig.mapHeight]). Its camera follows [avatarOffset], while
+/// [InteractiveViewer] allows pinch-zoom and panning. Manual movement pauses
+/// following until the player taps the recenter control. `null` hides the
+/// avatar.
 ///
 /// Background: [CampusMapConfig.backgroundAssetPath] when set and loadable,
 /// otherwise the built-in [PixelCampusPainter].
@@ -49,12 +54,30 @@ class CampusMap extends StatefulWidget {
   State<CampusMap> createState() => _CampusMapState();
 }
 
-class _CampusMapState extends State<CampusMap> {
+class _CampusMapState extends State<CampusMap>
+    with SingleTickerProviderStateMixin {
   /// Asset paths that failed to load: skipped on later builds so the map does
   /// not flash blank while retrying an image that is known to be missing.
   static final Set<String> _missingAssets = {};
 
   bool _walking = false;
+  late final TransformationController _camera = TransformationController();
+  late final AnimationController _cameraAnimation =
+      AnimationController(vsync: this, duration: widget.moveDuration)
+        ..addListener(
+          () => _camera.value = _cameraTween!.evaluate(_cameraAnimation),
+        );
+  Matrix4Tween? _cameraTween;
+  Size? _viewportSize;
+  bool _following = true;
+  bool _interacting = false;
+
+  @override
+  void dispose() {
+    _cameraAnimation.dispose();
+    _camera.dispose();
+    super.dispose();
+  }
 
   @override
   void didUpdateWidget(CampusMap oldWidget) {
@@ -62,6 +85,66 @@ class _CampusMapState extends State<CampusMap> {
     final from = oldWidget.avatarOffset;
     final to = widget.avatarOffset;
     if (from != null && to != null && from != to) _walking = true;
+    if (oldWidget.config != widget.config || from != to) {
+      _scheduleCameraUpdate(animate: from != null && to != null);
+    }
+  }
+
+  void _scheduleCameraUpdate({required bool animate}) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _moveCamera(animate: animate);
+    });
+  }
+
+  void _moveCamera({required bool animate}) {
+    final viewport = _viewportSize;
+    if (!widget.interactive ||
+        viewport == null ||
+        viewport.isEmpty ||
+        !_following ||
+        _interacting) {
+      return;
+    }
+
+    final mapSize = widget.config.mapSize;
+    final coverScale = math.max(
+      viewport.width / mapSize.width,
+      viewport.height / mapSize.height,
+    );
+    final offset = widget.avatarOffset;
+    final scale = offset == null ? coverScale : coverScale * 1.5;
+    final scaledWidth = mapSize.width * scale;
+    final scaledHeight = mapSize.height * scale;
+
+    double translation(
+      double viewportLength,
+      double contentLength,
+      double? position,
+    ) {
+      if (contentLength <= viewportLength) {
+        return (viewportLength - contentLength) / 2;
+      }
+      final desired = position == null
+          ? (viewportLength - contentLength) / 2
+          : viewportLength / 2 - position * scale;
+      return desired.clamp(viewportLength - contentLength, 0.0);
+    }
+
+    final target = Matrix4.translationValues(
+      translation(viewport.width, scaledWidth, offset?.dx),
+      translation(viewport.height, scaledHeight, offset?.dy),
+      0,
+    )..scaleByDouble(scale, scale, 1, 1);
+
+    _cameraAnimation.stop();
+    if (animate) {
+      _cameraTween = Matrix4Tween(begin: _camera.value.clone(), end: target);
+      _cameraAnimation
+        ..duration = widget.moveDuration
+        ..forward(from: 0);
+    } else {
+      _camera.value = target;
+    }
   }
 
   void _onMoveEnd() {
@@ -103,6 +186,13 @@ class _CampusMapState extends State<CampusMap> {
         clipBehavior: Clip.none,
         children: [
           Positioned.fill(child: _background()),
+          if (config.backgroundAssetPath ==
+              CampusMapConfig.defaultBackgroundAssetPath)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(painter: const FairLandmarksPainter()),
+              ),
+            ),
           if (offset != null)
             AnimatedPositioned(
               key: CampusMap.avatarKey,
@@ -124,29 +214,74 @@ class _CampusMapState extends State<CampusMap> {
       ),
     );
 
-    // The width is pinned to the panel and the height follows the art's ratio:
-    // taller panels leave lawn-colored bars above and below, shorter ones crop
-    // top and bottom. It is never stretched.
-    final fitted = SizedBox.expand(
-      child: FittedBox(
-        fit: BoxFit.fitWidth,
-        clipBehavior: Clip.hardEdge,
-        child: map,
-      ),
-    );
-
     return Semantics(
       label: 'Mapa del campus',
       container: true,
       child: ColoredBox(
         color: PixelCampusPainter._water,
         child: widget.interactive
-            ? InteractiveViewer(
-                minScale: 1,
-                maxScale: widget.maxScale,
-                child: fitted,
+            ? LayoutBuilder(
+                builder: (context, constraints) {
+                  final viewport = constraints.biggest;
+                  if (_viewportSize != viewport) {
+                    _viewportSize = viewport;
+                    _scheduleCameraUpdate(animate: false);
+                  }
+                  final fitScale = math.min(
+                    viewport.width / config.mapWidth,
+                    viewport.height / config.mapHeight,
+                  );
+                  final coverScale = math.max(
+                    viewport.width / config.mapWidth,
+                    viewport.height / config.mapHeight,
+                  );
+
+                  return Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      InteractiveViewer(
+                        transformationController: _camera,
+                        alignment: Alignment.topLeft,
+                        constrained: false,
+                        minScale: fitScale,
+                        maxScale: coverScale * widget.maxScale,
+                        onInteractionStart: (_) {
+                          _interacting = true;
+                          _cameraAnimation.stop();
+                        },
+                        onInteractionUpdate: (_) {
+                          if (_following) {
+                            setState(() => _following = false);
+                          }
+                        },
+                        onInteractionEnd: (_) {
+                          _interacting = false;
+                          if (_following) {
+                            _scheduleCameraUpdate(animate: true);
+                          }
+                        },
+                        child: map,
+                      ),
+                      if (!_following && offset != null)
+                        Positioned(
+                          left: 8,
+                          bottom: 8,
+                          child: PixelIconButton(
+                            icon: PixelIcons.gpsNotFixed,
+                            semanticLabel: 'Centrar en mi ubicación',
+                            onPressed: () {
+                              setState(() => _following = true);
+                              _scheduleCameraUpdate(animate: true);
+                            },
+                          ),
+                        ),
+                    ],
+                  );
+                },
               )
-            : fitted,
+            : SizedBox.expand(
+                child: FittedBox(fit: BoxFit.fitWidth, child: map),
+              ),
       ),
     );
   }

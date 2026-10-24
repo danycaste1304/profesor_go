@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:profesor_go/app/theme.dart';
+import 'package:profesor_go/core/widgets/pixel_icon_button.dart';
 import 'package:profesor_go/features/avatar/avatar_style.dart';
 import 'package:profesor_go/features/map/domain/campus_map_config.dart';
 import 'package:profesor_go/features/map/presentation/widgets/avatar.dart';
@@ -11,6 +12,23 @@ void main() {
     theme: AppTheme.dark(),
     home: Scaffold(body: SizedBox.expand(child: child)),
   );
+
+  Widget wrapViewport(Widget child) => MaterialApp(
+    theme: AppTheme.dark(),
+    home: Scaffold(
+      body: Center(child: SizedBox(width: 360, height: 500, child: child)),
+    ),
+  );
+
+  Offset cameraPosition(WidgetTester tester, Offset mapPosition) {
+    final viewer = tester.widget<InteractiveViewer>(
+      find.byType(InteractiveViewer),
+    );
+    return MatrixUtils.transformPoint(
+      viewer.transformationController!.value,
+      mapPosition,
+    );
+  }
 
   Positioned avatarPositioned(WidgetTester tester) => tester.widget<Positioned>(
     find.descendant(
@@ -104,6 +122,58 @@ void main() {
       tester.widget<PixelAvatar>(find.byType(PixelAvatar)).walking,
       isFalse,
     );
+  });
+
+  testWidgets('camera follows the avatar and can recenter after manual pan', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      wrapViewport(const CampusMap(avatarOffset: Offset(360, 645))),
+    );
+    await tester.pumpAndSettle();
+    var position = cameraPosition(tester, const Offset(360, 645));
+    expect(position.dx, closeTo(180, 1));
+    expect(position.dy, closeTo(250, 1));
+
+    await tester.pumpWidget(
+      wrapViewport(const CampusMap(avatarOffset: Offset(400, 700))),
+    );
+    await tester.pumpAndSettle();
+    position = cameraPosition(tester, const Offset(400, 700));
+    expect(position.dx, closeTo(180, 1));
+    expect(position.dy, closeTo(250, 1));
+
+    await tester.drag(find.byType(InteractiveViewer), const Offset(-50, 0));
+    await tester.pumpAndSettle();
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is PixelIconButton &&
+            widget.semanticLabel == 'Centrar en mi ubicación',
+      ),
+      findsOneWidget,
+    );
+    final panned = cameraPosition(tester, const Offset(400, 700));
+
+    await tester.pumpWidget(
+      wrapViewport(const CampusMap(avatarOffset: Offset(350, 650))),
+    );
+    await tester.pumpAndSettle();
+    position = cameraPosition(tester, const Offset(400, 700));
+    expect(position.dx, closeTo(panned.dx, 1));
+    expect(position.dy, closeTo(panned.dy, 1));
+
+    await tester.tap(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is PixelIconButton &&
+            widget.semanticLabel == 'Centrar en mi ubicación',
+      ),
+    );
+    await tester.pumpAndSettle();
+    position = cameraPosition(tester, const Offset(350, 650));
+    expect(position.dx, closeTo(180, 1));
+    expect(position.dy, closeTo(250, 1));
   });
 
   testWidgets('PixelAvatar alternates frames only while walking', (

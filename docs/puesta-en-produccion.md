@@ -43,18 +43,21 @@ la feria; ningún emulador sustituye la última prueba con los dispositivos.
    distinto antes de terminar la asignación.
 3. Con una cuenta de jugador distinta, probar lectura, encuentro, captura,
    persistencia al cerrar/abrir la app y rechazo de un tag no registrado.
-4. Probar con la pantalla encendida, NFC activo, el beacon ya colocado y el
-   teléfono que usarán los participantes. Verificar batería de cada beacon.
+4. Probar con la pantalla encendida, NFC activo, el profesor portando su beacon
+   y el teléfono que usarán los participantes. Verificar batería de cada beacon.
 
 ## 3. Lugar y distribución
 
 1. La feria será en el campus Santiago Gangotena de la Universidad San Francisco
-   de Quito, en Diego de Robles, en la esquina derecha del primer cuadrángulo
-   según la organización local. Sustituir `CampusConfig.bounds` (actualmente
-   coordenadas de ejemplo en Madrid) por los cuatro límites GPS medidos del
-   recinto. Un compañero está actualizando el mapa visual; coordinar la
-   proyección GPS con ese mapa antes de cambiar el código de ubicación. Como
-   referencia, la USFQ publica un [mapa del campus](https://www.usfq.edu.ec/en/university-map).
+   de Quito, en Diego de Robles. La carpa del Politécnico y los puestos MAC y
+   Computación estarán en los Cuadrángulos, frente al edificio Espejo (n.º 20
+   en el mapa de la USFQ). Algunos profesores también estarán en un laboratorio
+   hacia la derecha de esta zona. Todos portarán sus beacons: los NFC no son
+   puntos fijos del mapa. Sustituir `CampusConfig.bounds` (actualmente
+   coordenadas de ejemplo en Madrid) por límites GPS medidos y validar la
+   proyección de los Cuadrángulos antes de mostrar posición real del jugador.
+   El laboratorio se indica como dirección aproximada hasta confirmar su
+   edificio y entrada. Referencia: [mapa oficial de la USFQ](https://www.usfq.edu.ec/sites/default/files/2023-10/mapa-usfq-2023.pdf).
 2. Para la primera prueba, crear `apps/mobile/.env` con `DEMO_MODE=false`, URL
    HTTPS y clave pública de Supabase; ejecutar `./scripts/build-real-android.sh`.
    El script rechaza una configuración demo o incompleta. Para distribución

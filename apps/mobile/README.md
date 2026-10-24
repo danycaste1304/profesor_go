@@ -91,8 +91,12 @@ Los diez profesores usan sprites chibi de cuerpo completo durante el encuentro
 y retratos pixelados basados en sus fotos para la colección. Conservan sus
 rasgos personales con expresiones más juguetonas.
 
-El mapa editable está en `assets/map/campus_map.svg`; para regenerar su PNG
-sin suavizado usa `bash tool/generate_retro_map.sh` (requiere `rsvg-convert`). La
+El mapa principal de los Cuadrángulos es `assets/map/campus_map.png`. Los
+marcadores de la carpa y del laboratorio se dibujan encima desde
+`lib/features/map/presentation/widgets/fair_landmarks_painter.dart`, sin
+modificar la imagen. `assets/map/campus_map.svg` es el mapa retro anterior;
+`bash tool/generate_retro_map.sh` solo regenera `campus_map_old.png` y requiere
+`rsvg-convert`. La
 partitura y síntesis de las tres piezas están en `tool/generate_soundtrack.py`;
 `python3 tool/generate_soundtrack.py` actualiza sus WAV sin dependencias externas.
 Los cinco efectos originales se generan con `python3 tool/generate_sound_effects.py`.

@@ -262,7 +262,7 @@ void main() {
     final first = CampusConfig.toMapOffset(CampusConfig.demoPath.first);
     expect(avatar().left, closeTo(first.dx - size / 2, 1e-6));
     expect(avatar().top, closeTo(first.dy - size * 0.92, 1e-6));
-    expect(find.text('Estás fuera del campus'), findsNothing);
+    expect(find.text('Ubicación fuera del mapa actual'), findsNothing);
 
     const next = LatLng(40.4525, -3.7262);
     h.location.teleport(next);
@@ -273,7 +273,8 @@ void main() {
 
     h.location.teleport(const LatLng(0, 0));
     await settle(tester);
-    expect(find.text('Estás fuera del campus'), findsOneWidget);
+    expect(find.text('Ubicación fuera del mapa actual'), findsOneWidget);
+    expect(find.byKey(CampusMap.avatarKey), findsNothing);
     await tearDownTree(tester, h);
   });
 

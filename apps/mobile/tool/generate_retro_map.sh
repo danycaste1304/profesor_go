@@ -6,6 +6,6 @@ command -v rsvg-convert >/dev/null 2>&1 || {
   exit 1
 }
 rsvg-convert --width 450 --height 600 \
-  --output "$MOBILE_ROOT/assets/map/campus_map.png" \
+  --output "$MOBILE_ROOT/assets/map/campus_map_old.png" \
   "$MOBILE_ROOT/assets/map/campus_map.svg"
-echo "Retro campus map regenerated."
+echo "Legacy retro map regenerated without replacing the current campus art."

@@ -68,10 +68,11 @@ class MapState {
   bool get isChecking => status == null;
   bool get isAvailable => status == LocationStatus.available;
 
-  /// Avatar position in logical map units, `null` without a fix.
+  /// Avatar position in logical map units. An out-of-bounds fix must not be
+  /// clamped to the edge and shown as though the player were there.
   Offset? get mapOffset {
     final p = current;
-    return p == null ? null : config.toMapOffset(p);
+    return p == null || !config.contains(p) ? null : config.toMapOffset(p);
   }
 
   bool get isInsideCampus {
