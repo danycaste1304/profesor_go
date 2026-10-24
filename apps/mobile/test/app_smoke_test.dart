@@ -48,7 +48,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
     await tester.pump(const Duration(milliseconds: 50));
-    expect(find.text('Campus USFQ'), findsOneWidget);
+    expect(find.text('CAMPUS USFQ'), findsOneWidget);
     expect(find.text('CAPTURAR'), findsOneWidget);
     expect(find.byType(Scaffold), findsOneWidget);
 

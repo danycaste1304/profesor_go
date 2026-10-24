@@ -22,7 +22,7 @@ class CollectionScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(collectionViewProvider);
     return AppScaffold(
-      title: 'Profedex',
+      title: 'Mi Profedex',
       homeFallback: true,
       padding: EdgeInsets.zero,
       body: switch (state) {
@@ -250,7 +250,11 @@ class ProfessorCard extends StatelessWidget {
           // Shrinks on narrow cells ("LEGENDARIA" in a 2-column grid).
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: RarityBadge(professor.rarity, compact: true),
+            child: RarityBadge(
+              professor.rarity,
+              compact: true,
+              tinted: false,
+            ),
           ),
         ],
       ),

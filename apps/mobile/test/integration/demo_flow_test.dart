@@ -125,7 +125,7 @@ void main() {
       );
       await tester.tap(find.byKey(LoginScreen.submitKey));
       await settle(tester);
-      expect(find.text('Campus USFQ'), findsOneWidget);
+      expect(find.text('CAMPUS USFQ'), findsOneWidget);
       expect(find.text('0 %'), findsOneWidget);
       final captureButton = find.widgetWithText(PixelButton, 'CAPTURAR');
       expect(captureButton, findsOneWidget);

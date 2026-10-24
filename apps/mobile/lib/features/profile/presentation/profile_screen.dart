@@ -14,6 +14,7 @@ import '../../../core/repositories/mock_professor_repository.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/pixel_button.dart';
 import '../../../core/widgets/pixel_card.dart';
+import '../../../core/widgets/pixel_pill.dart';
 import '../../../core/widgets/progress_bar.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../avatar/avatar_style.dart';
@@ -130,71 +131,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       homeFallback: true,
       body: ListView(
         children: [
-          PixelCard(
-            semanticLabel: 'Jugador $name, $email',
-            child: Row(
-              children: [
-                PixelAvatar(
-                  size: 72,
-                  semanticLabel: 'Avatar del jugador',
-                  style: avatarStyle,
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        style: textTheme.titleLarge,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (email.isNotEmpty && email != name) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          email,
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textMuted,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                      if (isAdmin || AppConfig.isDemoMode) ...[
-                        const SizedBox(height: 10),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 6,
-                          children: [
-                            if (isAdmin)
-                              const _Badge(
-                                label: 'Admin',
-                                icon: Icons.shield_outlined,
-                                color: AppColors.accentText,
-                              ),
-                            if (AppConfig.isDemoMode)
-                              const _Badge(
-                                label: 'Modo demo',
-                                icon: Icons.science_outlined,
-                                color: AppColors.accentAlt,
-                              ),
-                          ],
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
           if (profileAsync.hasError) ...[
-            const SizedBox(height: 12),
             _InlineError(
               message: AppException.from(profileAsync.error!).message,
               onRetry: () => ref.invalidate(profileProvider),
             ),
+            const SizedBox(height: 16),
           ],
-          const SizedBox(height: 16),
           PixelCard(
             borderColor: AppColors.accentAlt,
             child: Column(
@@ -209,11 +152,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       width: 112,
                       height: 112,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE0F5DE),
-                        border: Border.all(
-                          color: AppColors.accentAlt,
-                          width: 2,
-                        ),
+                        color: Colors.transparent,
+                        border: Border.all(color: Colors.transparent, width: 2),
                         borderRadius: BorderRadius.circular(AppTheme.radius),
                       ),
                       child: Center(
@@ -225,6 +165,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           child: PixelAvatar(
                             key: ValueKey(avatarStyle),
                             size: 104,
+                            semanticLabel: 'Avatar del jugador',
                             style: avatarStyle,
                           ),
                         ),
@@ -232,21 +173,54 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '¡A tu estilo!',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: AppColors.accentAlt,
+                      child: Semantics(
+                        label: 'Jugador $name, $email',
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name,
+                              style: textTheme.titleLarge,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            'Elige tu look. Lo verás al explorar el campus.',
-                            style: textTheme.bodyMedium,
-                          ),
-                        ],
+                            if (email.isNotEmpty && email != name) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                email,
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: AppColors.textMuted,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                            if (isAdmin || AppConfig.isDemoMode) ...[
+                              const SizedBox(height: 10),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 6,
+                                children: [
+                                  if (isAdmin)
+                                    const PixelPill(
+                                      label: 'Admin',
+                                      icon: Icons.shield_outlined,
+                                      color: AppColors.accentText,
+                                      tinted: true,
+                                      semanticLabel: 'Admin',
+                                    ),
+                                  if (AppConfig.isDemoMode)
+                                    const PixelPill(
+                                      label: 'Modo demo',
+                                      icon: Icons.science_outlined,
+                                      color: AppColors.accentAlt,
+                                      tinted: true,
+                                      semanticLabel: 'Modo demo',
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -621,46 +595,6 @@ class _AvatarChoice extends StatelessWidget {
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Small outlined chip with an icon and an uppercase label.
-class _Badge extends StatelessWidget {
-  const _Badge({required this.label, required this.icon, required this.color});
-
-  final String label;
-  final IconData icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      label: label,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.18),
-          border: Border.all(color: color, width: 2),
-          borderRadius: BorderRadius.circular(AppTheme.radius),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 16, color: color),
-            const SizedBox(width: 6),
-            Text(
-              label.toUpperCase(),
-              style: TextStyle(
-                color: color,
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 0,
-              ),
-            ),
-          ],
         ),
       ),
     );

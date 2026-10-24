@@ -157,7 +157,7 @@ void main() {
     await tester.pumpWidget(h.build());
     await settle(tester);
 
-    expect(find.text('Campus USFQ'), findsOneWidget);
+    expect(find.text('CAMPUS USFQ'), findsOneWidget);
     expect(find.text('CAPTURAR'), findsOneWidget);
     expect(captureButton(tester).onPressed, isNotNull);
     expect(find.text('PROFEDEX'), findsOneWidget);
@@ -166,7 +166,10 @@ void main() {
     expect(find.text('30 %'), findsOneWidget);
     expect(find.text('EN LÍNEA'), findsOneWidget);
     expect(find.byType(CampusMap), findsOneWidget);
-    expect(find.text('Simular movimiento'), findsOneWidget);
+    expect(
+      find.widgetWithIcon(PixelIconButton, Icons.directions_walk),
+      findsOneWidget,
+    );
     expect(find.text('¡Profedex completada!'), findsNothing);
     expect(find.text(MapScreen.offlineCaptureMessage), findsNothing);
 
@@ -189,12 +192,12 @@ void main() {
     await settle(tester);
 
     expect(find.byIcon(Icons.music_off), findsOneWidget);
-    await tester.tap(find.byType(PixelIconButton));
+    await tester.tap(find.widgetWithIcon(PixelIconButton, Icons.music_off));
     await settle(tester);
     expect(find.byIcon(Icons.music_note), findsOneWidget);
     expect(music.plays, 1);
 
-    await tester.tap(find.byType(PixelIconButton));
+    await tester.tap(find.widgetWithIcon(PixelIconButton, Icons.music_note));
     await settle(tester);
     expect(find.byIcon(Icons.music_off), findsOneWidget);
     expect(music.pauses, 1);
@@ -290,13 +293,14 @@ void main() {
     await tester.pumpWidget(h.build());
     await settle(tester);
 
+    final toggle = find.widgetWithIcon(PixelIconButton, Icons.directions_walk);
     expect(h.location.isWalking, isFalse);
-    await tester.tap(find.byType(Switch));
+    await tester.tap(toggle);
     await settle(tester);
     expect(h.location.isWalking, isTrue);
-    expect(tester.widget<Switch>(find.byType(Switch)).value, isTrue);
+    expect(tester.widget<PixelIconButton>(toggle).toggled, isTrue);
 
-    await tester.tap(find.byType(Switch));
+    await tester.tap(toggle);
     await settle(tester);
     expect(h.location.isWalking, isFalse);
     await tester.pumpAndSettle();

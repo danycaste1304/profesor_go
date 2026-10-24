@@ -116,7 +116,15 @@ void main() {
         quality: ThrowQuality.miss,
       ),
     );
-    expect(find.text('¡Prof. Erick se escapó!'), findsOneWidget);
+    // The dialogue types its text out, so match the widget, not the glyphs.
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is RetroDialogue &&
+            widget.text == '¡Prof. Erick se escapó! Vuelve a leer la tarjeta.',
+      ),
+      findsOneWidget,
+    );
     expect(
       find.text(
         'Para intentarlo de nuevo, encuentra al profesor y lee su tarjeta NFC otra vez.',

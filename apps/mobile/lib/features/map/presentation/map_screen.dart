@@ -105,18 +105,12 @@ class _MapScreenState extends ConsumerState<MapScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            PixelCard(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 10,
-                              ),
-                              child: _Header(online: online),
-                            ),
-                            const SizedBox(height: 8),
                             _ProgressChip(
                               progress: progress,
                               progressAsync: progressAsync,
                             ),
+                            const SizedBox(height: 8),
+                            _StatusPills(online: online),
                             if (showBanner) ...[
                               const SizedBox(height: 8),
                               _CompletionBanner(
@@ -232,11 +226,11 @@ class _MapScreenState extends ConsumerState<MapScreen>
 }
 
 // ---------------------------------------------------------------------------
-// Header: title + connectivity indicator
+// Status pills: location + connectivity indicator
 // ---------------------------------------------------------------------------
 
-class _Header extends StatelessWidget {
-  const _Header({required this.online});
+class _StatusPills extends StatelessWidget {
+  const _StatusPills({required this.online});
 
   final bool online;
 
@@ -244,45 +238,25 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = online ? AppColors.success : AppColors.danger;
     final label = online ? 'En línea' : 'Sin conexión';
-    return Row(
+    // Wrap, not Row: both pills together can exceed a 320 px screen.
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
       children: [
-        Expanded(
-          child: Text(
-            'Campus USFQ',
-            style: Theme.of(context).textTheme.titleLarge
-                ?.copyWith(color: AppColors.text),
-          ),
+        const PixelPill(
+          label: 'Campus USFQ',
+          icon: Icons.location_on,
+          color: AppColors.danger,
+          tinted: true,
         ),
         Semantics(
           label: 'Conexión: $label',
           liveRegion: true,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.15),
-              border: Border.all(color: color, width: 2),
-              borderRadius: BorderRadius.circular(AppTheme.radius),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  online ? Icons.wifi : Icons.wifi_off,
-                  size: 18,
-                  color: color,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  label.toUpperCase(),
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 0,
-                  ),
-                ),
-              ],
-            ),
+          child: PixelPill(
+            label: label,
+            icon: online ? Icons.wifi : Icons.wifi_off,
+            color: color,
+            tinted: true,
           ),
         ),
       ],
@@ -500,43 +474,50 @@ class _MapPanel extends ConsumerWidget {
                   text: statusText,
                 ),
               ),
-            if (state.canSimulate)
-              Positioned(
-                right: 8,
-                bottom: 164,
-                child: _SimulationToggle(
-                  value: state.simulating,
-                  onChanged: ref
-                      .read(mapControllerProvider.notifier)
-                      .setSimulation,
-                ),
-              ),
             Positioned(
               right: 8,
-              bottom: state.canSimulate ? 222 : 164,
-              child: PixelIconButton(
-                icon: music.enabled ? Icons.music_note : Icons.music_off,
-                semanticLabel: 'Música del juego',
-                toggled: music.enabled,
-                onPressed: music.busy
-                    ? null
-                    : () async {
-                        try {
-                          await ref
-                              .read(gameMusicControllerProvider.notifier)
-                              .toggle();
-                        } catch (_) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'No se pudo reproducir la música.',
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                      },
+              bottom: 164,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Demo-only toggle that starts / pauses the mock walk along
+                  // the demo path.
+                  if (state.canSimulate) ...[
+                    PixelIconButton(
+                      icon: Icons.directions_walk,
+                      semanticLabel: 'Simular movimiento',
+                      toggled: state.simulating,
+                      onPressed: () => ref
+                          .read(mapControllerProvider.notifier)
+                          .setSimulation(!state.simulating),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                  PixelIconButton(
+                    icon: music.enabled ? Icons.music_note : Icons.music_off,
+                    semanticLabel: 'Música del juego',
+                    toggled: music.enabled,
+                    onPressed: music.busy
+                        ? null
+                        : () async {
+                            try {
+                              await ref
+                                  .read(gameMusicControllerProvider.notifier)
+                                  .toggle();
+                            } catch (_) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'No se pudo reproducir la música.',
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                  ),
+                ],
               ),
             ),
           ],
@@ -575,55 +556,6 @@ class _OverlayChip extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Demo-only switch that starts / pauses the mock walk along the demo path.
-class _SimulationToggle extends StatelessWidget {
-  const _SimulationToggle({required this.value, required this.onChanged});
-
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      label: 'Simular movimiento',
-      toggled: value,
-      container: true,
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(10, 2, 4, 2),
-        decoration: BoxDecoration(
-          color: AppColors.background.withValues(alpha: 0.85),
-          border: Border.all(color: AppColors.border, width: 2),
-          borderRadius: BorderRadius.circular(AppTheme.radius),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.directions_walk,
-              size: 16,
-              color: AppColors.accentAlt,
-            ),
-            const SizedBox(width: 6),
-            const Text(
-              'Simular movimiento',
-              style: TextStyle(
-                color: AppColors.text,
-                fontSize: 16,
-              ),
-            ),
-            Switch(
-              value: value,
-              onChanged: onChanged,
-              activeThumbColor: AppColors.accent,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-          ],
-        ),
       ),
     );
   }

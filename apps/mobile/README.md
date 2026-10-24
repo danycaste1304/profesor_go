@@ -237,7 +237,7 @@ lib/
     repositories/           ProfessorRepository, CaptureService, AuthRepository (+ Supabase / Mock)
     mock/                   seed demo (10 profesores, tags) y DemoGameState
     di/providers.dart       providers Riverpod (Mock vs Supabase según DEMO_MODE)
-    widgets/                PixelCard, PixelButton, PixelIconButton (+ PixelFramePainter / PixelCirclePainter), RarityBadge, ProfessorSprite, ...
+    widgets/                PixelCard, PixelButton, PixelIconButton, PixelPill (+ PixelFramePainter / PixelCirclePainter), RarityBadge, ProfessorSprite, ...
   features/
     auth/                   splash, login, register, AuthController
     map/                    mapa del campus, MapController, banner de colección completa

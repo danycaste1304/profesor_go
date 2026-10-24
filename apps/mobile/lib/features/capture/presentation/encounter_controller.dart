@@ -181,7 +181,7 @@ class EncounterController extends Notifier<EncounterState> {
       state.copyWith(
         phase: EncounterPhase.throwing,
         quality: quality,
-        shakeCount: 1 + _random.nextInt(3),
+        shakeCount: 2 + _random.nextInt(3),
       ),
     );
     _pending = _resolve(quality);

@@ -115,12 +115,12 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
 
   static const Duration _flyDuration = Duration(milliseconds: 500);
   static const Duration _absorbDuration = Duration(milliseconds: 280);
-  static const Duration _dropDuration = Duration(milliseconds: 220);
-  static const Duration _shakeDuration = Duration(milliseconds: 350);
-  static const Duration _burstDuration = Duration(milliseconds: 650);
-  static const Duration _popOutDuration = Duration(milliseconds: 600);
-  static const Duration _missDuration = Duration(milliseconds: 550);
-  static const Duration _dodgeDuration = Duration(milliseconds: 500);
+  static const Duration _dropDuration = Duration(milliseconds: 500);
+  static const Duration _shakeDuration = Duration(milliseconds: 360);
+  static const Duration _burstDuration = Duration(milliseconds: 1660);
+  static const Duration _popOutDuration = Duration(milliseconds: 1000);
+  static const Duration _missDuration = Duration(milliseconds: 1000);
+  static const Duration _dodgeDuration = Duration(milliseconds: 1600);
 
   final GlobalKey _arenaKey = GlobalKey();
   final GlobalKey _spriteKey = GlobalKey();
@@ -588,25 +588,22 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
                   Row(
                     children: [
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        // Row's default cross-axis alignment keeps the pill
+                        // vertically centered on the name.
+                        child: Row(
                           children: [
-                            Text(
-                              professor.displayName,
-                              style: textTheme.titleLarge,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 6),
-                            // Shrinks when the countdown leaves little room.
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.centerLeft,
-                              child: RarityBadge(
-                                professor.rarity,
-                                compact: true,
+                            // The name ellipsizes first when the countdown
+                            // leaves little room.
+                            Flexible(
+                              child: Text(
+                                professor.displayName,
+                                style: textTheme.titleLarge,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
+                            const SizedBox(width: 20),
+                            RarityBadge(professor.rarity, compact: true),
                           ],
                         ),
                       ),
@@ -840,33 +837,6 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
                 ),
               ),
             ),
-          // Status text (quality / capturado / se escapó).
-          if (_statusText != null)
-            Positioned(
-              top: _spriteTop + _spriteSize + 12,
-              left: 16,
-              right: 16,
-              child: IgnorePointer(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 220),
-                  transitionBuilder: (child, animation) => FadeTransition(
-                    opacity: animation,
-                    child: ScaleTransition(scale: animation, child: child),
-                  ),
-                  child: Text(
-                    _statusText!,
-                    key: ValueKey(_statusText),
-                    textAlign: TextAlign.center,
-                    style: textTheme.headlineMedium?.copyWith(
-                      color: _statusColor,
-                      shadows: const [
-                        Shadow(color: Colors.white, blurRadius: 6),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
           // Instructions.
           if (showInstructions)
             Positioned(
@@ -931,6 +901,36 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
                   child: Transform.scale(
                     scale: ball.scale,
                     child: const CaptureBall(),
+                  ),
+                ),
+              ),
+            ),
+          // Status text (quality / capturado / se escapó). Last child of the
+          // stack so it paints above the ball and every effect.
+          if (_statusText != null)
+            Positioned(
+              top: _spriteTop + _spriteSize + 12,
+              left: 16,
+              right: 16,
+              child: IgnorePointer(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 220),
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: ScaleTransition(scale: animation, child: child),
+                  ),
+                  child: Text(
+                    _statusText!,
+                    key: ValueKey(_statusText),
+                    textAlign: TextAlign.center,
+                    style: textTheme.headlineMedium?.copyWith(
+                      color: _statusColor,
+                      // Stacked so the soft halo accumulates opacity.
+                      shadows: [
+                        for (var i = 0; i < 20; i++)
+                          const Shadow(color: Colors.white, blurRadius: 20),
+                      ],
+                    ),
                   ),
                 ),
               ),

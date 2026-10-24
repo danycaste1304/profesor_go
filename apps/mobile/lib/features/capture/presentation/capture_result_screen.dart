@@ -209,19 +209,8 @@ class _FailureBody extends StatelessWidget {
 
     return Column(
       children: [
-        Text(
-              '¡${professor.displayName} se escapó!',
-              textAlign: TextAlign.center,
-              style: textTheme.headlineMedium?.copyWith(
-                color: AppColors.danger,
-              ),
-            )
-            .animate()
-            .fadeIn(duration: 400.ms)
-            .shake(hz: 3, offset: const Offset(4, 0)),
-        const SizedBox(height: 14),
-        const RetroDialogue(
-          text: '¡La captura falló! Vuelve a leer la tarjeta.',
+        RetroDialogue(
+          text: '¡${professor.displayName} se escapó! Vuelve a leer la tarjeta.',
           minHeight: 42,
         ),
         const SizedBox(height: 20),

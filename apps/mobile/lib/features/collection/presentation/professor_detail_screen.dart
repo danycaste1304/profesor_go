@@ -116,7 +116,7 @@ class _ProfessorDetail extends StatelessWidget {
             ),
           ],
           const SizedBox(height: 12),
-          Center(child: RarityBadge(professor.rarity)),
+          Center(child: RarityBadge(professor.rarity, tinted: false)),
           const SizedBox(height: 20),
           PixelCard(
             child: captured

@@ -11,6 +11,7 @@ export 'pixel_card.dart';
 export 'pixel_circle_painter.dart';
 export 'pixel_frame_painter.dart';
 export 'pixel_icon_button.dart';
+export 'pixel_pill.dart';
 export 'professor_sprite.dart';
 export 'progress_bar.dart';
 export 'rarity_badge.dart';
