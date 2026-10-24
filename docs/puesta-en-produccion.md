@@ -56,8 +56,11 @@ la feria; ningún emulador sustituye la última prueba con los dispositivos.
    puntos fijos del mapa. Sustituir `CampusConfig.bounds` (actualmente
    coordenadas de ejemplo en Madrid) por límites GPS medidos y validar la
    proyección de los Cuadrángulos antes de mostrar posición real del jugador.
-   El laboratorio se indica como dirección aproximada hasta confirmar su
-   edificio y entrada. Referencia: [mapa oficial de la USFQ](https://www.usfq.edu.ec/sites/default/files/2023-10/mapa-usfq-2023.pdf).
+   La entrada del laboratorio es la esquina marcada con un círculo rojo en el
+   plano proporcionado por el organizador. El mapa ilustrado solo muestra la
+   dirección hacia esa entrada; faltan sus coordenadas GPS y las de la carpa
+   para calibrar la ubicación real del jugador. Referencia: [mapa oficial de
+   la USFQ](https://www.usfq.edu.ec/sites/default/files/2023-10/mapa-usfq-2023.pdf).
 2. Para la primera prueba, crear `apps/mobile/.env` con `DEMO_MODE=false`, URL
    HTTPS y clave pública de Supabase; ejecutar `./scripts/build-real-android.sh`.
    El script rechaza una configuración demo o incompleta. Para distribución

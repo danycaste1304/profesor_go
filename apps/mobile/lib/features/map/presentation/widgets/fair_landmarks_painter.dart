@@ -110,8 +110,9 @@ class FairLandmarksPainter extends CustomPainter {
     label('COMP', 289, 907, 26, _ink);
     label('CARPA POLITÉCNICO', 250, 947, 25, _ink);
 
-    // Only a direction for the more distant laboratory: its exact entrance
-    // still needs confirmation before it can become a location marker.
+    // The user marked the laboratory entrance on the campus reference map.
+    // This sign gives its direction from the quadrangles; the perspective
+    // artwork does not support placing that entrance at a precise map point.
     rect(550, 663, 133, 43, _ink);
     rect(555, 668, 123, 33, _cream);
     polygon(
@@ -122,7 +123,7 @@ class FairLandmarksPainter extends CustomPainter {
       const [Offset(682, 672), Offset(697, 685), Offset(682, 697)],
       AppColors.accent,
     );
-    label('LABORATORIO', 616, 669, 25, _ink);
+    label('ENTRADA LAB', 616, 669, 25, _ink);
 
     // A few small flowers soften the sticker without recoloring the original
     // quadrangles image or hiding the paths.
