@@ -69,7 +69,7 @@ class MockNfcService implements NfcService {
   Future<NfcAvailability> availability() async => _availability;
 
   @override
-  Future<String?> scanTag() async {
+  Future<String?> scanTag({void Function()? onReady}) async {
     if (_pending != null) await cancel();
     switch (_availability) {
       case NfcAvailability.unsupported:
@@ -81,6 +81,7 @@ class MockNfcService implements NfcService {
     }
     final completer = Completer<String?>();
     _pending = completer;
+    onReady?.call();
     final tag = selectedTag;
     _timer = Timer(delay, () {
       if (identical(_pending, completer)) {

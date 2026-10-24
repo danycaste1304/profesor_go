@@ -12,8 +12,9 @@ import 'nfc_service.dart';
 
 /// [NfcService] backed by `nfc_manager`.
 ///
-/// Reads the first NDEF text record (`T` well-known type or `text/plain`) if
-/// present, otherwise falls back to the tag UID in upper-case hex.
+/// Reads an Estimote beacon ID, an NDEF text record, or the tag UID.
+/// Estimote's external record is preferred so the same beacon has a stable,
+/// namespaced identifier even if it also contains a custom text record.
 class RealNfcService implements NfcService {
   RealNfcService({
     nm.NfcManager? manager,
@@ -25,6 +26,10 @@ class RealNfcService implements NfcService {
 
   Completer<String?>? _pending;
   Timer? _timer;
+  String? _lastTagUid;
+
+  /// Android tag UID from the last scan, exposed for the local field diagnostic.
+  String? get lastTagUid => _lastTagUid;
 
   nm.NfcManager get _manager => _managerOverride ?? nm.NfcManager.instance;
 
@@ -46,9 +51,10 @@ class RealNfcService implements NfcService {
   }
 
   @override
-  Future<String?> scanTag() async {
+  Future<String?> scanTag({void Function()? onReady}) async {
     // Only one session at a time: cancel a previous pending scan.
     if (_pending != null) await cancel();
+    _lastTagUid = null;
 
     switch (await availability()) {
       case NfcAvailability.unsupported:
@@ -84,7 +90,9 @@ class RealNfcService implements NfcService {
                   .readerSessionInvalidationErrorFirstNDEFTagRead) {
             // Normal invalidation after the first read; onDiscovered handles it.
           } else {
-            _fail(AppException.fromCode(AppException.nfcReadError, cause: error));
+            _fail(
+              AppException.fromCode(AppException.nfcReadError, cause: error),
+            );
           }
         },
         onDiscovered: (tag) async {
@@ -97,8 +105,9 @@ class RealNfcService implements NfcService {
           }
           await _safeStop(
             alertMessageIos: identifier != null ? 'Tarjeta leída' : null,
-            errorMessageIos:
-                identifier == null ? 'No se pudo leer la tarjeta' : null,
+            errorMessageIos: identifier == null
+                ? 'No se pudo leer la tarjeta'
+                : null,
           );
           if (identifier != null) {
             _finish(identifier);
@@ -109,6 +118,9 @@ class RealNfcService implements NfcService {
           }
         },
       );
+      if (identical(_pending, completer) && !completer.isCompleted) {
+        onReady?.call();
+      }
     } catch (e) {
       _fail(AppException.fromCode(AppException.nfcReadError, cause: e));
     }
@@ -158,34 +170,35 @@ class RealNfcService implements NfcService {
   }
 
   Future<String?> _extractAndroid(nm.NfcTag tag) async {
+    final raw = NfcTagAndroid.from(tag);
+    _lastTagUid = raw == null || raw.id.isEmpty ? null : bytesToHex(raw.id);
     final ndef = NdefAndroid.from(tag);
     if (ndef != null) {
-      var text = textFromNdef(ndef.cachedNdefMessage);
-      if (text == null) {
+      var identifier = identifierFromNdef(ndef.cachedNdefMessage);
+      if (identifier == null) {
         try {
-          text = textFromNdef(await ndef.getNdefMessage());
+          identifier = identifierFromNdef(await ndef.getNdefMessage());
         } catch (_) {
           // Fall through to the UID.
         }
       }
-      if (text != null) return text;
+      if (identifier != null) return identifier;
     }
-    final raw = NfcTagAndroid.from(tag);
-    return raw == null || raw.id.isEmpty ? null : bytesToHex(raw.id);
+    return _lastTagUid;
   }
 
   Future<String?> _extractIos(nm.NfcTag tag) async {
     final ndef = NdefIos.from(tag);
     if (ndef != null) {
-      var text = textFromNdef(ndef.cachedNdefMessage);
-      if (text == null && ndef.status != NdefStatusIos.notSupported) {
+      var identifier = identifierFromNdef(ndef.cachedNdefMessage);
+      if (identifier == null && ndef.status != NdefStatusIos.notSupported) {
         try {
-          text = textFromNdef(await ndef.readNdef());
+          identifier = identifierFromNdef(await ndef.readNdef());
         } catch (_) {
           // Fall through to the UID.
         }
       }
-      if (text != null) return text;
+      if (identifier != null) return identifier;
     }
     final mifare = MiFareIos.from(tag);
     if (mifare != null) return bytesToHex(mifare.identifier);
@@ -196,6 +209,22 @@ class RealNfcService implements NfcService {
     final felica = FeliCaIos.from(tag);
     if (felica != null) return bytesToHex(felica.currentIDm);
     return null;
+  }
+
+  /// Returns the Estimote beacon ID when its external NDEF record is present.
+  /// Its binary payload is encoded as hex, with a prefix to distinguish it
+  /// from a regular tag UID. This exact value is registered in the admin.
+  @visibleForTesting
+  static String? identifierFromNdef(NdefMessage? message) {
+    if (message == null) return null;
+    for (final record in message.records) {
+      if (record.typeNameFormat == TypeNameFormat.external &&
+          utf8.decode(record.type, allowMalformed: true) == 'estimote.com:id' &&
+          record.payload.isNotEmpty) {
+        return 'ESTIMOTE:${bytesToHex(record.payload)}';
+      }
+    }
+    return textFromNdef(message);
   }
 
   /// Returns the first text payload of an NDEF message, or null.
@@ -254,13 +283,17 @@ class RealNfcService implements NfcService {
     final units = <int>[];
     for (var i = offset; i + 1 < bytes.length; i += 2) {
       units.add(
-        littleEndian ? bytes[i] | (bytes[i + 1] << 8) : (bytes[i] << 8) | bytes[i + 1],
+        littleEndian
+            ? bytes[i] | (bytes[i + 1] << 8)
+            : (bytes[i] << 8) | bytes[i + 1],
       );
     }
     return String.fromCharCodes(units);
   }
 
   @visibleForTesting
-  static String bytesToHex(Uint8List bytes) =>
-      bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join().toUpperCase();
+  static String bytesToHex(Uint8List bytes) => bytes
+      .map((b) => b.toRadixString(16).padLeft(2, '0'))
+      .join()
+      .toUpperCase();
 }

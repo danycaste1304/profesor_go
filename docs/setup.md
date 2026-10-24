@@ -92,8 +92,8 @@ analizador rompe la build.
 Android:
 
 ```bash
+./scripts/build-real-android.sh             # APK real, valida .env antes de compilar
 cd apps/mobile
-flutter build apk --release --dart-define-from-file=.env
 # o app bundle: flutter build appbundle --release --dart-define-from-file=.env
 ```
 
@@ -112,5 +112,7 @@ supabase db push                       # migraciones
 supabase functions deploy start-encounter resolve-capture admin-register-nfc
 ```
 
-Después ejecuta `seed.sql` manualmente solo si quieres datos demo en producción (los
-usuarios demo NO deben crearse en producción).
+No ejecutes `seed.sql` en producción: contiene usuarios y contraseñas demo. Las
+migraciones incluyen el catálogo y los ajustes necesarios; registra los tags
+físicos desde el panel admin. Sigue la verificación de
+[`puesta-en-produccion.md`](puesta-en-produccion.md).

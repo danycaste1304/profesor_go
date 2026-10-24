@@ -28,9 +28,9 @@ export function NfcForm({ professors }: { professors: ProfessorOption[] }) {
           maxLength={128}
           autoComplete="off"
           spellCheck={false}
-          placeholder="DEMO-TAG-01"
+          placeholder="ESTIMOTE:00A3… o UID NFC"
           defaultValue={state.values?.tag_identifier ?? ""}
-          hint="Introdúcelo tal como lo lee el móvil (hasta 128 caracteres)."
+          hint="Copia el identificador que muestra la app con una cuenta admin (hasta 128 caracteres)."
         />
         <Select
           label="Profesor"

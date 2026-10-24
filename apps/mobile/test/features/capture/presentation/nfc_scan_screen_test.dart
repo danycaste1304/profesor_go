@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -92,6 +94,26 @@ void main() {
     await settle(tester);
     expect(capture.startedTags, ['DEMO-TAG-01']);
     expect(find.text('ENCOUNTER enc-1 Prof. Ricardo'), findsOneWidget);
+  });
+
+  testWidgets('waits for reader mode before inviting the player to scan', (
+    tester,
+  ) async {
+    final manualNfc = _ManualReadyNfcService();
+    await pumpScreen(tester, nfcService: manualNfc);
+    await settle(tester);
+
+    expect(manualNfc._onReady, isNotNull);
+    expect(find.text('Comprobando el NFC…'), findsOneWidget);
+    expect(find.text('BUSCANDO TARJETA'), findsNothing);
+
+    manualNfc.markReady();
+    await tester.pump();
+    expect(find.text('BUSCANDO TARJETA'), findsOneWidget);
+    expect(
+      find.text('Acerca tu teléfono a la tarjeta del profesor'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('ALREADY_CAPTURED shows the Spanish message and retries', (
@@ -286,4 +308,27 @@ void main() {
     expect(nfc.cancelCalls, greaterThanOrEqualTo(2)); // begin() + dispose()
     expect(capture.startedTags, isEmpty);
   });
+}
+
+class _ManualReadyNfcService implements NfcService {
+  void Function()? _onReady;
+  Completer<String?>? _pending;
+
+  @override
+  Future<NfcAvailability> availability() async => NfcAvailability.available;
+
+  @override
+  Future<String?> scanTag({void Function()? onReady}) {
+    _onReady = onReady;
+    return (_pending = Completer<String?>()).future;
+  }
+
+  void markReady() => _onReady?.call();
+
+  @override
+  Future<void> cancel() async {
+    final pending = _pending;
+    _pending = null;
+    if (pending != null && !pending.isCompleted) pending.complete(null);
+  }
 }

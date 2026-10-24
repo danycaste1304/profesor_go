@@ -54,7 +54,7 @@ class EncounterState {
   /// The throw the player made (null while idle).
   final ThrowQuality? quality;
 
-  /// How many times the ball shakes before the outcome (1..3).
+  /// How many times the ball shakes before the outcome (2..4).
   final int shakeCount;
 
   /// Backend result once available.

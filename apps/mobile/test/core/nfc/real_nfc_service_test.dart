@@ -6,20 +6,23 @@ import 'package:nfc_manager/ndef_record.dart';
 import 'package:profesor_go/core/nfc/real_nfc_service.dart';
 
 NdefRecord _textRecord(String text, {String lang = 'en'}) => NdefRecord(
-      typeNameFormat: TypeNameFormat.wellKnown,
-      type: Uint8List.fromList([0x54]),
-      identifier: Uint8List(0),
-      payload: Uint8List.fromList([
-        lang.length,
-        ...utf8.encode(lang),
-        ...utf8.encode(text),
-      ]),
-    );
+  typeNameFormat: TypeNameFormat.wellKnown,
+  type: Uint8List.fromList([0x54]),
+  identifier: Uint8List(0),
+  payload: Uint8List.fromList([
+    lang.length,
+    ...utf8.encode(lang),
+    ...utf8.encode(text),
+  ]),
+);
 
 void main() {
   group('RealNfcService helpers', () {
     test('bytesToHex is upper-case and zero padded', () {
-      expect(RealNfcService.bytesToHex(Uint8List.fromList([0x04, 0xa3, 0x0f, 0xff])), '04A30FFF');
+      expect(
+        RealNfcService.bytesToHex(Uint8List.fromList([0x04, 0xa3, 0x0f, 0xff])),
+        '04A30FFF',
+      );
     });
 
     test('textFromNdef reads the well-known text record', () {
@@ -40,9 +43,30 @@ void main() {
         identifier: Uint8List(0),
         payload: Uint8List.fromList(utf8.encode(' DEMO-TAG-07 ')),
       );
-      expect(RealNfcService.textFromNdef(NdefMessage(records: [uri, plain])), 'DEMO-TAG-07');
+      expect(
+        RealNfcService.textFromNdef(NdefMessage(records: [uri, plain])),
+        'DEMO-TAG-07',
+      );
       expect(RealNfcService.textFromNdef(NdefMessage(records: [uri])), isNull);
       expect(RealNfcService.textFromNdef(null), isNull);
+    });
+
+    test('identifierFromNdef reads Estimote beacon ID ahead of text', () {
+      final estimote = NdefRecord(
+        typeNameFormat: TypeNameFormat.external,
+        type: Uint8List.fromList(utf8.encode('estimote.com:id')),
+        identifier: Uint8List(0),
+        payload: Uint8List.fromList([0x00, 0xa3, 0xff]),
+      );
+      final message = NdefMessage(records: [_textRecord('OTHER-ID'), estimote]);
+      expect(RealNfcService.identifierFromNdef(message), 'ESTIMOTE:00A3FF');
+      expect(
+        RealNfcService.identifierFromNdef(
+          NdefMessage(records: [_textRecord('TAG-1')]),
+        ),
+        'TAG-1',
+      );
+      expect(RealNfcService.identifierFromNdef(null), isNull);
     });
   });
 }

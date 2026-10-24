@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/config/app_config.dart';
 import '../core/di/providers.dart';
 import '../core/models/auth_user.dart';
 import '../features/auth/presentation/login_screen.dart';
@@ -51,6 +52,9 @@ String? appRedirect(AsyncValue<AuthUser?> auth, String location) {
   final signedIn = auth.value != null;
   final isPublic = AppRoutes.public.contains(location);
   if (!signedIn) {
+    if (!AppConfig.isDemoMode && location == AppRoutes.register) {
+      return AppRoutes.login;
+    }
     return isPublic && location != AppRoutes.splash ? null : AppRoutes.login;
   }
   if (isPublic) return AppRoutes.map;
@@ -100,9 +104,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.encounterPattern,
-        builder: (context, state) => EncounterScreen(
-          encounterId: state.pathParameters['encounterId']!,
-        ),
+        builder: (context, state) =>
+            EncounterScreen(encounterId: state.pathParameters['encounterId']!),
       ),
       GoRoute(
         path: AppRoutes.result,

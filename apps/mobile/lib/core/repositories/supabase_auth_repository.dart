@@ -7,11 +7,8 @@ import 'auth_repository.dart';
 
 /// [AuthRepository] over Supabase Auth + the `profiles` table.
 ///
-/// Verified against the live backend: `POST /auth/v1/signup` with
-/// `{"data": {"display_name": "..."}}` creates the user, copies
-/// `display_name` into `user_metadata` and — with e-mail confirmation off —
-/// returns a session right away. The `profiles` row is written by the
-/// `auth.users` trigger (CONTRACTS §2).
+/// Uses Google OAuth in the public build. The `auth.users` trigger writes the
+/// corresponding `profiles` row (CONTRACTS §2).
 class SupabaseAuthRepository implements AuthRepository {
   SupabaseAuthRepository(this._client);
 
@@ -22,9 +19,7 @@ class SupabaseAuthRepository implements AuthRepository {
     yield currentUser;
     yield* _client.auth.onAuthStateChange
         .map((state) => _toAuthUser(state.session?.user))
-        .distinct(
-          (a, b) => a?.id == b?.id && a?.displayName == b?.displayName,
-        );
+        .distinct((a, b) => a?.id == b?.id && a?.displayName == b?.displayName);
   }
 
   @override
@@ -43,6 +38,22 @@ class SupabaseAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<void> signInWithGoogle() async {
+    try {
+      final launched = await _client.auth.signInWithOAuth(
+        OAuthProvider.google,
+        redirectTo: 'profesorgo://login-callback',
+        authScreenLaunchMode: LaunchMode.externalApplication,
+      );
+      if (!launched) {
+        throw AppException.fromCode(AppException.serverUnavailable);
+      }
+    } catch (e) {
+      throw AppException.from(e);
+    }
+  }
+
+  @override
   Future<void> signUp(
     String email,
     String password, {
@@ -53,9 +64,7 @@ class SupabaseAuthRepository implements AuthRepository {
       final response = await _client.auth.signUp(
         email: email.trim(),
         password: password,
-        data: {
-          if (name != null && name.isNotEmpty) 'display_name': name,
-        },
+        data: {if (name != null && name.isNotEmpty) 'display_name': name},
       );
       final user = response.user;
       if (user == null) {
@@ -103,7 +112,7 @@ class SupabaseAuthRepository implements AuthRepository {
         return Profile(
           id: user.id,
           email: user.email ?? '',
-          displayName: user.userMetadata?['display_name'] as String?,
+          displayName: _displayName(user),
         );
       }
       return Profile.fromJson(row);
@@ -117,7 +126,16 @@ class SupabaseAuthRepository implements AuthRepository {
     return AuthUser(
       id: user.id,
       email: user.email ?? '',
-      displayName: user.userMetadata?['display_name'] as String?,
+      displayName: _displayName(user),
     );
+  }
+
+  static String? _displayName(User user) {
+    final metadata = user.userMetadata;
+    for (final key in ['display_name', 'full_name', 'name']) {
+      final value = metadata?[key];
+      if (value is String && value.trim().isNotEmpty) return value.trim();
+    }
+    return null;
   }
 }

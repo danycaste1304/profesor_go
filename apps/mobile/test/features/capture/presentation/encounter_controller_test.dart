@@ -85,7 +85,7 @@ void main() {
       expect(notifier.throwBall(ThrowQuality.great), isTrue);
       expect(container.read(provider).phase, EncounterPhase.throwing);
       expect(container.read(provider).quality, ThrowQuality.great);
-      expect(container.read(provider).shakeCount, inInclusiveRange(1, 3));
+      expect(container.read(provider).shakeCount, inInclusiveRange(2, 4));
       // Backend already called, before any animation callback.
       expect(service.resolved.single.quality, ThrowQuality.great);
       expect(service.resolved.single.encounterId, 'enc-1');

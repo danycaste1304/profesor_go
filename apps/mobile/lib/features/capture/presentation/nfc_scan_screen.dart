@@ -10,6 +10,7 @@ import '../../../app/theme.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/di/providers.dart';
 import '../../../core/errors/app_exception.dart';
+import '../../../core/models/profile.dart';
 import '../../../core/nfc/mock_nfc_service.dart';
 import '../../../core/nfc/nfc_service.dart';
 import '../../../core/widgets/widgets.dart';
@@ -44,6 +45,7 @@ class NfcScanScreen extends ConsumerStatefulWidget {
 class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
   _ScanStatus _status = _ScanStatus.checking;
   String? _errorMessage;
+  String? _unregisteredTag;
   List<DemoTag>? _demoTags;
   bool _starting = false;
 
@@ -80,11 +82,12 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
     if (mounted) setState(() => _demoTags = tags);
   }
 
-  void _set(_ScanStatus status, {String? message}) {
+  void _set(_ScanStatus status, {String? message, String? unregisteredTag}) {
     if (!mounted) return;
     setState(() {
       _status = status;
       _errorMessage = message;
+      _unregisteredTag = unregisteredTag;
     });
   }
 
@@ -119,10 +122,14 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
   }
 
   Future<void> _scan(int session) async {
-    _set(_ScanStatus.scanning);
+    _set(_ScanStatus.checking);
     String? tag;
     try {
-      tag = await _nfc.scanTag();
+      tag = await _nfc.scanTag(
+        onReady: () {
+          if (mounted && session == _session) _set(_ScanStatus.scanning);
+        },
+      );
     } on AppException catch (e) {
       if (!mounted || session != _session) return;
       switch (e.code) {
@@ -163,8 +170,22 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
       if (!mounted) return;
       context.go(AppRoutes.encounter(encounter.id), extra: encounter);
     } catch (e) {
+      final error = AppException.from(e);
+      String? unregisteredTag;
+      if (!AppConfig.isDemoMode && error.code == AppException.tagNotFound) {
+        try {
+          final profile = await ref.read(profileProvider.future);
+          if (profile?.role == UserRole.admin) unregisteredTag = tag;
+        } catch (_) {
+          // Registration details are only shown after confirming admin role.
+        }
+      }
       if (!mounted) return;
-      _set(_ScanStatus.error, message: AppException.from(e).message);
+      _set(
+        _ScanStatus.error,
+        message: error.message,
+        unregisteredTag: unregisteredTag,
+      );
     } finally {
       _starting = false;
     }
@@ -281,6 +302,7 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
           title: 'No se pudo empezar',
           message:
               _errorMessage ?? AppException.messages[AppException.unknown]!,
+          unregisteredTag: _unregisteredTag,
           onRetry: _begin,
         );
     }
@@ -395,6 +417,7 @@ class _MessageView extends StatelessWidget {
     this.iconColor = AppColors.danger,
     this.onRetry,
     this.onOpenSettings,
+    this.unregisteredTag,
   });
 
   final PixelIconData icon;
@@ -405,6 +428,7 @@ class _MessageView extends StatelessWidget {
 
   /// When set, the primary action opens the system settings.
   final Future<void> Function()? onOpenSettings;
+  final String? unregisteredTag;
 
   @override
   Widget build(BuildContext context) {
@@ -429,6 +453,23 @@ class _MessageView extends StatelessWidget {
               textAlign: TextAlign.center,
               style: textTheme.bodyLarge?.copyWith(color: AppColors.textMuted),
             ),
+            if (unregisteredTag != null) ...[
+              const SizedBox(height: 16),
+              Text(
+                'Identificador para registrar en el panel admin:',
+                textAlign: TextAlign.center,
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 8),
+              SelectableText(
+                unregisteredTag!,
+                textAlign: TextAlign.center,
+                style: textTheme.bodyMedium?.copyWith(
+                  fontFamily: 'monospace',
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
             if (onOpenSettings != null) ...[
               const SizedBox(height: 24),
               PixelButton(

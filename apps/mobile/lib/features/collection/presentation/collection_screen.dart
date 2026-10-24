@@ -23,8 +23,13 @@ class CollectionScreen extends ConsumerWidget {
     final state = ref.watch(collectionViewProvider);
     return AppScaffold(
       title: 'Mi Profedex',
-      homeFallback: true,
       padding: EdgeInsets.zero,
+      bottomBar: PixelButton(
+        label: 'Volver al mapa',
+        icon: PixelIcons.map,
+        variant: PixelButtonVariant.secondary,
+        onPressed: () => context.go(AppRoutes.map),
+      ),
       body: switch (state) {
         CollectionLoading() => const LoadingView(message: 'Cargando Profedex…'),
         CollectionError(:final error) => ErrorView.fromError(
@@ -250,7 +255,7 @@ class ProfessorCard extends StatelessWidget {
           // Shrinks on narrow cells ("LEGENDARIA" in a 2-column grid).
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: RarityBadge(professor.rarity, compact: true, tinted: false),
+            child: RarityBadge(professor.rarity, compact: true),
           ),
         ],
       ),

@@ -27,6 +27,7 @@ fun requiredKeystoreProperty(name: String): String =
         )
 
 val releaseSigningAvailable = keystorePropertiesFile.exists()
+val nfcDiagnosticBuild = System.getenv("PROFESOR_GO_NFC_DIAGNOSTIC") == "1"
 
 /** True when this invocation actually asks for a release task: keeps the fallback warning off debug builds. */
 val buildingRelease =
@@ -43,7 +44,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "edu.profesorgo.profesor_go"
+        applicationId =
+            if (nfcDiagnosticBuild) "edu.profesorgo.profesor_go.nfcdiag"
+            else "edu.profesorgo.profesor_go"
+        manifestPlaceholders["appLabel"] =
+            if (nfcDiagnosticBuild) "Profesor GO NFC" else "Profesor GO"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         // API 24 (flutter.minSdkVersion in Flutter 3.47). The nfc_manager and geolocator_android

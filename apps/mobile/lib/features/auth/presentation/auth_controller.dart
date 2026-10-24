@@ -53,6 +53,20 @@ class AuthController extends Notifier<AuthFormState> {
     () => ref.read(authRepositoryProvider).signIn(email.trim(), password),
   );
 
+  Future<bool> signInWithGoogle() async {
+    final started = await _run(
+      () => ref.read(authRepositoryProvider).signInWithGoogle(),
+    );
+    if (started &&
+        ref.mounted &&
+        ref.read(authRepositoryProvider).currentUser == null) {
+      state = const AuthFormState(
+        notice: 'Completa el acceso en Google y vuelve a Profesor GO.',
+      );
+    }
+    return started;
+  }
+
   /// Creates the account and leaves the user signed in. When the backend
   /// returns no session (e-mail confirmation enabled) a regular sign-in is
   /// attempted; if that is rejected because the e-mail is not confirmed the

@@ -177,7 +177,6 @@ class _MapScreenState extends ConsumerState<MapScreen>
                                     child: PixelButton(
                                       label: 'Profedex',
                                       icon: PixelIcons.book,
-                                      variant: PixelButtonVariant.tertiary,
                                       onPressed: () =>
                                           context.push(AppRoutes.collection),
                                     ),

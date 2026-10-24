@@ -81,12 +81,13 @@ class FakeNfcService implements NfcService {
   Future<NfcAvailability> availability() async => availabilityValue;
 
   @override
-  Future<String?> scanTag() {
+  Future<String?> scanTag({void Function()? onReady}) {
     scanCalls++;
     final error = scanError;
     if (error != null) return Future.error(error);
     final completer = Completer<String?>();
     _pending = completer;
+    onReady?.call();
     _timer = Timer(scanDelay, () {
       if (identical(_pending, completer)) {
         _pending = null;

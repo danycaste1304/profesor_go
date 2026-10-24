@@ -17,7 +17,7 @@ import 'widgets/email_field.dart';
 import 'widgets/password_field.dart';
 import 'widgets/pixel_logo.dart';
 
-/// E-mail + password sign-in. On success the router redirects to `/map`.
+/// Google sign-in in real builds; e-mail/password remains in the local demo.
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
@@ -26,6 +26,7 @@ class LoginScreen extends ConsumerStatefulWidget {
   static const Key submitKey = Key('login_submit');
   static const Key registerLinkKey = Key('login_register_link');
   static const Key demoFillKey = Key('login_demo_fill');
+  static const Key googleKey = Key('login_google');
 
   static const String demoHint = 'Modo demo: cualquier correo válido funciona';
   static const String demoEmail = 'player@profesorgo.local';
@@ -143,34 +144,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
                 ],
-                EmailField(
-                  key: LoginScreen.emailKey,
-                  controller: _email,
-                  validator: AuthValidators.email,
-                  enabled: !auth.loading,
-                ),
-                const SizedBox(height: 16),
-                PasswordField(
-                  key: LoginScreen.passwordKey,
-                  controller: _password,
-                  validator: AuthValidators.password,
-                  enabled: !auth.loading,
-                  onSubmitted: (_) => _submit(),
-                ),
-                const SizedBox(height: 24),
-                PixelButton(
-                  key: LoginScreen.submitKey,
-                  label: 'Entrar',
-                  icon: PixelIcons.login,
-                  loading: auth.loading,
-                  onPressed: _submit,
-                ),
-                const SizedBox(height: 12),
-                TextButton(
-                  key: LoginScreen.registerLinkKey,
-                  onPressed: auth.loading ? null : _goToRegister,
-                  child: const Text('¿No tienes cuenta? Crear cuenta'),
-                ),
+                if (AppConfig.isDemoMode) ...[
+                  EmailField(
+                    key: LoginScreen.emailKey,
+                    controller: _email,
+                    validator: AuthValidators.email,
+                    enabled: !auth.loading,
+                  ),
+                  const SizedBox(height: 16),
+                  PasswordField(
+                    key: LoginScreen.passwordKey,
+                    controller: _password,
+                    validator: AuthValidators.password,
+                    enabled: !auth.loading,
+                    onSubmitted: (_) => _submit(),
+                  ),
+                  const SizedBox(height: 24),
+                  PixelButton(
+                    key: LoginScreen.submitKey,
+                    label: 'Entrar',
+                    icon: PixelIcons.login,
+                    loading: auth.loading,
+                    onPressed: _submit,
+                  ),
+                  const SizedBox(height: 12),
+                  TextButton(
+                    key: LoginScreen.registerLinkKey,
+                    onPressed: auth.loading ? null : _goToRegister,
+                    child: const Text('¿No tienes cuenta? Crear cuenta'),
+                  ),
+                ] else ...[
+                  PixelButton(
+                    key: LoginScreen.googleKey,
+                    label: 'Continuar con Google',
+                    icon: PixelIcons.login,
+                    loading: auth.loading,
+                    onPressed: () => controller.signInWithGoogle(),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Usa tu cuenta personal de Google para jugar.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
                 const SizedBox(height: 16),
               ],
             ),

@@ -8,6 +8,9 @@ abstract class AuthRepository {
 
   Future<void> signIn(String email, String password);
 
+  /// Starts Google OAuth. The session arrives later through [authState].
+  Future<void> signInWithGoogle();
+
   Future<void> signUp(String email, String password, {String? displayName});
 
   Future<void> signOut();

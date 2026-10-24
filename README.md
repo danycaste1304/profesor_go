@@ -112,8 +112,8 @@ Ideal para desarrollo, tests y presentaciones sin infraestructura.
 ## Builds
 
 ```bash
+./scripts/build-real-android.sh                                     # Android real
 cd apps/mobile
-flutter build apk --release --dart-define-from-file=.env         # Android
 flutter build ipa --release --dart-define-from-file=.env         # iOS (macOS + Xcode)
 ```
 
@@ -129,6 +129,7 @@ iOS necesita el entitlement *Near Field Communication Tag Reading* en el App ID.
 | [docs/nfc.md](docs/nfc.md)                    | lectura NFC, compatibilidad, seguridad      |
 | [docs/privacy.md](docs/privacy.md)            | qué datos se guardan y cuáles no            |
 | [docs/setup.md](docs/setup.md)                | instalación paso a paso, builds, despliegue |
+| [docs/puesta-en-produccion.md](docs/puesta-en-produccion.md) | salida de demo a feria y pruebas físicas |
 | [docs/CONTRACTS.md](docs/CONTRACTS.md)        | contratos entre móvil, backend y admin      |
 | [docs/cambios-ui.md](docs/cambios-ui.md)      | cambios de UI pixel art (fuentes, componentes) |
 

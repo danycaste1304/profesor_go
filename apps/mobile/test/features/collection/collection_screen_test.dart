@@ -49,7 +49,8 @@ void main() {
   ) async {
     await pumpCollection(tester);
 
-    expect(find.text('PROFEDEX'), findsOneWidget);
+    expect(find.text('MI PROFEDEX'), findsOneWidget);
+    expect(find.widgetWithText(PixelButton, 'VOLVER AL MAPA'), findsOneWidget);
     expect(find.byType(ProfessorSprite), findsNWidgets(10));
     expect(silhouetteCount(tester), 7);
     expect(find.text('???'), findsWidgets);

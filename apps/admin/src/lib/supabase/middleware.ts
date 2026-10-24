@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { NOT_ADMIN_ERROR } from "@/lib/constants";
 import { getSupabaseEnv } from "./env";
 
-const PUBLIC_PATHS = ["/login"];
+const PUBLIC_PATHS = ["/login", "/auth/callback"];
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));

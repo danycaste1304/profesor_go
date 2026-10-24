@@ -5,9 +5,15 @@ import 'package:profesor_go/core/widgets/pixel_button.dart';
 
 void main() {
   test('each variant carries its own colors', () {
-    expect(PixelButtonVariant.primary.style.face, AppColors.danger);
+    expect(
+      PixelButtonVariant.primary.style.face,
+      const Color.fromARGB(255, 213, 53, 71),
+    );
     expect(PixelButtonVariant.primary.style.foreground, AppColors.surface);
-    expect(PixelButtonVariant.secondary.style.face, AppColors.border);
+    expect(
+      PixelButtonVariant.secondary.style.face,
+      const Color.fromARGB(255, 209, 232, 243),
+    );
     expect(PixelButtonVariant.secondary.style.foreground, AppColors.text);
     expect(PixelButtonVariant.tertiary.style.face, AppColors.accent);
     expect(PixelButtonVariant.danger.style.face, AppColors.dangerFill);

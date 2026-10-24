@@ -22,6 +22,7 @@ FakeAuthRepository stubbedAuthRepository({AuthUser? user, Profile? profile}) {
   when(() => repo.currentUser).thenReturn(user);
   when(() => repo.getProfile()).thenAnswer((_) async => profile);
   when(() => repo.signIn(any(), any())).thenAnswer((_) async {});
+  when(() => repo.signInWithGoogle()).thenAnswer((_) async {});
   when(() => repo.signUp(any(), any(), displayName: any(named: 'displayName')))
       .thenAnswer((_) async {});
   when(() => repo.signOut()).thenAnswer((_) async {});

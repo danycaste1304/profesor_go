@@ -165,10 +165,7 @@ void main() {
       );
 
       // 5. Fly / absorb / drop / shake / burst animations, then /result.
-      final onResult = await pumpUntilFound(
-        tester,
-        find.text('¡CAPTURADO!'),
-      );
+      final onResult = await pumpUntilFound(tester, find.text('¡CAPTURADO!'));
       expect(onResult, isTrue, reason: 'throw should end on the result screen');
       expect(find.text('¡CAPTURADO!'), findsOneWidget); // app bar title
       expect(find.text('Lanzamiento: Excelente'), findsOneWidget);
@@ -178,7 +175,7 @@ void main() {
       // 6. "Ver Profedex" → /collection shows the capture.
       await tester.tap(find.widgetWithText(PixelButton, 'VER PROFEDEX'));
       await settle(tester);
-      expect(find.text('PROFEDEX'), findsOneWidget);
+      expect(find.text('MI PROFEDEX'), findsOneWidget);
       expect(find.text('10 %'), findsOneWidget);
       expect(find.byType(ProfessorSprite), findsNWidgets(10));
       expect(find.text('Prof. Henry'), findsOneWidget);
@@ -188,6 +185,10 @@ void main() {
           .where((s) => s.silhouette)
           .length;
       expect(silhouettes, 9);
+
+      await tester.tap(find.widgetWithText(PixelButton, 'VOLVER AL MAPA'));
+      await settle(tester);
+      expect(find.widgetWithText(PixelButton, 'CAPTURAR'), findsOneWidget);
 
       // Unmount before disposing the services the screens still hold.
       await tester.pumpWidget(const SizedBox());

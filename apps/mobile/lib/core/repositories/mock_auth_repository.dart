@@ -97,6 +97,10 @@ class MockAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<void> signInWithGoogle() =>
+      signIn('player@profesorgo.local', 'player12345');
+
+  @override
   Future<void> signUp(
     String email,
     String password, {

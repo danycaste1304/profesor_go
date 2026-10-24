@@ -16,6 +16,15 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>profesor_go</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>profesorgo</string>
+			</array>
+		</dict>
+	</array>
 	<key>NFCReaderUsageDescription</key>
 	<string>Profesor GO usa NFC para leer las tarjetas de los profesores y comenzar un encuentro.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

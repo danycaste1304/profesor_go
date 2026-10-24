@@ -122,9 +122,11 @@ flutter run --dart-define=DEMO_MODE=false \
 Con `DEMO_MODE=false` se usan `SupabaseAuthRepository`,
 `SupabaseProfessorRepository`, `SupabaseCaptureService` (Edge Functions
 `start-encounter` / `resolve-capture`), `RealNfcService` (`nfc_manager`) y
-`RealLocationService` (`geolocator`). Si faltan las credenciales o
-`Supabase.initialize` falla, la app arranca igualmente en modo demo y lo
-indica en el log (`AppConfig.demoFallbackReason`).
+`RealLocationService` (`geolocator`). El acceso público se hace con Google;
+Supabase debe tener el proveedor Google activo y el retorno
+`profesorgo://login-callback` en su lista de URLs autorizadas. Si faltan las credenciales o falla
+`Supabase.initialize`, la app muestra un error de configuración y no permite
+capturas simuladas. Una build release real exige URL HTTPS.
 
 Para un móvil físico contra el Supabase local usa la IP de tu PC (no
 `localhost`) y, en Android, tráfico HTTP en claro solo si tu build lo permite

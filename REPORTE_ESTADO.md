@@ -2,6 +2,34 @@
 
 Revisión: 20 de octubre de 2026.
 
+## Avance hacia operación real — 23 de octubre de 2026
+
+- El kit mostrado es un Estimote Location Beacons Development Kit con tres
+  beacons BLE; el empaque confirma que incluyen un tag NFC programable. La app
+  ahora reconoce el registro `estimote.com:id` y usa `ESTIMOTE:<hex>` como
+  identificador estable para el panel admin. Sigue pendiente leer los aparatos
+  físicos en el Android de la usuaria. La usuaria confirmó al menos cuatro kits
+  (doce beacons), suficientes para diez profesores y dos reservas.
+- En modo real, un fallo de configuración de Supabase muestra un error de inicio
+  en vez de habilitar capturas demo. Una build release real exige HTTPS.
+- Una migración carga los ajustes necesarios sin el seed de desarrollo y borra
+  `DEMO-TAG-01…10` de producción. El identificador de un beacon no registrado
+  se muestra solamente a una cuenta admin para facilitar el alta.
+- Guía de salida y requisitos externos: `docs/puesta-en-produccion.md`.
+- `scripts/build-real-android.sh` impide generar por error el APK real sin
+  `DEMO_MODE=false`, URL HTTPS y clave pública. Los archivos de entorno locales
+  ya apuntan al nuevo proyecto Supabase «Profesor GO» en `us-east-1`. Las 19
+  migraciones están aplicadas, las tres Edge Functions activas y la producción
+  contiene diez profesores, ningún tag de ejemplo y cero cuentas de jugador.
+- La app y el panel ya incluyen «Continuar con Google». Se creó un proyecto
+  Google Cloud separado (`profesor-go-usfq`); falta completar su cliente OAuth,
+  activar el proveedor en Supabase y probar el retorno en un Android físico.
+- Verificación de esta fase: Flutter analyze sin problemas; 268 pruebas pasan
+  y 12 pruebas se omiten en la ejecución general; la prueba de acceso Google
+  en modo real también pasó por separado. Panel admin lint,
+  TypeScript, 44 pruebas y build correctos. Las pruebas SQL no se ejecutaron
+  porque el servicio Docker/Supabase local no estaba iniciado.
+
 ## Juego disponible
 
 - App Flutter con modo demo jugable sin backend, GPS ni NFC: acceso, mapa, selección de diez tarjetas, encuentro, lanzamiento, captura, colección, perfil y finalización.
@@ -48,6 +76,8 @@ Para empezar otra partida, entrar en **Perfil → Opciones de demo → Reiniciar
 1. Sustituir los límites GPS de muestra por los del campus y, si se desea, el mapa exacto del lugar.
 2. Registrar los identificadores de las tarjetas NFC físicas y probar lectura y ubicación en teléfonos reales.
 3. Preparar firma Android de producción. Para iOS, completar Xcode/CocoaPods y la capacidad NFC de Apple Developer.
-4. Conectar un proyecto Supabase de producción, configurar cuentas y volver a probar el flujo real en ese entorno.
+4. Completar Google OAuth, autorizar los retornos, entrar con Gmail y elevar
+   exclusivamente la cuenta de administración autorizada. Publicar el panel
+   por HTTPS y probar el flujo completo contra producción.
 
 Código fuente: [danycaste1304/profesor_go](https://github.com/danycaste1304/profesor_go). Los archivos de entorno, claves de firma, compilaciones locales y el retrato personal externo al juego quedan fuera del repositorio.

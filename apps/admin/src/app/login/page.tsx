@@ -12,7 +12,11 @@ export default async function LoginPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const { error } = await searchParams;
-  const initialError = error === NOT_ADMIN_ERROR ? NOT_ADMIN_MESSAGE : undefined;
+  const initialError = error === NOT_ADMIN_ERROR
+    ? NOT_ADMIN_MESSAGE
+    : error === "oauth"
+      ? "No se pudo completar el acceso con Google. Inténtalo de nuevo."
+      : undefined;
 
   return (
     <main className="pixel-grid flex min-h-screen items-center justify-center p-4 sm:p-8">
