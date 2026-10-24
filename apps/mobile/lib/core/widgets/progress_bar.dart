@@ -87,7 +87,7 @@ class ProgressBar extends StatelessWidget {
                   fill: fill,
                   outline: AppColors.text,
                   // Thinner blocks keep slim bars (mini bars) readable.
-                  pixel: height >= 20 ? 4 : 2,
+                  pixel: height >= 20 ? 3 : 2,
                 ),
               ),
             ),

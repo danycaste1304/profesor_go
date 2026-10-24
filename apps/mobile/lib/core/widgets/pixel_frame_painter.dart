@@ -32,7 +32,7 @@ class PixelFramePainter extends CustomPainter {
        bevel = false;
 
   /// Medium pixel size, also the height of the raised slab.
-  static const double defaultPixel = 4;
+  static const double defaultPixel = 3;
 
   final Color face;
   final Color outline;

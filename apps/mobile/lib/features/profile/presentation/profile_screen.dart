@@ -14,6 +14,7 @@ import '../../../core/repositories/mock_professor_repository.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/pixel_button.dart';
 import '../../../core/widgets/pixel_card.dart';
+import '../../../core/widgets/pixel_frame_painter.dart';
 import '../../../core/widgets/pixel_pill.dart';
 import '../../../core/widgets/progress_bar.dart';
 import '../../auth/presentation/auth_controller.dart';
@@ -424,7 +425,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 PixelButton(
                   key: ProfileScreen.collectionKey,
                   label: 'Ver Profedex',
-                  icon: Icons.grid_view,
+                  icon: Icons.menu_book,
                   variant: PixelButtonVariant.secondary,
                   onPressed: () => context.go(AppRoutes.collection),
                 ),
@@ -552,46 +553,66 @@ class _AvatarChoice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const block = PixelFramePainter.defaultPixel;
+    final face = selected ? const Color(0xFFFFF1BC) : AppColors.surface;
     return Semantics(
       button: true,
       selected: selected,
       label: label,
-      child: Material(
-        color: selected ? const Color(0xFFFFF1BC) : AppColors.surfaceAlt,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radius),
-          side: BorderSide(
-            color: selected ? AppColors.accentText : AppColors.border,
-            width: 2,
-          ),
+      child: CustomPaint(
+        painter: PixelFramePainter(
+          face: face,
+          outline: AppColors.text,
+          highlight: Color.lerp(face, Colors.white, 0.5)!,
+          shade: Color.lerp(face, AppColors.text, 0.3)!,
+          // The selected choice reads as pressed in (sunken), like the
+          // rarity filter chips.
+          pressed: selected,
         ),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(AppTheme.radius),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 44),
-            child: Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (swatch != null) ...[
-                    Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: swatch,
-                        border: Border.all(color: AppColors.text),
-                      ),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: onTap,
+            // The frame itself is the press feedback; no ripple.
+            splashFactory: NoSplash.splashFactory,
+            overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 48),
+              child: Padding(
+                // Keeps the content centered in the face, not in the slab.
+                padding: EdgeInsets.fromLTRB(
+                  8,
+                  selected ? block : 0,
+                  8,
+                  selected ? 0 : block,
+                ),
+                child: Center(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (swatch != null) ...[
+                          Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color: swatch,
+                              border: Border.all(color: AppColors.text),
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                        ],
+                        Text(
+                          label,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.labelLarge
+                              ?.copyWith(fontSize: 20, color: AppColors.text),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 5),
-                  ],
-                  Text(
-                    label,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelLarge
-                        ?.copyWith(fontSize: 20, color: AppColors.text),
                   ),
-                ],
+                ),
               ),
             ),
           ),

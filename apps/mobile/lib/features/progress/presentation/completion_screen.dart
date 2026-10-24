@@ -112,7 +112,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen>
         ),
         bottomBar: PixelButton(
           label: 'Ver Profedex',
-          icon: Icons.grid_view,
+          icon: Icons.menu_book,
           onPressed: () => context.go(AppRoutes.collection),
         ),
       );
@@ -134,7 +134,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen>
           const SizedBox(height: 10),
           PixelButton(
             label: 'Ver mi Profedex',
-            icon: Icons.grid_view,
+            icon: Icons.menu_book,
             variant: PixelButtonVariant.secondary,
             onPressed: () => context.go(AppRoutes.collection),
           ),

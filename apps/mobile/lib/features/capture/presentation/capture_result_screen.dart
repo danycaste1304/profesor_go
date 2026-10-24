@@ -179,7 +179,7 @@ class _SuccessActions extends StatelessWidget {
         ],
         PixelButton(
           label: 'Ver Profedex',
-          icon: Icons.grid_view,
+          icon: Icons.menu_book,
           variant: args.collectionCompleted
               ? PixelButtonVariant.secondary
               : PixelButtonVariant.primary,
