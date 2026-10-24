@@ -173,7 +173,7 @@ void main() {
     expect(captureButton(tester).onPressed, isNotNull);
     expect(find.text('PROFEDEX'), findsOneWidget);
     expect(find.text('PERFIL'), findsOneWidget);
-    expect(find.text('Profes Capturados'), findsOneWidget);
+    expect(find.text('PROFES CAPTURADOS'), findsOneWidget);
     expect(find.text('30 %'), findsOneWidget);
     expect(find.text('EN LÍNEA'), findsOneWidget);
     expect(find.byType(CampusMap), findsOneWidget);

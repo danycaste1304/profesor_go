@@ -443,7 +443,7 @@ class _MessageView extends StatelessWidget {
                 label: 'Reintentar',
                 icon: PixelIcons.refresh,
                 variant: onOpenSettings == null
-                    ? PixelButtonVariant.primary
+                    ? PixelButtonVariant.tertiary
                     : PixelButtonVariant.secondary,
                 onPressed: () => unawaited(onRetry!()),
               ),

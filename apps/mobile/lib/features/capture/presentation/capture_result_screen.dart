@@ -182,7 +182,7 @@ class _SuccessActions extends StatelessWidget {
           icon: PixelIcons.book,
           variant: args.collectionCompleted
               ? PixelButtonVariant.secondary
-              : PixelButtonVariant.primary,
+              : PixelButtonVariant.tertiary,
           onPressed: () => context.go(AppRoutes.collection),
         ),
         const SizedBox(height: 10),
@@ -286,17 +286,16 @@ class _FailureActions extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        PixelButton(
+        PixelButton.primary(
+          label: 'Leer otra tarjeta',
+          icon: PixelIcons.nfc,
+          onPressed: () => context.go(AppRoutes.scan),
+        ),
+        const SizedBox(height: 10),
+        PixelButton.secondary(
           label: 'Volver al mapa',
           icon: PixelIcons.map,
           onPressed: () => context.go(AppRoutes.map),
-        ),
-        const SizedBox(height: 10),
-        PixelButton(
-          label: 'Leer otra tarjeta',
-          icon: PixelIcons.nfc,
-          variant: PixelButtonVariant.secondary,
-          onPressed: () => context.go(AppRoutes.scan),
         ),
       ],
     );

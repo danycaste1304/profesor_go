@@ -78,6 +78,7 @@ class _EncounterErrorScreen extends StatelessWidget {
         icon: PixelIcons.searchOff,
         retryLabel: 'Leer otra tarjeta',
         retryIcon: PixelIcons.nfc,
+        retryVariant: PixelButtonVariant.primary,
         onRetry: () => context.go(AppRoutes.scan),
       ),
       bottomBar: PixelButton(

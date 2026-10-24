@@ -153,6 +153,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                               PixelButton(
                                 label: 'Capturar',
                                 icon: PixelIcons.nfc,
+                                variant: PixelButtonVariant.primary,
                                 onPressed: online
                                     ? () => context.push(AppRoutes.scan)
                                     : null,
@@ -176,7 +177,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                                     child: PixelButton(
                                       label: 'Profedex',
                                       icon: PixelIcons.book,
-                                      variant: PixelButtonVariant.secondary,
+                                      variant: PixelButtonVariant.tertiary,
                                       onPressed: () =>
                                           context.push(AppRoutes.collection),
                                     ),
@@ -286,7 +287,7 @@ class _ProgressChip extends StatelessWidget {
       child = ProgressBar(
         value: p.captured,
         total: p.total,
-        label: 'Profes Capturados',
+        label: 'PROFES CAPTURADOS',
         height: 20,
         color: p.completed ? AppColors.success : AppColors.accent,
       );

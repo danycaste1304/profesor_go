@@ -6,6 +6,7 @@ import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/pixel_button.dart';
+import '../../../core/widgets/pixel_icon.dart';
 import '../../../core/widgets/pixel_icons.dart';
 import '../domain/auth_validators.dart';
 import 'auth_controller.dart';
@@ -13,7 +14,6 @@ import 'widgets/auth_message_banner.dart';
 import 'widgets/email_field.dart';
 import 'widgets/password_field.dart';
 import 'widgets/pixel_logo.dart';
-import '../../../core/widgets/pixel_icon.dart';
 
 /// Account creation: e-mail, password and an optional nickname. On success
 /// the user is signed in and the router redirects to `/map`.

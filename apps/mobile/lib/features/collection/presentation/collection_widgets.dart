@@ -60,7 +60,7 @@ class CollectionHeader extends StatelessWidget {
           ProgressBar(
             value: progress.captured,
             total: progress.total,
-            label: 'Profes Capturados',
+            label: 'PROFES CAPTURADOS',
             color: progress.completed ? AppColors.success : AppColors.accent,
           ),
           const SizedBox(height: 14),

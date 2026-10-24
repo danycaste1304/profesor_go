@@ -15,13 +15,13 @@ import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/pixel_button.dart';
 import '../../../core/widgets/pixel_card.dart';
 import '../../../core/widgets/pixel_frame_painter.dart';
+import '../../../core/widgets/pixel_icon.dart';
 import '../../../core/widgets/pixel_icons.dart';
 import '../../../core/widgets/pixel_pill.dart';
 import '../../../core/widgets/progress_bar.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../avatar/avatar_style.dart';
 import '../../map/presentation/widgets/avatar.dart';
-import '../../../core/widgets/pixel_icon.dart';
 
 /// Keep in sync with `version:` in pubspec.yaml (no package_info_plus to
 /// avoid an extra dependency).

@@ -8,6 +8,7 @@ import '../../../core/config/app_config.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/pixel_button.dart';
 import '../../../core/widgets/pixel_card.dart';
+import '../../../core/widgets/pixel_icon.dart';
 import '../../../core/widgets/pixel_icons.dart';
 import '../domain/auth_validators.dart';
 import 'auth_controller.dart';
@@ -15,7 +16,6 @@ import 'widgets/auth_message_banner.dart';
 import 'widgets/email_field.dart';
 import 'widgets/password_field.dart';
 import 'widgets/pixel_logo.dart';
-import '../../../core/widgets/pixel_icon.dart';
 
 /// E-mail + password sign-in. On success the router redirects to `/map`.
 class LoginScreen extends ConsumerStatefulWidget {

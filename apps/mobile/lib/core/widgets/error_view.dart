@@ -14,6 +14,7 @@ class ErrorView extends StatelessWidget {
     this.onRetry,
     this.retryLabel = 'Reintentar',
     this.retryIcon = PixelIcons.refresh,
+    this.retryVariant = PixelButtonVariant.tertiary,
     this.icon = PixelIcons.error,
   });
 
@@ -24,6 +25,7 @@ class ErrorView extends StatelessWidget {
     this.onRetry,
     this.retryLabel = 'Reintentar',
     this.retryIcon = PixelIcons.refresh,
+    this.retryVariant = PixelButtonVariant.tertiary,
     this.icon = PixelIcons.error,
   }) : message = AppException.from(error).message;
 
@@ -31,6 +33,7 @@ class ErrorView extends StatelessWidget {
   final VoidCallback? onRetry;
   final String retryLabel;
   final PixelIconData retryIcon;
+  final PixelButtonVariant retryVariant;
   final PixelIconData icon;
 
   @override
@@ -54,6 +57,7 @@ class ErrorView extends StatelessWidget {
                 label: retryLabel,
                 onPressed: onRetry,
                 icon: retryIcon,
+                variant: retryVariant,
                 expand: false,
               ),
             ],
