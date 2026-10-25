@@ -14,16 +14,16 @@ on conflict (key) do update set value = excluded.value;
 -- professors (ten campus professors)
 -- ---------------------------------------------------------------------------
 insert into public.professors (id, name, display_name, description, rarity, base_capture_rate, active) values
-  ('00000000-0000-4000-8000-000000000016', 'Henry Carvajal',    'Prof. Henry', 'Profesor de MAC, amable y buena onda con sus estudiantes.', 'COMMON', 0.80, true),
-  ('00000000-0000-4000-8000-000000000015', 'Felipe Grijalva',   'Prof. Felipe', 'Excoordinador de MAC y experto en Machine Learning. Está a cargo de las maestrías de Ciencia de Datos e IA. Su aire serio impone respeto, pero es buena gente.', 'EPIC', 0.40, true),
-  ('00000000-0000-4000-8000-000000000014', 'Jose David Vega',   'Prof. Jose David', 'Enseña muy bien y sus materias son llevaderas. Es un profe muy buena onda, cercano y querido por sus estudiantes.', 'COMMON', 0.80, true),
-  ('00000000-0000-4000-8000-000000000013', 'Ricardo Flores',    'Prof. Ricardo', 'Experto en Redes y nuestro advisor de CS. Sus exámenes son legendariamente difíciles, pero explica muy bien.', 'RARE', 0.60, true),
-  ('00000000-0000-4000-8000-000000000012', 'Pavel Alba',        'Prof. Pavel',    'Experto en Inteligencia Artificial y el «papá de la carrera». Su oficina está en nuestro laboratorio; explica increíble y hace sus clases súper interactivas.', 'EPIC', 0.40, true),
-  ('00000000-0000-4000-8000-000000000011', 'Noel Perez',        'Prof. Noel',     'Profesor cubano de Bases de Datos y Estructuras de Datos. Sus exámenes son retadores; enseña bien y anima a sus estudiantes a ser más sociables.', 'EPIC', 0.40, true),
-  ('00000000-0000-4000-8000-000000000009', 'Daniel Riofrio',    'Prof. Daniel',  'Coordinador de MAC y CMP. «Todo es un experimento social». Uno de los profesores más poderosos e inteligentes del campus.', 'LEGENDARY', 0.25, true),
-  ('00000000-0000-4000-8000-000000000010', 'Erick Ñauñay',      'Prof. Erick',   'Enseña mejor que nadie, pero sus pruebas son imposibles. Genio de Big Tech y Netflix; fundó su propia empresa y cae genial en clase.', 'LEGENDARY', 0.25, true),
-  ('00000000-0000-4000-8000-000000000017', 'Diego Morales',    'Prof. Diego', 'Profesor de MAC. Es tan difícil encontrárselo que aquí aparece como raro. Cuando se deja ver, llega con buena onda.', 'RARE', 0.60, true),
-  ('00000000-0000-4000-8000-000000000018', 'Roberto Andrade',  'Prof. Roberto', 'Profesor de CMP. Gentil, sencillo y muy buena gente con sus estudiantes.', 'COMMON', 0.80, true)
+  ('00000000-0000-4000-8000-000000000016', 'Henry Carvajal',   'Prof. Henry', 'Profesor de Ingeniería en Matemáticas Aplicadas y Computación en la USFQ.', 'COMMON', 0.80, true),
+  ('00000000-0000-4000-8000-000000000015', 'Felipe Grijalva',  'Prof. Felipe', 'Coordinador de Ingeniería en Matemáticas Aplicadas y Computación. Dirige las maestrías en Ciencia de Datos e Inteligencia Artificial e investiga aprendizaje automático.', 'EPIC', 0.40, true),
+  ('00000000-0000-4000-8000-000000000014', 'José David Vega', 'Prof. José David', 'Profesor de Ciencias de la Computación. Investiga comunicaciones, aprendizaje automático y seguridad de la información.', 'COMMON', 0.80, true),
+  ('00000000-0000-4000-8000-000000000013', 'Ricardo Flores',   'Prof. Ricardo', 'Profesor e investigador en redes y seguridad de red. Asesora al capítulo de Computer Science de IEEE-USFQ.', 'RARE', 0.60, true),
+  ('00000000-0000-4000-8000-000000000012', 'Pavel Alba',       'Prof. Pavel', 'Profesor de Ingeniería en Ciencias de la Computación en la USFQ. Comparte su interés por la inteligencia artificial con estudiantes.', 'EPIC', 0.40, true),
+  ('00000000-0000-4000-8000-000000000011', 'Noel Pérez',       'Prof. Noel', 'Profesor e investigador en minería de datos, aprendizaje automático y procesamiento de imágenes.', 'EPIC', 0.40, true),
+  ('00000000-0000-4000-8000-000000000009', 'Daniel Riofrío',  'Prof. Daniel', 'Coordinador de Ingeniería en Ciencias de la Computación. Investiga aprendizaje automático, seguridad y optimización.', 'LEGENDARY', 0.25, true),
+  ('00000000-0000-4000-8000-000000000010', 'Erick Ñauñay',    'Prof. Erick', 'Invita a explorar retos de programación y nuevas ideas tecnológicas en Profesor GO.', 'LEGENDARY', 0.25, true),
+  ('00000000-0000-4000-8000-000000000017', 'Diego Morales',   'Prof. Diego', 'Profesor de Ingeniería en Matemáticas Aplicadas y Computación en la USFQ.', 'RARE', 0.60, true),
+  ('00000000-0000-4000-8000-000000000018', 'Roberto Andrade', 'Prof. Roberto', 'Profesor de Ciencias de la Computación en la USFQ. Participa en proyectos de enseñanza de programación y robótica.', 'COMMON', 0.80, true)
 on conflict (id) do update set
   name              = excluded.name,
   display_name      = excluded.display_name,

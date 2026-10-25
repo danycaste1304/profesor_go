@@ -213,7 +213,7 @@ void main() {
       professor: demoProfessors[2].summary,
     );
     await pumpScreen(tester, extra: encounter);
-    expect(find.text('Prof. Jose David'), findsOneWidget);
+    expect(find.text('Prof. José David'), findsOneWidget);
     expect(find.text('COMÚN'), findsOneWidget);
     expect(
       find.byWidgetPredicate(

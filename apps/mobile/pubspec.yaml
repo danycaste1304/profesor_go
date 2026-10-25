@@ -1,7 +1,7 @@
 name: profesor_go
 description: "Profesor GO - juego de captura de profesores para la feria universitaria (Flutter + Supabase)."
 publish_to: 'none'
-version: 0.1.0+5
+version: 0.1.0+6
 
 environment:
   sdk: ^3.13.3

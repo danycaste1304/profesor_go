@@ -44,7 +44,7 @@ void main() {
         'Prof. Diego',
         'Prof. Ricardo',
         'Prof. Henry',
-        'Prof. Jose David',
+        'Prof. José David',
         'Prof. Roberto',
       ]);
       expect(sortProfessors(sorted), sorted);

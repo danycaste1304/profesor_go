@@ -17,7 +17,7 @@ void main() {
     expect(tags.first.label, 'Prof. Henry');
     expect(tags[1].label, 'Prof. Felipe');
     expect(tags[1].professorId, felipeGrijalvaId);
-    expect(tags[2].label, 'Prof. Jose David');
+    expect(tags[2].label, 'Prof. José David');
     expect(tags[2].professorId, joseDavidVegaId);
     expect(tags[3].label, 'Prof. Ricardo');
     expect(tags[3].professorId, ricardoFloresId);
