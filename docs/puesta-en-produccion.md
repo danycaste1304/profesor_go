@@ -1,7 +1,28 @@
 # Paso de demo a operación real
 
-Estado: 24 de octubre de 2026. Este documento es la secuencia de salida para
+Estado: 25 de octubre de 2026. Este documento es la secuencia de salida para
 la feria; ningún emulador sustituye la última prueba con los dispositivos.
+
+## Estado de la beta 7
+
+La APK real v0.1.0+7 integra el mapa y la transición de encuentro nuevos,
+NFC, Google y Supabase. Su botón **Perfil → Reiniciar mi Profedex** aparece
+solo para la cuenta organizadora y el servidor verifica su identificador y
+rol antes de borrar únicamente sus capturas y encuentros. La migración se
+probó en producción dentro de una transacción revertida; la colección real
+del organizador quedó intacta.
+
+La APK actual es para prueba directa: está firmada con la clave debug local y
+contiene la pista de batalla de Pokémon solicitada para esta revisión, sin
+licencia de distribución documentada. Antes de publicar una APK abierta,
+obtener la autorización de uso de esa música o volver a la pista original
+`battle_loop.wav` y crear una clave de firma de producción.
+
+Google Auth Platform sigue en estado **Prueba**, con solo el Gmail del
+organizador autorizado. Antes de que cualquier asistente pueda iniciar sesión,
+terminar la configuración de marca y publicar la pantalla OAuth para usuarios
+externos. También siguen pendientes la calibración GPS en campus, la prueba
+física completa de los diez NFC en la APK nueva y el panel admin por HTTPS.
 
 ## 1. Infraestructura y cuentas
 
@@ -11,7 +32,7 @@ la feria; ningún emulador sustituye la última prueba con los dispositivos.
    Guardar su **Project URL** y
    **publishable/anon key** en `apps/mobile/.env` (`DEMO_MODE=false`) y en el
    entorno del panel admin. La `service_role` nunca va en ninguna app cliente.
-2. Las 19 migraciones ya se aplicaron con `supabase db push` y las tres Edge
+2. Las 21 migraciones ya se aplicaron con `supabase db push` y las tres Edge
    Functions de `docs/setup.md` están desplegadas. La migración final carga los ajustes de juego
    y elimina `DEMO-TAG-01…10`; **no ejecutar `supabase/seed.sql` en producción**.
 3. Configurar «Continuar con Google» en el proyecto Google Cloud
