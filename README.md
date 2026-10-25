@@ -127,6 +127,7 @@ iOS necesita el entitlement *Near Field Communication Tag Reading* en el App ID.
 | [docs/database.md](docs/database.md)          | tablas, RLS, RPC, concurrencia              |
 | [docs/game-design.md](docs/game-design.md)    | reglas, minijuego, anti-trampas, a11y       |
 | [docs/nfc.md](docs/nfc.md)                    | lectura NFC, compatibilidad, seguridad      |
+| [docs/beacons-profesores.md](docs/beacons-profesores.md) | etiqueta física de cada beacon y profesor |
 | [docs/privacy.md](docs/privacy.md)            | qué datos se guardan y cuáles no            |
 | [docs/setup.md](docs/setup.md)                | instalación paso a paso, builds, despliegue |
 | [docs/puesta-en-produccion.md](docs/puesta-en-produccion.md) | salida de demo a feria y pruebas físicas |

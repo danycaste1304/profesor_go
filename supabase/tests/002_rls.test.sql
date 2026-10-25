@@ -1,6 +1,7 @@
 -- pgTAP: RLS matrix (docs/CONTRACTS.md §3) simulated with request.jwt.claims + set role.
--- Player writes that RLS silently filters (UPDATE/DELETE with no policy affect 0 rows)
--- are executed as the player and verified afterwards as postgres (bypassrls).
+-- Player writes are executed as the player and verified afterwards as postgres
+-- (bypassrls). Tables with revoked write privileges reject them with 42501;
+-- tables that still grant writes but have no matching RLS policy filter them.
 begin;
 create extension if not exists pgtap with schema extensions;
 select plan(41);
@@ -79,9 +80,9 @@ select results_eq(
 select throws_ok(
   $$insert into public.encounters (user_id, professor_id, expires_at) values ('30000000-0000-4000-8000-000000000001', '30000000-0000-4000-8000-0000000000bb', now())$$,
   '42501', null, 'player cannot insert encounters');
-select lives_ok(
+select throws_ok(
   $$update public.encounters set status = 'SUCCESS' where id = '30000000-0000-4000-8000-0000000000e1'$$,
-  'player update on own encounter is filtered');
+  '42501', null, 'player cannot update own encounter');
 
 -- captures
 select results_eq(
@@ -91,12 +92,12 @@ select results_eq(
 select throws_ok(
   $$insert into public.captures (user_id, professor_id, throw_quality) values ('30000000-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000003', 'GOOD')$$,
   '42501', null, 'player cannot insert captures');
-select lives_ok(
+select throws_ok(
   $$update public.captures set throw_quality = 'EXCELLENT' where id = '30000000-0000-4000-8000-0000000000c1'$$,
-  'player update on own capture is filtered');
-select lives_ok(
+  '42501', null, 'player cannot update own capture');
+select throws_ok(
   $$delete from public.captures where id = '30000000-0000-4000-8000-0000000000c1'$$,
-  'player delete on own capture is filtered');
+  '42501', null, 'player cannot delete own capture');
 
 -- app_settings
 select ok(exists (select 1 from public.app_settings where key = 'throw_bonus'), 'player can read app_settings');
