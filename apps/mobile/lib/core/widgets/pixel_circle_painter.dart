@@ -46,8 +46,7 @@ class PixelCirclePainter extends CustomPainter {
       n,
       (y) => List.generate(n, (x) => _inside(x, y, n)),
     );
-    bool at(int x, int y) =>
-        x >= 0 && y >= 0 && x < n && y < n && inside[y][x];
+    bool at(int x, int y) => x >= 0 && y >= 0 && x < n && y < n && inside[y][x];
     bool isOutline(int x, int y) =>
         at(x, y) &&
         !(at(x - 1, y) && at(x + 1, y) && at(x, y - 1) && at(x, y + 1));
@@ -55,10 +54,7 @@ class PixelCirclePainter extends CustomPainter {
     final paint = Paint()..isAntiAlias = false;
     void cell(int x, int y, double dy, Color color) {
       paint.color = color;
-      canvas.drawRect(
-        Rect.fromLTWH(left + x * p, dy + y * p, p, p),
-        paint,
-      );
+      canvas.drawRect(Rect.fromLTWH(left + x * p, dy + y * p, p, p), paint);
     }
 
     if (!pressed) {

@@ -78,8 +78,8 @@ void main() {
     expect(find.text('ana@uni.edu'), findsOneWidget);
     expect(find.text('MODO DEMO'), findsOneWidget);
     expect(find.text('ADMIN'), findsNothing);
-    await scrollTo(tester, find.text('38 %'));
-    expect(find.text('38 %'), findsOneWidget);
+    await scrollTo(tester, find.text('3 / 8'));
+    expect(find.text('3 / 8'), findsOneWidget);
     expect(find.text('Profesores capturados'), findsOneWidget);
     await scrollTo(tester, find.text('Profesor GO v$kAppVersion'));
     expect(find.text('Profesor GO v$kAppVersion'), findsOneWidget);
@@ -177,8 +177,8 @@ void main() {
       ),
     );
 
-    await scrollTo(tester, find.text('100 %'));
-    expect(find.text('100 %'), findsOneWidget);
+    await scrollTo(tester, find.text('8 / 8'));
+    expect(find.text('8 / 8'), findsOneWidget);
     expect(find.text('¡Profedex completa!'), findsOneWidget);
   });
 
@@ -242,8 +242,8 @@ void main() {
 
     expect(state.captures, isEmpty);
     expect(find.text('Profedex demo reiniciada'), findsOneWidget);
-    await scrollTo(tester, find.text('0 %'));
-    expect(find.text('0 %'), findsOneWidget);
+    await scrollTo(tester, find.text('0 / 10'));
+    expect(find.text('0 / 10'), findsOneWidget);
     expect(find.byType(Scaffold), findsOneWidget);
   });
 }

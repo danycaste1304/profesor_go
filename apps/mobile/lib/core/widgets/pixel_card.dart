@@ -27,7 +27,9 @@ class PixelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // The outline is painted inside the bounds, so content is inset by it.
     final content = Padding(
-      padding: padding.add(const EdgeInsets.all(PixelFramePainter.defaultPixel)),
+      padding: padding.add(
+        const EdgeInsets.all(PixelFramePainter.defaultPixel),
+      ),
       child: child,
     );
 

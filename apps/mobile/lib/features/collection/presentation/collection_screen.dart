@@ -23,6 +23,8 @@ class CollectionScreen extends ConsumerWidget {
     final state = ref.watch(collectionViewProvider);
     return AppScaffold(
       title: 'Mi Profedex',
+      // The bottom bar already has "Volver al mapa".
+      showBackButton: false,
       padding: EdgeInsets.zero,
       bottomBar: PixelButton(
         label: 'Volver al mapa',

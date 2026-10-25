@@ -187,7 +187,7 @@ void main() {
       PixelButtonVariant.secondary,
     );
     expect(find.text('PROFES CAPTURADOS'), findsOneWidget);
-    expect(find.text('30 %'), findsOneWidget);
+    expect(find.text('3 / 10'), findsOneWidget);
     expect(find.text('EN LÍNEA'), findsOneWidget);
     expect(find.byType(CampusMap), findsOneWidget);
     expect(iconButton(PixelIcons.walk), findsOneWidget);
@@ -337,7 +337,7 @@ void main() {
     await tester.pumpWidget(h.build());
     await settle(tester);
 
-    expect(find.text('100 %'), findsOneWidget);
+    expect(find.text('10 / 10'), findsOneWidget);
     expect(find.text('¡Profedex completada!'), findsOneWidget);
 
     await tester.tap(find.text('VER'));

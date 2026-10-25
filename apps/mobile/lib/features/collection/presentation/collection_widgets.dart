@@ -62,6 +62,8 @@ class CollectionHeader extends StatelessWidget {
             total: progress.total,
             label: 'PROFES CAPTURADOS',
             color: progress.completed ? AppColors.success : AppColors.accent,
+            showCount: true,
+            showPercent: false,
           ),
           const SizedBox(height: 14),
           for (final rarity in Rarity.values) ...[

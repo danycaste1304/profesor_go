@@ -9,6 +9,7 @@ import '../../../avatar/avatar_style.dart';
 import '../../domain/campus_map_config.dart';
 import 'avatar.dart';
 import 'fair_landmarks_painter.dart';
+import 'fair_map_labels.dart';
 
 /// Illustrated campus map with the player's avatar layered on top.
 ///
@@ -193,6 +194,10 @@ class _CampusMapState extends State<CampusMap>
                 child: CustomPaint(painter: const FairLandmarksPainter()),
               ),
             ),
+          if (config.backgroundAssetPath ==
+              CampusMapConfig.defaultBackgroundAssetPath)
+            // Positions live in FairMapLabels; drag them into place there.
+            ...FairMapLabels.all,
           if (offset != null)
             AnimatedPositioned(
               key: CampusMap.avatarKey,

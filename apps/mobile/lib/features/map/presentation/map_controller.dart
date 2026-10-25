@@ -84,15 +84,15 @@ class MapState {
 
   /// Spanish explanation when the position is unavailable, `null` otherwise.
   String? get message => switch (status) {
-        null || LocationStatus.available => null,
-        LocationStatus.denied => AppException.messages[AppException.locationDenied],
-        LocationStatus.deniedForever =>
-          'El permiso de ubicación está bloqueado. Actívalo en los ajustes '
-              'del móvil para verte en el mapa.',
-        LocationStatus.serviceDisabled =>
-          '${AppException.messages[AppException.locationDisabled]} '
-              'Actívala para verte en el mapa.',
-      };
+    null || LocationStatus.available => null,
+    LocationStatus.denied => AppException.messages[AppException.locationDenied],
+    LocationStatus.deniedForever =>
+      'El permiso de ubicación está bloqueado. Actívalo en los ajustes '
+          'del móvil para verte en el mapa.',
+    LocationStatus.serviceDisabled =>
+      '${AppException.messages[AppException.locationDisabled]} '
+          'Actívala para verte en el mapa.',
+  };
 
   /// Whether an "Abrir ajustes" action makes sense for [status].
   bool get canOpenSettings =>
@@ -107,14 +107,13 @@ class MapState {
     bool? simulating,
     bool? canSimulate,
     CampusMapConfig? config,
-  }) =>
-      MapState(
-        status: clearStatus ? null : (status ?? this.status),
-        current: current ?? this.current,
-        simulating: simulating ?? this.simulating,
-        canSimulate: canSimulate ?? this.canSimulate,
-        config: config ?? this.config,
-      );
+  }) => MapState(
+    status: clearStatus ? null : (status ?? this.status),
+    current: current ?? this.current,
+    simulating: simulating ?? this.simulating,
+    canSimulate: canSimulate ?? this.canSimulate,
+    config: config ?? this.config,
+  );
 
   @override
   bool operator ==(Object other) =>
@@ -130,8 +129,9 @@ class MapState {
       Object.hash(status, current, simulating, canSimulate, config);
 }
 
-final mapControllerProvider =
-    NotifierProvider<MapController, MapState>(MapController.new);
+final mapControllerProvider = NotifierProvider<MapController, MapState>(
+  MapController.new,
+);
 
 /// Subscribes to [LocationService.positions] after a successful
 /// [LocationService.checkAndRequest] and projects the position onto the map.

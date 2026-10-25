@@ -389,6 +389,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         total: p.total,
                         label: 'Profesores capturados',
                         color: p.completed ? AppColors.success : null,
+                        showCount: true,
+                        showPercent: false,
                       ),
                       if (p.completed) ...[
                         const SizedBox(height: 10),

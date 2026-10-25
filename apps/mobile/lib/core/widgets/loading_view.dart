@@ -25,9 +25,7 @@ class LoadingView extends StatelessWidget {
             Text(
               message!,
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
+              style: Theme.of(context).textTheme.titleMedium
                   ?.copyWith(color: AppColors.textMuted),
             ),
           ],

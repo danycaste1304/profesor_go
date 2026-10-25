@@ -48,6 +48,37 @@ void main() {
     expect(find.byType(BackButton), findsNothing);
   });
 
+  testWidgets('showBackButton: false hides the automatic arrow', (
+    tester,
+  ) async {
+    final router = GoRouter(
+      initialLocation: AppRoutes.map,
+      routes: [
+        GoRoute(
+          path: AppRoutes.map,
+          builder: (_, _) => const Scaffold(body: Text('MAPA')),
+        ),
+        GoRoute(
+          path: AppRoutes.collection,
+          builder: (_, _) => const AppScaffold(
+            title: 'Profedex',
+            showBackButton: false,
+            body: Text('CONTENIDO'),
+          ),
+        ),
+      ],
+    );
+    await tester.pumpWidget(
+      MaterialApp.router(theme: AppTheme.light(), routerConfig: router),
+    );
+    await tester.pumpAndSettle();
+    unawaited(router.push(AppRoutes.collection));
+    await tester.pumpAndSettle();
+
+    expect(find.text('CONTENIDO'), findsOneWidget);
+    expect(find.byType(BackButton), findsNothing);
+  });
+
   testWidgets('with a back stack the automatic arrow is used', (tester) async {
     await tester.pumpWidget(app(AppRoutes.map));
     await tester.pumpAndSettle();

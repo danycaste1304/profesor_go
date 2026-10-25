@@ -58,7 +58,7 @@ void main() {
     expect(find.text('Prof. Ricardo'), findsOneWidget);
     expect(find.text('Prof. Erick'), findsOneWidget);
     expect(find.text('Prof. Noel'), findsNothing);
-    expect(find.text('30 %'), findsOneWidget);
+    expect(find.text('3 / 10'), findsOneWidget);
     expect(find.byType(RarityBadge), findsNWidgets(10));
     expect(find.byType(CachedDataBanner), findsNothing);
 
@@ -80,7 +80,7 @@ void main() {
     expect(find.byType(ProfessorSprite), findsNWidgets(2));
     expect(find.text('Prof. Ricardo'), findsOneWidget);
     expect(find.text('???'), findsWidgets); // Diego is still a silhouette.
-    expect(find.text('30 %'), findsOneWidget); // header is global
+    expect(find.text('3 / 10'), findsOneWidget); // header is global
 
     await tester.tap(find.byKey(const Key('filter-ALL')));
     await tester.pump();
@@ -132,8 +132,16 @@ void main() {
 
     expect(find.byType(ErrorView), findsNothing);
     expect(find.byType(ProfessorSprite), findsNWidgets(10));
-    expect(find.text('30 %'), findsOneWidget);
+    expect(find.text('3 / 10'), findsOneWidget);
     expect(find.text(CachedDataBanner.text), findsOneWidget);
+  });
+
+  testWidgets('has no AppBar back arrow, only "Volver al mapa"', (
+    tester,
+  ) async {
+    await pumpCollection(tester);
+    expect(find.byType(BackButton), findsNothing);
+    expect(find.text('VOLVER AL MAPA'), findsOneWidget);
   });
 
   testWidgets('offline shows the cached-data banner', (tester) async {
@@ -148,7 +156,7 @@ void main() {
     await pumpCollection(tester);
     expect(find.byType(ProfessorSprite), findsNothing);
     expect(find.textContaining('Aún no hay profesores'), findsOneWidget);
-    expect(find.text('0 %'), findsOneWidget);
+    expect(find.text('0 / 0'), findsOneWidget);
   });
 
   testWidgets('completed collection shows the achievement shortcut', (
@@ -156,7 +164,7 @@ void main() {
   ) async {
     repo.captures = [for (final p in demoProfessors) captureOf(p.id)];
     await pumpCollection(tester);
-    expect(find.text('100 %'), findsOneWidget);
+    expect(find.text('10 / 10'), findsOneWidget);
     expect(find.text('???'), findsNothing);
     expect(find.text('¡Profedex completa!'), findsOneWidget);
     expect(find.text('VER LOGRO'), findsOneWidget);

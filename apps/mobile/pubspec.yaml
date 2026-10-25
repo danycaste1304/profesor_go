@@ -34,6 +34,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/map/campus_map.png
+    - assets/map/tent.png
     - assets/audio/campus_loop.wav
     - assets/audio/battle_loop.wav
     - assets/audio/victory.wav

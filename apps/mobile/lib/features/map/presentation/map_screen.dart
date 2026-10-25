@@ -290,6 +290,8 @@ class _ProgressChip extends StatelessWidget {
         total: p.total,
         label: 'PROFES CAPTURADOS',
         height: 20,
+        showCount: true,
+        showPercent: false,
         color: p.completed ? AppColors.success : AppColors.accent,
       );
     } else if (progressAsync.hasError) {

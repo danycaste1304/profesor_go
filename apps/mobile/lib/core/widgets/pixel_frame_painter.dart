@@ -73,8 +73,14 @@ class PixelFramePainter extends CustomPainter {
     final light = pressed ? shade : highlight;
     final dark = pressed ? highlight : shade;
     paint.color = light;
-    canvas.drawRect(Rect.fromLTWH(inner.left, inner.top, inner.width, p), paint);
-    canvas.drawRect(Rect.fromLTWH(inner.left, inner.top, p, inner.height), paint);
+    canvas.drawRect(
+      Rect.fromLTWH(inner.left, inner.top, inner.width, p),
+      paint,
+    );
+    canvas.drawRect(
+      Rect.fromLTWH(inner.left, inner.top, p, inner.height),
+      paint,
+    );
     paint.color = dark;
     canvas.drawRect(
       Rect.fromLTWH(inner.left, inner.bottom - p, inner.width, p),

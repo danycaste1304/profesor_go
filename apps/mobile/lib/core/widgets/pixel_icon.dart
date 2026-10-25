@@ -58,6 +58,14 @@ class _PixelIconPainter extends CustomPainter {
       ..isAntiAlias = false
       ..color = color;
     final rows = data.art.split('\n');
+    // The glyph asks for its own size, but a parent can force a bigger box
+    // (e.g. InputDecoration gives a prefixIcon at least 48 x 48): center the
+    // art in it instead of leaving it in the top-left corner.
+    canvas.save();
+    canvas.translate(
+      (size.width - data.extent) / 2,
+      (size.height - data.extent) / 2,
+    );
     for (var y = 0; y < data.size; y++) {
       var x = 0;
       while (x < data.size) {
@@ -81,6 +89,7 @@ class _PixelIconPainter extends CustomPainter {
         );
       }
     }
+    canvas.restore();
   }
 
   @override

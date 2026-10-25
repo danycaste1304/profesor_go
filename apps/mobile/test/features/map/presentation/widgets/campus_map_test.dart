@@ -6,6 +6,8 @@ import 'package:profesor_go/features/avatar/avatar_style.dart';
 import 'package:profesor_go/features/map/domain/campus_map_config.dart';
 import 'package:profesor_go/features/map/presentation/widgets/avatar.dart';
 import 'package:profesor_go/features/map/presentation/widgets/campus_map.dart';
+import 'package:profesor_go/features/map/presentation/widgets/fair_map_labels.dart';
+import 'package:profesor_go/features/map/presentation/widgets/map_label.dart';
 
 void main() {
   Widget wrap(Widget child) => MaterialApp(
@@ -41,9 +43,18 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(wrap(const CampusMap(avatarOffset: null)));
-    expect(find.byType(Image), findsOneWidget);
+    // The map itself plus the tent picture of the POLI label.
+    expect(find.byType(Image), findsNWidgets(7));
+    expect(find.byType(MapLabel), findsNWidgets(FairMapLabels.all.length));
+    expect(find.text('POLI'), findsOneWidget);
+    // POLI's tent plus the five picture-only ones.
     expect(find.byType(InteractiveViewer), findsOneWidget);
     expect(find.byType(PixelAvatar), findsNothing);
+  });
+
+  test('every fair label is fixed once its position is final', () {
+    // To move one again, give it `draggable: MapLabel.dragEnabled`.
+    expect(FairMapLabels.all.where((l) => l.draggable), isEmpty);
   });
 
   testWidgets('uses Image.asset when a background asset path is configured', (

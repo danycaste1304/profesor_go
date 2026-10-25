@@ -29,10 +29,9 @@ class PixelBarPainter extends CustomPainter {
       pixel: pixel,
     ).paint(canvas, size);
 
-    final inner = Offset(pixel, pixel) & Size(
-      size.width - 2 * pixel,
-      size.height - 2 * pixel,
-    );
+    final inner =
+        Offset(pixel, pixel) &
+        Size(size.width - 2 * pixel, size.height - 2 * pixel);
     if (inner.width <= 0 || inner.height <= 0 || ratio <= 0) return;
 
     // Whole blocks only; any progress shows at least one block.

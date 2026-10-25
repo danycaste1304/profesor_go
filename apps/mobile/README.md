@@ -79,6 +79,18 @@ Con `DEMO_MODE=true` (el valor por defecto) la app funciona 100 % en memoria:
   la pantalla de resultado tras terminar la fanfarria. La elección se guarda en
   `SharedPreferences` y se aplica al volver a abrir la app. Empieza silenciada
   en la primera instalación.
+* **Colocar etiquetas del mapa (`MapLabel`)**: en builds debug se pueden
+  arrastrar las etiquetas que declaran `draggable: MapLabel.dragEnabled` (hoy,
+  solo las carpas sin pill de `FairMapLabels`); `--dart-define=MAP_LABEL_DRAG=false`
+  lo desactiva, y en profile y release nunca está activo. Al soltar una, la consola de `flutter run` imprime su posición en
+  unidades del mapa (lienzo de 720×1290, punto inferior central de la
+  etiqueta), lista para pegar en el código:
+  ```bash
+  flutter run 2>&1 | tee map_labels.log
+  grep '\[MapLabel\]' map_labels.log   # [MapLabel] carpa-1: Offset(250, 1008)
+  ```
+  Sin el define las etiquetas quedan fijas, así que ninguna build normal las
+  mueve.
 
 ### Arte y sonido
 

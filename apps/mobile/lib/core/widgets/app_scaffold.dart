@@ -13,6 +13,7 @@ class AppScaffold extends StatelessWidget {
     this.actions,
     this.leading,
     this.showAppBar = true,
+    this.showBackButton = true,
     this.homeFallback = false,
     this.padding = const EdgeInsets.all(16),
     this.bottomBar,
@@ -26,6 +27,11 @@ class AppScaffold extends StatelessWidget {
   final List<Widget>? actions;
   final Widget? leading;
   final bool showAppBar;
+
+  /// Whether the AppBar adds its automatic back arrow when the screen was
+  /// pushed. Turn it off when the body already has its own way back (e.g. a
+  /// "Volver al mapa" button in [bottomBar]).
+  final bool showBackButton;
 
   /// When the screen was reached with `go` (empty back stack) the AppBar has no
   /// automatic back arrow; this adds one that returns to the map.
@@ -51,13 +57,16 @@ class AppScaffold extends StatelessWidget {
               title: title == null ? null : Text(title!.toUpperCase()),
               actions: actions,
               leading: fallbackLeading,
+              automaticallyImplyLeading: showBackButton,
             )
           : null,
       floatingActionButton: floatingActionButton,
       body: SafeArea(
         child: Column(
           children: [
-            Expanded(child: Padding(padding: padding, child: body)),
+            Expanded(
+              child: Padding(padding: padding, child: body),
+            ),
             if (bottomBar != null)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),

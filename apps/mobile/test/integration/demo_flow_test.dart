@@ -126,7 +126,7 @@ void main() {
       await tester.tap(find.byKey(LoginScreen.submitKey));
       await settle(tester);
       expect(find.text('CAMPUS USFQ'), findsOneWidget);
-      expect(find.text('0 %'), findsOneWidget);
+      expect(find.text('0 / 10'), findsOneWidget);
       final captureButton = find.widgetWithText(PixelButton, 'CAPTURAR');
       expect(captureButton, findsOneWidget);
       expect(tester.widget<PixelButton>(captureButton).onPressed, isNotNull);
@@ -176,7 +176,7 @@ void main() {
       await tester.tap(find.widgetWithText(PixelButton, 'VER PROFEDEX'));
       await settle(tester);
       expect(find.text('MI PROFEDEX'), findsOneWidget);
-      expect(find.text('10 %'), findsOneWidget);
+      expect(find.text('1 / 10'), findsOneWidget);
       expect(find.byType(ProfessorSprite), findsNWidgets(10));
       expect(find.text('Prof. Henry'), findsOneWidget);
       expect(find.text('???'), findsWidgets);
