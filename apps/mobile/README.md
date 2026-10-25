@@ -36,8 +36,8 @@ Con `DEMO_MODE=true` (el valor por defecto) la app funciona 100 % en memoria:
   algún día cambia en Supabase, cámbiala ahí y los tres textos se actualizan
   solos. En modo demo `MockAuthRepository` aplica el mismo mínimo.
 * Tarjetas demo `DEMO-TAG-01` … `DEMO-TAG-10` → Henry Carvajal,
-  Felipe Grijalva, Jose David Vega, Ricardo Flores, Pavel Alba, Noel Perez,
-  Daniel Riofrio, Erick Ñauñay, Diego Morales y Roberto Andrade.
+  Felipe Grijalva, José David Vega, Ricardo Flores, Pavel Alba, Noel Pérez,
+  Daniel Riofrío, Erick Ñauñay, Diego Morales y Roberto Andrade.
   Daniel y Erick son legendarios; Felipe, Pavel y Noel son épicos;
   Ricardo y Diego son raros; Henry, Jose David y Roberto son comunes.
   La probabilidad de captura es la del contrato:

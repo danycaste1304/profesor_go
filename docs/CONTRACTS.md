@@ -163,17 +163,17 @@ Tests en `supabase/functions/**/*.test.ts` ejecutables con `deno test` sin red (
 |---|------------------|-----------------|-----------|------|
 | 1 | Henry Carvajal   | Prof. Henry     | COMMON    | 0.80 |
 | 2 | Felipe Grijalva  | Prof. Felipe    | EPIC      | 0.40 |
-| 3 | Jose David Vega  | Prof. Jose David | COMMON   | 0.80 |
+| 3 | José David Vega  | Prof. José David | COMMON   | 0.80 |
 | 4 | Ricardo Flores   | Prof. Ricardo   | RARE      | 0.60 |
 | 5 | Pavel Alba       | Prof. Pavel     | EPIC      | 0.40 |
-| 6 | Noel Perez       | Prof. Noel      | EPIC      | 0.40 |
-| 7 | Daniel Riofrio   | Prof. Daniel    | LEGENDARY | 0.25 |
+| 6 | Noel Pérez       | Prof. Noel      | EPIC      | 0.40 |
+| 7 | Daniel Riofrío   | Prof. Daniel    | LEGENDARY | 0.25 |
 | 8 | Erick Ñauñay     | Prof. Erick     | LEGENDARY | 0.25 |
 | 9 | Diego Morales    | Prof. Diego     | RARE      | 0.60 |
 | 10 | Roberto Andrade | Prof. Roberto   | COMMON    | 0.80 |
 
 Los UUID son fijos: sufijo `0016` para Henry, `0015` para Felipe,
-`0014` para Jose David, `0013` para Ricardo, `0012` para Pavel, `0011` para
+`0014` para José David, `0013` para Ricardo, `0012` para Pavel, `0011` para
 Noel, `0009` para Daniel, `0010` para Erick, `0017` para Diego y `0018`
 para Roberto. Las diez tarjetas demo siguen ese orden.
 

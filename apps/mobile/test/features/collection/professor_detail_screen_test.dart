@@ -67,7 +67,7 @@ void main() {
     expect(find.text('???'), findsWidgets);
     expect(find.text('PROFESOR'), findsOneWidget);
     expect(find.text('Prof. Noel'), findsNothing);
-    expect(find.text('Noel Perez'), findsNothing);
+    expect(find.text('Noel Pérez'), findsNothing);
     expect(find.text(noel.description!), findsNothing);
     expect(find.text(ProfessorDetailScreen.undiscoveredHint), findsOneWidget);
     expect(find.textContaining('Capturado el'), findsNothing);

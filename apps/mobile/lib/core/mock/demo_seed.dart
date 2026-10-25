@@ -24,7 +24,7 @@ final List<Professor> demoProfessors = List.unmodifiable([
     id: henryCarvajalId,
     name: 'Henry Carvajal',
     displayName: 'Prof. Henry',
-    description: 'Profesor de MAC, amable y buena onda con sus estudiantes.',
+    description: 'Profesor de Ingeniería en Matemáticas Aplicadas y Computación en la USFQ.',
     rarity: Rarity.common,
     baseCaptureRate: 0.80,
   ),
@@ -33,19 +33,19 @@ final List<Professor> demoProfessors = List.unmodifiable([
     name: 'Felipe Grijalva',
     displayName: 'Prof. Felipe',
     description:
-        'Excoordinador de MAC y experto en Machine Learning. '
-        'Está a cargo de las maestrías de Ciencia de Datos e IA. '
-        'Su aire serio impone respeto, pero es buena gente.',
+        'Coordinador de Ingeniería en Matemáticas Aplicadas y Computación. '
+        'Dirige las maestrías en Ciencia de Datos e Inteligencia Artificial '
+        'e investiga aprendizaje automático.',
     rarity: Rarity.epic,
     baseCaptureRate: 0.40,
   ),
   Professor(
     id: joseDavidVegaId,
-    name: 'Jose David Vega',
-    displayName: 'Prof. Jose David',
+    name: 'José David Vega',
+    displayName: 'Prof. José David',
     description:
-        'Enseña muy bien y sus materias son llevaderas. '
-        'Es un profe muy buena onda, cercano y querido por sus estudiantes.',
+        'Profesor de Ciencias de la Computación. Investiga comunicaciones, '
+        'aprendizaje automático y seguridad de la información.',
     rarity: Rarity.common,
     baseCaptureRate: 0.80,
   ),
@@ -54,8 +54,8 @@ final List<Professor> demoProfessors = List.unmodifiable([
     name: 'Ricardo Flores',
     displayName: 'Prof. Ricardo',
     description:
-        'Experto en Redes y nuestro advisor de CS. Sus exámenes son '
-        'legendariamente difíciles, pero explica muy bien.',
+        'Profesor e investigador en redes y seguridad de red. '
+        'Asesora al capítulo de Computer Science de IEEE-USFQ.',
     rarity: Rarity.rare,
     baseCaptureRate: 0.60,
   ),
@@ -64,30 +64,28 @@ final List<Professor> demoProfessors = List.unmodifiable([
     name: 'Pavel Alba',
     displayName: 'Prof. Pavel',
     description:
-        'Experto en Inteligencia Artificial y el «papá de la carrera». '
-        'Su oficina está en nuestro laboratorio; explica increíble y '
-        'hace sus clases súper interactivas.',
+        'Profesor de Ingeniería en Ciencias de la Computación en la USFQ. '
+        'Comparte su interés por la inteligencia artificial con estudiantes.',
     rarity: Rarity.epic,
     baseCaptureRate: 0.40,
   ),
   Professor(
     id: noelPerezId,
-    name: 'Noel Perez',
+    name: 'Noel Pérez',
     displayName: 'Prof. Noel',
     description:
-        'Profesor cubano de Bases de Datos y Estructuras de Datos. '
-        'Sus exámenes son retadores; enseña bien y anima a sus estudiantes '
-        'a ser más sociables.',
+        'Profesor e investigador en minería de datos, aprendizaje '
+        'automático y procesamiento de imágenes.',
     rarity: Rarity.epic,
     baseCaptureRate: 0.40,
   ),
   Professor(
     id: danielRiofrioId,
-    name: 'Daniel Riofrio',
+    name: 'Daniel Riofrío',
     displayName: 'Prof. Daniel',
     description:
-        'Coordinador de MAC y CMP. «Todo es un experimento social». '
-        'Uno de los profesores más poderosos e inteligentes del campus.',
+        'Coordinador de Ingeniería en Ciencias de la Computación. '
+        'Investiga aprendizaje automático, seguridad y optimización.',
     rarity: Rarity.legendary,
     baseCaptureRate: 0.25,
   ),
@@ -96,8 +94,8 @@ final List<Professor> demoProfessors = List.unmodifiable([
     name: 'Erick Ñauñay',
     displayName: 'Prof. Erick',
     description:
-        'Enseña mejor que nadie, pero sus pruebas son imposibles. '
-        'Genio de Big Tech y Netflix; fundó su propia empresa y cae genial en clase.',
+        'Invita a explorar retos de programación y nuevas ideas tecnológicas '
+        'en Profesor GO.',
     rarity: Rarity.legendary,
     baseCaptureRate: 0.25,
   ),
@@ -106,8 +104,8 @@ final List<Professor> demoProfessors = List.unmodifiable([
     name: 'Diego Morales',
     displayName: 'Prof. Diego',
     description:
-        'Profesor de MAC. Es tan difícil encontrárselo que aquí aparece como raro. '
-        'Cuando se deja ver, llega con buena onda.',
+        'Profesor de Ingeniería en Matemáticas Aplicadas y Computación '
+        'en la USFQ.',
     rarity: Rarity.rare,
     baseCaptureRate: 0.60,
   ),
@@ -115,7 +113,9 @@ final List<Professor> demoProfessors = List.unmodifiable([
     id: robertoAndradeId,
     name: 'Roberto Andrade',
     displayName: 'Prof. Roberto',
-    description: 'Profesor de CMP. Gentil, sencillo y muy buena gente con sus estudiantes.',
+    description:
+        'Profesor de Ciencias de la Computación en la USFQ. '
+        'Participa en proyectos de enseñanza de programación y robótica.',
     rarity: Rarity.common,
     baseCaptureRate: 0.80,
   ),
