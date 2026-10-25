@@ -6,27 +6,24 @@ Los diálogos de encuentro son texto ficticio del juego, no citas reales.
 
 | Carta | Nombre en la ficha | Descripción |
 | --- | --- | --- |
-| Prof. Henry | Henry Carvajal | Profesor de Ingeniería en Matemáticas Aplicadas y Computación en la USFQ. |
-| Prof. Felipe | Felipe Grijalva | Coordinador de Ingeniería en Matemáticas Aplicadas y Computación. Dirige las maestrías en Ciencia de Datos e Inteligencia Artificial e investiga aprendizaje automático. |
-| Prof. José David | José David Vega | Profesor de Ciencias de la Computación. Investiga comunicaciones, aprendizaje automático y seguridad de la información. |
-| Prof. Ricardo | Ricardo Flores | Profesor e investigador en redes y seguridad de red. Asesora al capítulo de Computer Science de IEEE-USFQ. |
-| Prof. Pavel | Pavel Alba | Profesor de Ingeniería en Ciencias de la Computación en la USFQ. Comparte su interés por la inteligencia artificial con estudiantes. |
-| Prof. Noel | Noel Pérez | Profesor e investigador en minería de datos, aprendizaje automático y procesamiento de imágenes. |
-| Prof. Daniel | Daniel Riofrío | Coordinador de Ingeniería en Ciencias de la Computación. Investiga aprendizaje automático, seguridad y optimización. |
-| Prof. Erick | Erick Ñauñay | Invita a explorar retos de programación y nuevas ideas tecnológicas en Profesor GO. |
-| Prof. Diego | Diego Morales | Profesor de Ingeniería en Matemáticas Aplicadas y Computación en la USFQ. |
-| Prof. Roberto | Roberto Andrade | Profesor de Ciencias de la Computación en la USFQ. Participa en proyectos de enseñanza de programación y robótica. |
+| Prof. Henry | Henry Carvajal | Profe de MAC, amable y siempre dispuesto a ayudar. Apoya directamente al capítulo IEEE CIS y a quienes se animan a aprender. |
+| Prof. Felipe | Felipe Grijalva | Está a cargo de las maestrías en Ciencia de Datos e Inteligencia Artificial y domina el aprendizaje automático. Su aire serio impone respeto, pero es buena gente. |
+| Prof. José David | José David Vega | Súper buena gente y cercano en clase. Entre comunicaciones, IA y seguridad te hace disfrutar la materia, aunque puede ser letal cuando quiere. |
+| Prof. Ricardo | Ricardo Flores | Experto en redes y nuestro asesor de IEEE CS en la USFQ. Sus exámenes hacen temblar a muchos, pero enseña como nadie. |
+| Prof. Pavel | Pavel Alba | Profe de CMP y experto en IA. Desde el laboratorio encuentra cómo automatizar sus clases y hacerlas cada vez más interactivas. |
+| Prof. Noel | Noel Pérez | Entre bases de datos y estructuras de datos, te impulsa a salir del aula, conocer gente y descubrir lo que hay más allá de las clases. |
+| Prof. Daniel | Daniel Riofrío | Coordina MAC y CMP. Entre aprendizaje automático, seguridad y optimización, cada clase puede convertirse en un experimento social. |
+| Prof. Erick | Erick Ñauñay | Genio de Big Tech: da unas clases increíbles y pone exámenes que parecen imposibles. Aun así, acabas adorando la materia. |
+| Prof. Diego | Diego Morales | Profe de MAC. Encontrarlo puede ser una misión rara, pero cuando aparece llega con buena onda y siempre vale la pena escucharlo. |
+| Prof. Roberto | Roberto Andrade | Profe de CMP, gentil y buena gente. Habla con él y puede que acabes metido en algún proyecto de programación o robótica. |
 
 ## Fuentes y autorización
 
-Los cargos y áreas se contrastaron con el
-[directorio y los perfiles de la USFQ](https://www.usfq.edu.ec/es/profesores).
-La ficha de Felipe corrige el cargo anterior de «excoordinador»: la USFQ lo
-presenta como coordinador actual. El directorio aún presenta a Pavel como
-«Apoyo Académico»; el equipo organizador confirmó que su cargo actual es
-profesor de la carrera y que el directorio no se ha actualizado. No
-encontramos un perfil docente institucional de Erick, por lo que su
-descripción no afirma cargos, empleadores ni logros profesionales.
+Los cargos y el tono de las fichas se ajustaron con la información del equipo
+organizador el 25 de octubre de 2026. Daniel coordina MAC y CMP; Felipe está a
+cargo de las maestrías y no coordina MAC. El directorio público de la USFQ puede
+seguir mostrando información anterior sobre Pavel y Felipe. Las frases sobre
+clases y exámenes son descripciones lúdicas del juego, no citas de los docentes.
 
 El equipo organizador confirmó que los diez participantes aprobaron el uso de
 sus nombres y retratos, y que Pavel y Erick participan como profesores.

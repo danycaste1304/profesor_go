@@ -90,6 +90,11 @@ beacon, registra **ambos identificadores** como tags activos del mismo profesor.
 La aplicación puede recurrir al UID cuando no logra leer el registro NDEF.
 Después valida cada uno en **Profesor GO → Capturar**.
 
+El beacon físico **08 → Prof. Pavel** mostró un UID adicional en la APK real
+el 25 de octubre de 2026. Se registró de forma privada en Supabase sin
+eliminar los identificadores anteriores. El Galaxy A52 abrió el encuentro de
+Pavel al leer el 08 separado de los otros beacons.
+
 Los Estimote pueden incluir un Android Application Record (AAR) que apunta a
 otra app. Si Android lee el beacon fuera de la sesión de captura, ese AAR puede
 abrir Play Store. En la feria, espera a que aparezca **BUSCANDO TARJETA** antes

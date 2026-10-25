@@ -2,7 +2,7 @@
 -- Runs as postgres (bypassrls). Everything is rolled back.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(88);
+select plan(89);
 
 -- tables ---------------------------------------------------------------------
 select has_table('public', 'profiles',     'profiles table exists');
@@ -95,25 +95,26 @@ select ok(not exists (select 1 from public.professors where id = '00000000-0000-
 select is((select professor_id from public.nfc_tags where tag_identifier = 'DEMO-TAG-02'), '00000000-0000-4000-8000-000000000015'::uuid, 'DEMO-TAG-02 -> Felipe');
 select is((select rarity from public.professors where id = '00000000-0000-4000-8000-000000000015' and active), 'EPIC', 'Felipe is the active epic professor');
 select is((select base_capture_rate from public.professors where id = '00000000-0000-4000-8000-000000000015'), 0.40::numeric, 'Felipe has the epic capture rate');
-select ok(position('Machine Learning' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000015')) > 0, 'Felipe has his supplied specialty');
-select ok(position('Coordinador de Ingeniería en Matemáticas Aplicadas y Computación' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000015')) > 0, 'Felipe has his current coordination role');
+select ok(position('aprendizaje automático' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000015')) > 0, 'Felipe has his supplied specialty');
+select ok(position('maestrías' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000015')) > 0 and position('Coordinador' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000015')) = 0, 'Felipe manages the masters, not MAC');
 select ok(not exists (select 1 from public.professors where id = '00000000-0000-4000-8000-000000000002' and active), 'old Turing sample is inactive or absent');
 select is((select professor_id from public.nfc_tags where tag_identifier = 'DEMO-TAG-03'), '00000000-0000-4000-8000-000000000014'::uuid, 'DEMO-TAG-03 -> Jose David');
 select is((select rarity from public.professors where id = '00000000-0000-4000-8000-000000000014' and active), 'COMMON', 'Jose David is the active common professor');
 select is((select base_capture_rate from public.professors where id = '00000000-0000-4000-8000-000000000014'), 0.80::numeric, 'Jose David has the common capture rate');
-select ok(position('seguridad de la información' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000014')) > 0, 'José David has his research profile');
+select ok(position('comunicaciones, IA y seguridad' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000014')) > 0, 'José David has his fields and playful copy');
 select ok(not exists (select 1 from public.professors where id = '00000000-0000-4000-8000-000000000003' and active), 'old Hopper sample is inactive or absent');
 select is((select professor_id from public.nfc_tags where tag_identifier = 'DEMO-TAG-04'), '00000000-0000-4000-8000-000000000013'::uuid, 'DEMO-TAG-04 -> Ricardo');
 select is((select rarity from public.professors where id = '00000000-0000-4000-8000-000000000013' and active), 'RARE', 'Ricardo is the active rare professor');
-select ok(position('redes y seguridad de red' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000013')) > 0, 'Ricardo has his research area');
-select ok(position('IEEE-USFQ' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000013')) > 0, 'Ricardo is the IEEE-CS chapter advisor');
+select ok(position('Experto en redes' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000013')) > 0, 'Ricardo has his research area');
+select ok(position('asesor de IEEE CS' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000013')) > 0, 'Ricardo is the IEEE-CS chapter advisor');
 select ok(not exists (select 1 from public.professors where id = '00000000-0000-4000-8000-000000000004' and active), 'old Dijkstra sample is inactive or absent');
 select is((select professor_id from public.nfc_tags where tag_identifier = 'DEMO-TAG-05'), '00000000-0000-4000-8000-000000000012'::uuid, 'DEMO-TAG-05 -> Pavel');
 select is((select rarity from public.professors where id = '00000000-0000-4000-8000-000000000012' and active), 'EPIC', 'Pavel is an active epic professor');
-select ok(position('Profesor de Ingeniería en Ciencias de la Computación' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000012')) > 0, 'Pavel has his current teaching role');
+select ok(position('Profe de CMP y experto en IA' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000012')) > 0, 'Pavel has his current teaching role');
 select ok(not exists (select 1 from public.professors where id = '00000000-0000-4000-8000-000000000005' and active), 'old rare sample is inactive or absent');
 select is((select professor_id from public.nfc_tags where tag_identifier = 'DEMO-TAG-06'), '00000000-0000-4000-8000-000000000011'::uuid, 'DEMO-TAG-06 -> Noel');
 select is((select professor_id from public.nfc_tags where tag_identifier = 'DEMO-TAG-07'), '00000000-0000-4000-8000-000000000009'::uuid, 'DEMO-TAG-07 -> Daniel');
+select ok(position('Coordina MAC y CMP' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000009')) > 0, 'Daniel coordinates both MAC and CMP');
 select is((select professor_id from public.nfc_tags where tag_identifier = 'DEMO-TAG-08'), '00000000-0000-4000-8000-000000000010'::uuid, 'DEMO-TAG-08 -> Erick');
 select is((select professor_id from public.nfc_tags where tag_identifier = 'DEMO-TAG-09'), '00000000-0000-4000-8000-000000000017'::uuid, 'DEMO-TAG-09 -> Diego');
 select is((select rarity from public.professors where id = '00000000-0000-4000-8000-000000000017' and active), 'RARE', 'Diego is rare');
@@ -121,9 +122,9 @@ select is((select professor_id from public.nfc_tags where tag_identifier = 'DEMO
 select is((select rarity from public.professors where id = '00000000-0000-4000-8000-000000000018' and active), 'COMMON', 'Roberto is common');
 select ok(position('CMP' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000018')) > 0, 'Roberto teaches CMP');
 select is((select count(*) from public.professors where active and rarity = 'LEGENDARY' and id in ('00000000-0000-4000-8000-000000000009', '00000000-0000-4000-8000-000000000010')), 2::bigint, 'Daniel and Erick are the two active legends');
-select ok(position('Profesor GO' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000010')) > 0, 'Erick has a neutral game profile');
+select ok(position('Big Tech' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000010')) > 0, 'Erick has the supplied playful description');
 select is((select rarity from public.professors where id = '00000000-0000-4000-8000-000000000011' and active), 'EPIC', 'Noel is the active epic professor');
-select ok(position('minería de datos' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000011')) > 0, 'Noel has his research profile');
+select ok(position('bases de datos y estructuras de datos' in (select description from public.professors where id = '00000000-0000-4000-8000-000000000011')) > 0, 'Noel encourages learning beyond class');
 select ok(not exists (select 1 from public.professors where id = '00000000-0000-4000-8000-000000000006' and active), 'old epic sample is inactive or absent');
 select ok(not exists (select 1 from public.professors where active and id in ('00000000-0000-4000-8000-000000000007', '00000000-0000-4000-8000-000000000008')), 'old placeholder legends are inactive');
 select is((select role from public.profiles where email = 'admin@profesorgo.local'), 'admin', 'seed admin has role admin');

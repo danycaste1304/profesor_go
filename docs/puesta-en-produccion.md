@@ -11,6 +11,11 @@ solo para la cuenta organizadora y el servidor verifica su identificador y
 rol antes de borrar únicamente sus capturas y encuentros. La migración se
 probó en producción dentro de una transacción revertida; la colección real
 del organizador quedó intacta.
+Las diez fichas usan el tono indicado por el equipo organizador; Daniel figura
+como coordinador de MAC y CMP y Felipe como responsable de las maestrías. El
+beacon 08 de Pavel acepta también el UID leído por el A52; la prueba física
+abrió correctamente su encuentro. El valor del UID se mantiene solo en el
+backend privado.
 
 La APK actual es para prueba directa: está firmada con la clave debug local y
 contiene la pista de batalla de Pokémon solicitada para esta revisión, sin
@@ -32,7 +37,7 @@ física completa de los diez NFC en la APK nueva y el panel admin por HTTPS.
    Guardar su **Project URL** y
    **publishable/anon key** en `apps/mobile/.env` (`DEMO_MODE=false`) y en el
    entorno del panel admin. La `service_role` nunca va en ninguna app cliente.
-2. Las 21 migraciones ya se aplicaron con `supabase db push` y las tres Edge
+2. Las 22 migraciones ya se aplicaron con `supabase db push` y las tres Edge
    Functions de `docs/setup.md` están desplegadas. La migración final carga los ajustes de juego
    y elimina `DEMO-TAG-01…10`; **no ejecutar `supabase/seed.sql` en producción**.
 3. Configurar «Continuar con Google» en el proyecto Google Cloud
