@@ -58,7 +58,7 @@ enum PixelButtonVariant {
     ),
   ),
 
-  /// White action used beside the highlighted map action.
+  /// White action (the classic map look). No screen uses it right now.
   neutral(
     PixelButtonStyle(
       face: AppColors.surface,

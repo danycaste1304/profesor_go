@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import 'pixel_button.dart';
 import 'pixel_circle_painter.dart';
 import 'pixel_frame_painter.dart';
 import 'pixel_icon.dart';
@@ -9,7 +10,7 @@ import 'pixel_icon.dart';
 ///
 /// Same look as [PixelButton]: outline, bevel, solid slab, and it sinks when
 /// pressed. Because there is no text, [semanticLabel] is required. Pass
-/// [toggled] for on/off buttons: `true` paints the accent face, `false` the
+/// [toggled] for on/off buttons: `true` paints the tertiary face, `false` the
 /// plain surface, and `null` (default) means it is not a toggle. Disabled when
 /// [onPressed] is null.
 class PixelIconButton extends StatefulWidget {
@@ -45,8 +46,11 @@ class _PixelIconButtonState extends State<PixelIconButton> {
   @override
   Widget build(BuildContext context) {
     final on = widget.toggled ?? false;
-    final face = on ? AppColors.accentAlt : AppColors.surface;
-    final foreground = on ? Colors.white : AppColors.text;
+    // The "on" look comes from the tertiary PixelButton variant, so restyling
+    // that variant restyles every toggled icon button too.
+    final onStyle = PixelButtonVariant.tertiary.style;
+    final face = on ? onStyle.face : AppColors.surface;
+    final foreground = on ? onStyle.foreground : AppColors.text;
 
     // The face sinks by one block when pressed; padding keeps the icon
     // centered on it.

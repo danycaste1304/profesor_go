@@ -54,7 +54,7 @@ abstract final class CampusConfig {
 
   /// Time between demo steps. Kept near the avatar glide (450 ms) so the walk
   /// looks continuous instead of stop-and-go.
-  static const Duration demoStepInterval = Duration(milliseconds: 420);
+  static const Duration demoStepInterval = Duration(milliseconds: 400);
 
   /// Demo route over the stone paths of the campus art: up the central
   /// walkway to the junction, out along the left diagonal and back, then out
