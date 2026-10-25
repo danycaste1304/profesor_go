@@ -12,7 +12,8 @@ enum GameMusicCue { campus, battle, victory }
 extension on GameMusicCue {
   String get assetPath => switch (this) {
     GameMusicCue.campus => 'audio/campus_loop.wav',
-    GameMusicCue.battle => 'audio/battle_loop.wav',
+    // Original chiptune: 'audio/battle_loop.wav'.
+    GameMusicCue.battle => 'audio/wild_pokemon_battle.mp3',
     GameMusicCue.victory => 'audio/victory.wav',
   };
 }
@@ -133,6 +134,12 @@ class GameMusicController extends Notifier<GameMusicState>
 
   Future<void> enterScene(GameMusicCue cue, Object owner) {
     _returnToCampus?.cancel();
+    // A scene already playing this cue hands it over without restarting the
+    // track (the scan screen starts the battle music, the encounter keeps it).
+    if (_sceneOwner != null && cue == _cue) {
+      _sceneOwner = owner;
+      return Future<void>.value();
+    }
     _sceneOwner = owner;
     _cue = cue;
     return _syncPlayback();

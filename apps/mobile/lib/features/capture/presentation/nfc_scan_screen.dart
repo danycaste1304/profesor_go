@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
+import '../../../core/audio/game_music_controller.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/di/providers.dart';
 import '../../../core/errors/app_exception.dart';
@@ -15,6 +16,7 @@ import '../../../core/nfc/mock_nfc_service.dart';
 import '../../../core/nfc/nfc_service.dart';
 import '../../../core/widgets/widgets.dart';
 import 'nfc_settings_opener.dart';
+import 'widgets/battle_wipe.dart';
 
 enum _ScanStatus {
   /// Checking connectivity / NFC availability.
@@ -54,6 +56,7 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
 
   /// Captured in [initState]: `ref` must not be used from [dispose].
   late final NfcService _nfc;
+  late final GameMusicController _music;
 
   /// The tag picker is essential in every demo build: without it a release
   /// demo can only ever scan the first mock card.
@@ -63,6 +66,7 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
   void initState() {
     super.initState();
     _nfc = ref.read(nfcServiceProvider);
+    _music = ref.read(gameMusicControllerProvider.notifier);
     unawaited(_loadDemoTags());
     unawaited(_begin());
   }
@@ -71,6 +75,8 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
   void dispose() {
     _session++;
     unawaited(_nfc.cancel());
+    // No-op once the encounter has taken over the battle music.
+    _music.leaveScene(this);
     super.dispose();
   }
 
@@ -168,7 +174,18 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
           .read(captureServiceProvider)
           .startEncounter(tag);
       if (!mounted) return;
-      context.go(AppRoutes.encounter(encounter.id), extra: encounter);
+      // The battle music starts with the wipe, as in a wild encounter; the
+      // encounter screen keeps it playing without restarting it.
+      unawaited(
+        _music.enterScene(GameMusicCue.battle, this).catchError((Object _) {}),
+      );
+      await BattleWipe.play(
+        context,
+        onCovered: () {
+          if (!mounted) return;
+          context.go(AppRoutes.encounter(encounter.id), extra: encounter);
+        },
+      );
     } catch (e) {
       final error = AppException.from(e);
       String? unregisteredTag;

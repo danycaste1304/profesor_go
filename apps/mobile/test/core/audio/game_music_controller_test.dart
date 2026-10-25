@@ -148,6 +148,29 @@ void main() {
     },
   );
 
+  test(
+    'the encounter takes over the battle music without restarting it',
+    () async {
+      SharedPreferences.setMockInitialValues({gameMusicPreferenceKey: true});
+      final player = FakeMusicPlayer();
+      final container = ProviderContainer(
+        overrides: [gameMusicPlayerProvider.overrideWithValue(player)],
+      );
+      container.listen(gameMusicControllerProvider, (_, _) {});
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+
+      final music = container.read(gameMusicControllerProvider.notifier);
+      final scan = Object();
+      final encounter = Object();
+      await music.enterScene(GameMusicCue.battle, scan); // wipe starts
+      await music.enterScene(GameMusicCue.battle, encounter); // route opens
+      music.leaveScene(scan); // old route disposed: no longer the owner
+      await Future<void>.delayed(const Duration(milliseconds: 110));
+      expect(player.cues, [GameMusicCue.campus, GameMusicCue.battle]);
+      container.dispose();
+    },
+  );
+
   test('an escaped professor returns the soundtrack to the map', () async {
     SharedPreferences.setMockInitialValues({gameMusicPreferenceKey: true});
     final player = FakeMusicPlayer();

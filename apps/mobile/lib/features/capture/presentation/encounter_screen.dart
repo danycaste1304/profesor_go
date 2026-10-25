@@ -20,6 +20,7 @@ import '../domain/capture_result_args.dart';
 import '../domain/throw_quality_calculator.dart';
 import 'encounter_backdrop.dart';
 import 'encounter_controller.dart';
+import 'widgets/battle_wipe.dart';
 
 /// `/encounter/:encounterId` — the throw mini-game.
 ///
@@ -146,6 +147,10 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
   bool _errorShown = false;
   bool _navigated = false;
   bool _introLineVisible = false;
+
+  /// The intro line is waiting for the battle wipe to open: the dialogue box
+  /// stays empty so the instruction does not flash before it.
+  bool _introPending = false;
   Timer? _introLineTimer;
   String? _statusText;
   Color _statusColor = AppColors.accent;
@@ -166,10 +171,16 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
         _encounter.professor.id == henryCarvajalId ||
         _encounter.professor.id == diegoMoralesId ||
         _encounter.professor.id == robertoAndradeId) {
-      _introLineVisible = true;
-      _introLineTimer = Timer(const Duration(milliseconds: 2800), () {
-        if (mounted) setState(() => _introLineVisible = false);
-      });
+      // Wait for the battle wipe to open (zero when it is disabled).
+      final delay = BattleWipe.introDelay;
+      if (delay == Duration.zero) {
+        _showIntroLine();
+      } else {
+        _introPending = true;
+        _introLineTimer = Timer(delay, () {
+          if (mounted && _introPending) setState(_showIntroLine);
+        });
+      }
     }
     _anim = AnimationController(vsync: this);
     _bob = AnimationController(
@@ -180,6 +191,15 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
       if (!mounted) return;
       final state = ref.read(encounterControllerProvider(_encounter));
       if (state.phase == EncounterPhase.error) _showErrorDialog(state.error);
+    });
+  }
+
+  /// Shows the professor's intro line for 2.8 s.
+  void _showIntroLine() {
+    _introPending = false;
+    _introLineVisible = true;
+    _introLineTimer = Timer(const Duration(milliseconds: 2800), () {
+      if (mounted) setState(() => _introLineVisible = false);
     });
   }
 
@@ -247,6 +267,7 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
     setState(() {
       _dragging = true;
       _introLineVisible = false;
+      _introPending = false;
       _ballPos = _restPosition;
     });
   }
@@ -853,7 +874,9 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
                       color: AppColors.accent,
                     ),
                     RetroDialogue(
-                      text: _introLineVisible
+                      text: _introPending
+                          ? ''
+                          : _introLineVisible
                           ? switch (professor.id) {
                               danielRiofrioId => '«$danielRiofrioCatchphrase»',
                               erickNaunayId => erickNaunayIntro,

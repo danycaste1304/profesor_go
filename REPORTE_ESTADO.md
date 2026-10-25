@@ -57,7 +57,7 @@ Revisión: 20 de octubre de 2026.
 
 Capturas de esta revisión: `docs/previews/avatar-personalizacion.png`, `docs/previews/avatar-rizos.png`, `docs/previews/felipe-encuentro.png`, `docs/previews/henry-encuentro.png`, `docs/previews/henry-captura.png`, `docs/previews/diego-encuentro.png`, `docs/previews/roberto-encuentro.png` y `docs/previews/roberto-captura.png`. Las vistas anteriores siguen en `docs/previews/`.
 
-El APK release se firma con la clave de desarrollo porque aún no hay `android/key.properties`; se puede instalar para probar, pero hace falta una firma de producción para distribuirlo en una tienda. La música es composición original; los registros confirman la reproducción en el emulador, pero conviene escuchar la mezcla y el volumen en un dispositivo físico. La integración real de NFC y GPS también requiere un móvil compatible y las tarjetas físicas.
+El APK release se firma con la clave de desarrollo porque aún no hay `android/key.properties`; se puede instalar para probar, pero hace falta una firma de producción para distribuirlo en una tienda. La música del mapa y la victoria es composición original; la del encuentro es el tema «Wild Pokémon Battle» de Pokémon Red/Blue (de terceros); los registros confirman la reproducción en el emulador, pero conviene escuchar la mezcla y el volumen en un dispositivo físico. La integración real de NFC y GPS también requiere un móvil compatible y las tarjetas físicas.
 
 ## Para jugar en modo demo
 

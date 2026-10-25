@@ -27,6 +27,7 @@ import 'package:profesor_go/core/repositories/mock_capture_service.dart';
 import 'package:profesor_go/core/repositories/mock_professor_repository.dart';
 import 'package:profesor_go/core/widgets/widgets.dart';
 import 'package:profesor_go/features/auth/presentation/login_screen.dart';
+import 'package:profesor_go/features/capture/presentation/widgets/battle_wipe.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Deterministic [Random]: every roll is 0, so `roll < p` always succeeds
@@ -148,8 +149,12 @@ void main() {
       expect(find.text('Prof. Henry'), findsOneWidget);
       expect(find.text('COMÚN'), findsOneWidget);
       expect(find.textContaining(RegExp(r'^0[23]:[0-5]\d$')), findsOneWidget);
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.text(henryCarvajalIntro), findsOneWidget);
+      // The intro line starts once the battle wipe has opened.
+      await tester.pump(BattleWipe.introDelay);
+      expect(
+        await pumpUntilFound(tester, find.text(henryCarvajalIntro)),
+        isTrue,
+      );
 
       // 4. A good throw: drag the ball onto the professor sprite. The
       //    release point is on the target, so the quality is EXCELLENT and

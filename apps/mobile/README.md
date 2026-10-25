@@ -72,13 +72,23 @@ Con `DEMO_MODE=true` (el valor por defecto) la app funciona 100 % en memoria:
   local. Conserva sesión, aspecto del avatar y preferencia de música.
 * **Simular movimiento** en el mapa: inicia / pausa el paseo del
   `MockLocationService` por la ruta demo.
-* **MÚSICA NO / SÍ** en el mapa: activa o silencia tres piezas chiptune
-  originales para el mapa, el encuentro y la victoria, además de cinco efectos
+* **MÚSICA NO / SÍ** en el mapa: activa o silencia la música del mapa, el
+  encuentro y la victoria, además de cinco efectos
   breves de lanzamiento, impacto, sacudida, captura y escape. Un solo reproductor
   acompaña toda la partida: combate → victoria → mapa, incluso si permaneces en
   la pantalla de resultado tras terminar la fanfarria. La elección se guarda en
   `SharedPreferences` y se aplica al volver a abrir la app. Empieza silenciada
-  en la primera instalación.
+  en la primera instalación. El mapa y la victoria son chiptune original; el
+  encuentro usa `assets/audio/wild_pokemon_battle.mp3` (tema «Wild Pokémon
+  Battle» de Pokémon Red/Blue, **no es original**: revisar sus derechos antes de
+  una distribución pública). La pieza original, `battle_loop.wav`, sigue en los
+  assets: para volver a ella, cambia `GameMusicCue.battle` en
+  `lib/core/audio/game_music_controller.dart`.
+* **Transición de batalla** (`BattleWipe`, en
+  `lib/features/capture/presentation/widgets/battle_wipe.dart`): al escanear,
+  barras negras cubren la pantalla de escaneo, se abre el encuentro y las barras
+  se retiran; la música de batalla arranca con el barrido. Duraciones, número de
+  barras y color están en esa clase; `BattleWipe.enabled = false` la desactiva.
 * **Colocar etiquetas del mapa (`MapLabel`)**: en builds debug se pueden
   arrastrar las etiquetas que declaran `draggable: MapLabel.dragEnabled` (hoy,
   solo las carpas sin pill de `FairMapLabels`); `--dart-define=MAP_LABEL_DRAG=false`

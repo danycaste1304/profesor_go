@@ -37,6 +37,7 @@ flutter:
     - assets/map/tent.png
     - assets/audio/campus_loop.wav
     - assets/audio/battle_loop.wav
+    - assets/audio/wild_pokemon_battle.mp3
     - assets/audio/victory.wav
     - assets/audio/throw.wav
     - assets/audio/impact.wav

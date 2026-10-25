@@ -13,6 +13,7 @@ import 'package:profesor_go/core/repositories/capture_service.dart';
 import 'package:profesor_go/core/widgets/widgets.dart';
 import 'package:profesor_go/features/capture/domain/capture_result_args.dart';
 import 'package:profesor_go/features/capture/presentation/encounter_screen.dart';
+import 'package:profesor_go/features/capture/presentation/widgets/battle_wipe.dart';
 
 import '../fakes.dart';
 
@@ -64,6 +65,8 @@ void main() {
       ),
     );
     await tester.pump();
+    // In the app the screen appears once the battle wipe has opened.
+    await tester.pump(BattleWipe.introDelay);
   }
 
   Future<void> dragOntoSprite(WidgetTester tester) async {
@@ -88,6 +91,33 @@ void main() {
     // Idle animations keep running without errors.
     await tester.pump(const Duration(seconds: 1));
     await tester.pump(const Duration(seconds: 1));
+  });
+
+  testWidgets('the intro line waits until the battle wipe has opened', (
+    tester,
+  ) async {
+    final encounter = makeEncounter().copyWith(
+      professor: demoProfessors[6].summary,
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          captureServiceProvider.overrideWithValue(service as CaptureService),
+        ],
+        child: testApp(
+          router: router(extra: encounter),
+        ),
+      ),
+    );
+    await tester.pump();
+    bool introShown() => tester.any(
+      find.byWidgetPredicate(
+        (w) => w is RetroDialogue && w.text.contains(danielRiofrioCatchphrase),
+      ),
+    );
+    expect(introShown(), isFalse);
+    await tester.pump(BattleWipe.introDelay);
+    expect(introShown(), isTrue);
   });
 
   testWidgets('Daniel introduces himself before the throw instruction', (

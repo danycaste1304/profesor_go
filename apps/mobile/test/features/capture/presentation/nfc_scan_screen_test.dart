@@ -13,6 +13,7 @@ import 'package:profesor_go/core/repositories/capture_service.dart';
 import 'package:profesor_go/core/widgets/widgets.dart';
 import 'package:profesor_go/features/capture/presentation/nfc_scan_screen.dart';
 import 'package:profesor_go/features/capture/presentation/nfc_settings_opener.dart';
+import 'package:profesor_go/features/capture/presentation/widgets/battle_wipe.dart';
 
 import '../fakes.dart';
 
@@ -50,6 +51,13 @@ void main() {
     for (var i = 0; i < times; i++) {
       await tester.pump(const Duration(milliseconds: 10));
     }
+  }
+
+  /// Runs the whole battle wipe: navigation happens once the screen is black.
+  Future<void> passWipe(WidgetTester tester) async {
+    await tester.pump(BattleWipe.cover);
+    await tester.pump(BattleWipe.hold + BattleWipe.reveal);
+    await tester.pump();
   }
 
   Future<void> pumpScreen(
@@ -93,7 +101,22 @@ void main() {
     // The fake "reads" the card after 20 ms.
     await settle(tester);
     expect(capture.startedTags, ['DEMO-TAG-01']);
+    await passWipe(tester);
     expect(find.text('ENCOUNTER enc-1 Prof. Ricardo'), findsOneWidget);
+  });
+
+  testWidgets('navigates only once the battle wipe covers the screen', (
+    tester,
+  ) async {
+    await pumpScreen(tester);
+    await tester.pump();
+    await settle(tester);
+    expect(capture.startedTags, ['DEMO-TAG-01']);
+    // Bars are still sliding in: the scan screen is underneath.
+    await tester.pump(BattleWipe.cover ~/ 2);
+    expect(find.textContaining('ENCOUNTER enc-1'), findsNothing);
+    await passWipe(tester);
+    expect(find.textContaining('ENCOUNTER enc-1'), findsOneWidget);
   });
 
   testWidgets('waits for reader mode before inviting the player to scan', (
@@ -135,6 +158,7 @@ void main() {
     expect(nfc.scanCalls, 2);
     await settle(tester);
     expect(capture.startedTags, hasLength(2));
+    await passWipe(tester);
     expect(find.textContaining('ENCOUNTER enc-1'), findsOneWidget);
   });
 
@@ -295,6 +319,7 @@ void main() {
     await settle(tester);
     expect(capture.startedTags, ['DEMO-TAG-08']);
     expect(mock.selectedTag.identifier, 'DEMO-TAG-08');
+    await passWipe(tester);
     expect(find.textContaining('ENCOUNTER enc-1'), findsOneWidget);
   });
 
