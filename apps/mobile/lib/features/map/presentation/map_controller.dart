@@ -13,10 +13,12 @@ import '../../../core/location/location_service.dart';
 import '../../../core/location/mock_location_service.dart';
 import '../domain/campus_map_config.dart';
 
-/// Map configuration used by the controller and the screen. Override it in
-/// tests or once the real background / bounds are available.
+/// Selects demo bounds or the approximate USFQ fair route for this build.
+/// Tests can override this provider with a specific map configuration.
 final campusMapConfigProvider = Provider<CampusMapConfig>(
-  (ref) => CampusMapConfig.defaults,
+  (ref) => AppConfig.isDemoMode
+      ? CampusMapConfig.defaults
+      : CampusMapConfig.production,
 );
 
 /// Opens the system screen where the user can fix a location [status];

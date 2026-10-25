@@ -1,6 +1,6 @@
 # Paso de demo a operación real
 
-Estado: 23 de octubre de 2026. Este documento es la secuencia de salida para
+Estado: 24 de octubre de 2026. Este documento es la secuencia de salida para
 la feria; ningún emulador sustituye la última prueba con los dispositivos.
 
 ## 1. Infraestructura y cuentas
@@ -53,14 +53,17 @@ la feria; ningún emulador sustituye la última prueba con los dispositivos.
    Computación estarán en los Cuadrángulos, frente al edificio Espejo (n.º 20
    en el mapa de la USFQ). Algunos profesores también estarán en un laboratorio
    hacia la derecha de esta zona. Todos portarán sus beacons: los NFC no son
-   puntos fijos del mapa. Sustituir `CampusConfig.bounds` (actualmente
-   coordenadas de ejemplo en Madrid) por límites GPS medidos y validar la
-   proyección de los Cuadrángulos antes de mostrar posición real del jugador.
+   puntos fijos del mapa. El modo real ya usa los pines aproximados enviados
+   por el organizador para la carpa (`-0.1968714, -78.4364417`) y la entrada
+   del laboratorio (`-0.1968818, -78.4352857`). La ilustración tiene
+   perspectiva, así que el avatar muestra el avance aproximado por el trayecto
+   carpa → laboratorio y dice «Ubicación aproximada». `CampusConfig.bounds`
+   conserva las coordenadas de Madrid solo para el modo demo. Antes de la
+   feria, medir ambos puntos caminando en sitio y comprobar el recorrido y el
+   margen de GPS con varios teléfonos; los pines se marcaron de forma remota.
    La entrada del laboratorio es la esquina marcada con un círculo rojo en el
-   plano proporcionado por el organizador. El mapa ilustrado solo muestra la
-   dirección hacia esa entrada; faltan sus coordenadas GPS y las de la carpa
-   para calibrar la ubicación real del jugador. Referencia: [mapa oficial de
-   la USFQ](https://www.usfq.edu.ec/sites/default/files/2023-10/mapa-usfq-2023.pdf).
+   plano proporcionado por el organizador. Referencia: [mapa oficial de la
+   USFQ](https://www.usfq.edu.ec/sites/default/files/2023-10/mapa-usfq-2023.pdf).
 2. Para la primera prueba, crear `apps/mobile/.env` con `DEMO_MODE=false`, URL
    HTTPS y clave pública de Supabase; ejecutar `./scripts/build-real-android.sh`.
    El script rechaza una configuración demo o incompleta. Para distribución
@@ -77,8 +80,8 @@ la feria; ningún emulador sustituye la última prueba con los dispositivos.
 La versión está lista para la feria cuando diez tags físicos distintos inician
 encuentros de sus diez profesores en teléfonos reales, las capturas sobreviven
 al reinicio, el panel permite desactivar un tag y el mapa muestra la ubicación
-en el recinto correcto. Repetir el flujo con una cuenta Gmail nueva,
-y con red móvil, no solo con Wi-Fi de desarrollo.
+en el trayecto correcto, con la etiqueta de aproximación. Repetir el flujo con
+una cuenta Gmail nueva y con red móvil, no solo con Wi-Fi de desarrollo.
 
 Los identificadores NFC son estáticos. Para una operación pública prolongada o
 recompensas valiosas hay que reforzar la protección contra copias y limitar

@@ -31,8 +31,8 @@ class CampusBounds {
 
 /// Static campus configuration: bounds, logical map size and the demo path.
 abstract final class CampusConfig {
-  // TODO_EXTERNAL: replace with the real fair-ground coordinates (WGS84 degrees).
-  // Placeholder rectangle of ~300 m x ~400 m; north > south, east > west.
+  // Demo-only rectangle of ~300 m x ~400 m; the real fair build uses
+  // FairRouteProjection.usfq instead of this Madrid placeholder.
   static const CampusBounds bounds = CampusBounds(
     north: 40.4535,
     south: 40.4508,

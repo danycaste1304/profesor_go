@@ -448,6 +448,8 @@ class _MapPanel extends ConsumerWidget {
       statusText = 'Esperando señal GPS…';
     } else if (state.isAvailable && !state.isInsideCampus) {
       statusText = 'Ubicación fuera del mapa actual';
+    } else if (state.isAvailable && state.config.isApproximate) {
+      statusText = 'Ubicación aproximada';
     } else {
       statusText = null;
     }

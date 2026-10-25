@@ -94,7 +94,11 @@ rasgos personales con expresiones más juguetonas.
 El mapa principal de los Cuadrángulos es `assets/map/campus_map.png`. Los
 marcadores de la carpa y del laboratorio se dibujan encima desde
 `lib/features/map/presentation/widgets/fair_landmarks_painter.dart`, sin
-modificar la imagen. `assets/map/campus_map.svg` es el mapa retro anterior;
+modificar la imagen. En modo real, `FairRouteProjection.usfq` usa dos pines
+aproximados para mostrar el avance del jugador entre la carpa y la entrada
+del laboratorio. El recorrido se ilustra en perspectiva y requiere una prueba
+de GPS caminando en el campus. Los profesores llevan los NFC y no tienen una
+posición fija en el mapa. `assets/map/campus_map.svg` es el mapa retro anterior;
 `bash tool/generate_retro_map.sh` solo regenera `campus_map_old.png` y requiere
 `rsvg-convert`. La
 partitura y síntesis de las tres piezas están en `tool/generate_soundtrack.py`;

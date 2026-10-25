@@ -5,7 +5,7 @@ Resumen corto de lo que cambió en `apps/mobile`. Todos los tests pasan (277) y 
 ## Mapa
 - Lienzo de **720×1290** (9:16), igual que `assets/map/campus_map.png`. Antes era 900×1200 y la imagen se veía aplastada. Está en `CampusConfig.mapWidth/mapHeight`.
 - La cámara sigue al avatar sobre el mapa completo; al mover o ampliar el mapa con los dedos se pausa el seguimiento y aparece un botón para recentrar. La ilustración de los Cuadrángulos se conserva y los marcadores de la carpa y la dirección del laboratorio se dibujan encima.
-- Las coordenadas GPS aún son de ejemplo. La cámara ya funciona, pero la proyección real de la USFQ requiere medir el área y validar el mapa en sitio.
+- El modo real usa dos pines aproximados de la USFQ y proyecta el avance entre la carpa y la entrada del laboratorio sobre un recorrido ilustrado. El avatar se oculta fuera de ese corredor y la pantalla dice «Ubicación aproximada». Hace falta validar los pines y el GPS caminando en sitio; el modo demo conserva sus coordenadas de ejemplo.
 - Ruta del avatar en modo demo (`CampusConfig.demoPath`) rehecha sobre los caminos del arte nuevo.
 
 ## Estilo pixel art (bloques de 4 px, misma paleta `AppColors`)
