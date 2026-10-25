@@ -23,11 +23,15 @@ licencia de distribución documentada. Antes de publicar una APK abierta,
 obtener la autorización de uso de esa música o volver a la pista original
 `battle_loop.wav` y crear una clave de firma de producción.
 
-Google Auth Platform sigue en estado **Prueba**, con solo el Gmail del
-organizador autorizado. Antes de que cualquier asistente pueda iniciar sesión,
-terminar la configuración de marca y publicar la pantalla OAuth para usuarios
-externos. También siguen pendientes la calibración GPS en campus, la prueba
-física completa de los diez NFC en la APK nueva y el panel admin por HTTPS.
+Google Auth Platform está **En producción** para usuarios externos: cualquier
+cuenta de Google puede iniciar sesión sin estar en la lista de prueba. La
+[página del juego](https://danycaste1304.github.io/profesor_go/) y la
+[política de privacidad](https://danycaste1304.github.io/profesor_go/privacidad.html)
+se publicaron en GitHub Pages y se registraron en la información de marca de
+Google. Falta una prueba de inicio de sesión con un Gmail que nunca haya estado
+en la lista de prueba. También siguen pendientes la calibración GPS en campus,
+la prueba física completa de los diez NFC en la APK nueva y el panel admin por
+HTTPS.
 
 ## 1. Infraestructura y cuentas
 
