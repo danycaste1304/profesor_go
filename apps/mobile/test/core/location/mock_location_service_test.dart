@@ -16,6 +16,19 @@ void main() {
     expect(back.latitude, closeTo(CampusConfig.bounds.center.latitude, 1e-9));
   });
 
+  test('demo path steps never exceed demoStepSize, including the loop wrap', () {
+    final path = CampusConfig.demoPath;
+    for (var i = 0; i < path.length; i++) {
+      final from = CampusConfig.toMapOffset(path[i]);
+      final to = CampusConfig.toMapOffset(path[(i + 1) % path.length]);
+      expect(
+        (to - from).distance,
+        lessThanOrEqualTo(CampusConfig.demoStepSize + 1e-6),
+        reason: 'step $i -> ${(i + 1) % path.length}',
+      );
+    }
+  });
+
   test('walks the path, teleports and resumes', () async {
     final service = MockLocationService(stepInterval: const Duration(days: 1));
     final received = <LatLng>[];

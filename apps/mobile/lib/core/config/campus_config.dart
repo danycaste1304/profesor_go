@@ -47,12 +47,23 @@ abstract final class CampusConfig {
   static const double mapHeight = 1290;
   static const Size mapSize = Size(mapWidth, mapHeight);
 
+  /// Longest distance (logical map units) the demo avatar covers in one step.
+  /// Lower it for smaller steps; [demoStepInterval] sets how often it steps,
+  /// so together they set the walking speed (units / second).
+  static const double demoStepSize = 20;
+
+  /// Time between demo steps. Kept near the avatar glide (450 ms) so the walk
+  /// looks continuous instead of stop-and-go.
+  static const Duration demoStepInterval = Duration(milliseconds: 420);
+
   /// Demo route over the stone paths of the campus art: up the central
   /// walkway to the junction, out along the left diagonal and back, then out
-  /// along the right branch and back. Keeping it in map coordinates prevents
-  /// the avatar from walking across lawns or rooftops.
+  /// along the right branch and back, and down the central walkway to the
+  /// start. Keeping it in map coordinates prevents the avatar from walking
+  /// across lawns or rooftops. The waypoints are subdivided so no step is
+  /// longer than [demoStepSize].
   static final List<LatLng> demoPath = List<LatLng>.unmodifiable(
-    const <Offset>[
+    _densify(const <Offset>[
       Offset(534, 1219),
       Offset(469, 1031),
       Offset(417, 844),
@@ -75,8 +86,31 @@ abstract final class CampusConfig {
       Offset(600, 609),
       Offset(525, 553),
       Offset(450, 525),
-    ].map(fromMapOffset),
+      // Back down the central walkway: without these the loop would close
+      // with one ~700-unit jump from the right branch to the start.
+      Offset(356, 553),
+      Offset(380, 656),
+      Offset(417, 844),
+      Offset(469, 1031),
+    ], demoStepSize).map(fromMapOffset),
   );
+
+  /// Subdivides each waypoint-to-waypoint segment so that no step exceeds
+  /// [maxStep]. The route is a loop, so the last waypoint also connects back
+  /// to the first.
+  static List<Offset> _densify(List<Offset> waypoints, double maxStep) {
+    final dense = <Offset>[];
+    for (var i = 0; i < waypoints.length; i++) {
+      final from = waypoints[i];
+      final to = waypoints[(i + 1) % waypoints.length];
+      final steps = ((to - from).distance / maxStep).ceil();
+      final count = steps < 1 ? 1 : steps; // repeated waypoint: emit it once
+      for (var s = 0; s < count; s++) {
+        dense.add(Offset.lerp(from, to, s / count)!);
+      }
+    }
+    return dense;
+  }
 
   /// Maps a coordinate to a logical map offset (0,0 = north-west corner).
   /// Points outside the bounds are clamped to the edge.

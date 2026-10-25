@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthUser;
 
 import '../config/app_config.dart';
+import '../config/campus_config.dart';
 import '../location/location_service.dart';
 import '../location/mock_location_service.dart';
 import '../location/real_location_service.dart';
@@ -50,7 +51,9 @@ final nfcServiceProvider = Provider<NfcService>((ref) {
 
 final locationServiceProvider = Provider<LocationService>((ref) {
   if (AppConfig.isDemoMode) {
-    final service = MockLocationService();
+    final service = MockLocationService(
+      stepInterval: CampusConfig.demoStepInterval,
+    );
     ref.onDispose(service.dispose);
     return service;
   }
