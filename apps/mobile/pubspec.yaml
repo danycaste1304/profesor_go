@@ -1,7 +1,7 @@
 name: profesor_go
 description: "Profesor GO - juego de captura de profesores para la feria universitaria (Flutter + Supabase)."
 publish_to: 'none'
-version: 0.1.0+7
+version: 0.1.0+8
 
 environment:
   sdk: ^3.13.3
@@ -37,7 +37,6 @@ flutter:
     - assets/map/tent.png
     - assets/audio/campus_loop.wav
     - assets/audio/battle_loop.wav
-    - assets/audio/wild_pokemon_battle.mp3
     - assets/audio/victory.wav
     - assets/audio/throw.wav
     - assets/audio/impact.wav

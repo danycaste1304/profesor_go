@@ -3,9 +3,9 @@
 Estado: 25 de octubre de 2026. Este documento es la secuencia de salida para
 la feria; ningún emulador sustituye la última prueba con los dispositivos.
 
-## Estado de la beta 7
+## Estado de la beta 8
 
-La APK real v0.1.0+7 integra el mapa y la transición de encuentro nuevos,
+La APK real v0.1.0+8 integra el mapa y la transición de encuentro nuevos,
 NFC, Google y Supabase. Su botón **Perfil → Reiniciar mi Profedex** aparece
 solo para la cuenta organizadora y el servidor verifica su identificador y
 rol antes de borrar únicamente sus capturas y encuentros. La migración se
@@ -17,11 +17,11 @@ beacon 08 de Pavel acepta también el UID leído por el A52; la prueba física
 abrió correctamente su encuentro. El valor del UID se mantiene solo en el
 backend privado.
 
-La APK actual es para prueba directa: está firmada con la clave debug local y
-contiene la pista de batalla de Pokémon solicitada para esta revisión, sin
-licencia de distribución documentada. Antes de publicar una APK abierta,
-obtener la autorización de uso de esa música o volver a la pista original
-`battle_loop.wav` y crear una clave de firma de producción.
+La beta distribuida por enlace usa únicamente música original y está firmada
+con la clave debug local. Sirve para probar mediante instalación directa; para
+distribuirla en una tienda se necesita una clave de firma de producción.
+La descarga pública de la beta 8 está en
+`https://github.com/danycaste1304/profesor_go/releases/download/v0.1.0-beta.8/profesor-go-beta8.apk`.
 
 Google Auth Platform está **En producción** para usuarios externos: cualquier
 cuenta de Google puede iniciar sesión sin estar en la lista de prueba. La

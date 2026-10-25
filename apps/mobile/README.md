@@ -83,12 +83,8 @@ Con `DEMO_MODE=true` (el valor por defecto) la app funciona 100 % en memoria:
   acompaña toda la partida: combate → victoria → mapa, incluso si permaneces en
   la pantalla de resultado tras terminar la fanfarria. La elección se guarda en
   `SharedPreferences` y se aplica al volver a abrir la app. Empieza silenciada
-  en la primera instalación. El mapa y la victoria son chiptune original; el
-  encuentro usa `assets/audio/wild_pokemon_battle.mp3` (tema «Wild Pokémon
-  Battle» de Pokémon Red/Blue, **no es original**: revisar sus derechos antes de
-  una distribución pública). La pieza original, `battle_loop.wav`, sigue en los
-  assets: para volver a ella, cambia `GameMusicCue.battle` en
-  `lib/core/audio/game_music_controller.dart`.
+  en la primera instalación. El mapa, el encuentro y la victoria usan las
+  piezas chiptune originales de `assets/audio/`.
 * **Transición de batalla** (`BattleWipe`, en
   `lib/features/capture/presentation/widgets/battle_wipe.dart`): al escanear,
   barras negras cubren la pantalla de escaneo, se abre el encuentro y las barras

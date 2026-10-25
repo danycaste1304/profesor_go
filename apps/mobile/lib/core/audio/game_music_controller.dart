@@ -12,8 +12,7 @@ enum GameMusicCue { campus, battle, victory }
 extension on GameMusicCue {
   String get assetPath => switch (this) {
     GameMusicCue.campus => 'audio/campus_loop.wav',
-    // Original chiptune: 'audio/battle_loop.wav'.
-    GameMusicCue.battle => 'audio/wild_pokemon_battle.mp3',
+    GameMusicCue.battle => 'audio/battle_loop.wav',
     GameMusicCue.victory => 'audio/victory.wav',
   };
 }
