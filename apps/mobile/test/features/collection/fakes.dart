@@ -19,8 +19,8 @@ class FakeProfessorRepository implements ProfessorRepository {
     List<Capture>? captures,
     this.professorsError,
     this.capturesError,
-  })  : professors = professors ?? demoProfessors,
-        captures = captures ?? const [];
+  }) : professors = professors ?? demoProfessors,
+       captures = captures ?? const [];
 
   List<Professor> professors;
   List<Capture> captures;
@@ -55,11 +55,17 @@ class FakeProfessorRepository implements ProfessorRepository {
     await cache.saveProgress(p);
     return p;
   }
+
+  @override
+  Future<void> resetMyCollection() async {
+    captures = [];
+    await cache.clear();
+  }
 }
 
 class FakeAuthRepository implements AuthRepository {
   FakeAuthRepository({this.profile, this.profileError, AuthUser? user})
-      : user = user ?? const AuthUser(id: 'u1', email: 'test@uni.edu');
+    : user = user ?? const AuthUser(id: 'u1', email: 'test@uni.edu');
 
   Profile? profile;
   Object? profileError;
@@ -87,7 +93,11 @@ class FakeAuthRepository implements AuthRepository {
   Future<void> signOut() async {}
 
   @override
-  Future<void> signUp(String email, String password, {String? displayName}) async {}
+  Future<void> signUp(
+    String email,
+    String password, {
+    String? displayName,
+  }) async {}
 }
 
 Capture captureOf(String professorId, {DateTime? at, ThrowQuality? quality}) =>
@@ -113,7 +123,8 @@ Widget buildCollectionApp({
     routes: [
       GoRoute(
         path: '/map',
-        builder: (_, _) => const Scaffold(body: Center(child: Text('MAP STUB'))),
+        builder: (_, _) =>
+            const Scaffold(body: Center(child: Text('MAP STUB'))),
       ),
       GoRoute(
         path: '/collection',
@@ -127,10 +138,7 @@ Widget buildCollectionApp({
           ),
         ],
       ),
-      GoRoute(
-        path: '/completion',
-        builder: (_, _) => const CompletionScreen(),
-      ),
+      GoRoute(path: '/completion', builder: (_, _) => const CompletionScreen()),
     ],
   );
   return ProviderScope(

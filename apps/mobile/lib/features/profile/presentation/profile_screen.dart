@@ -28,12 +28,13 @@ import '../../map/presentation/widgets/avatar.dart';
 const String kAppVersion = '0.1.0';
 
 /// Player profile: identity, avatar appearance, collection progress, sign-out
-/// and (demo only) a confirmed reset of local progress.
+/// and a confirmed collection reset in demo or for the event owner.
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   static const Key logoutKey = Key('profile_logout');
   static const Key resetDemoKey = Key('profile_reset_demo');
+  static const Key resetAdminKey = Key('profile_reset_admin');
   static const Key collectionKey = Key('profile_collection');
   static const Key avatarPreviewKey = Key('profile_avatar_preview');
   static const Key avatarSurpriseKey = Key('profile_avatar_surprise');
@@ -58,16 +59,30 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  Future<void> _resetDemoProgress() async {
+  Future<void> _resetProgress({required bool demo}) async {
     final repo = ref.read(professorRepositoryProvider);
-    if (repo is! MockProfessorRepository || _resetting) return;
+    if (_resetting || (demo && repo is! MockProfessorRepository)) return;
+    if (!demo) {
+      final user = ref.read(currentUserProvider);
+      final profile = await ref.read(profileProvider.future);
+      if (user?.id != _eventOwnerId ||
+          profile?.id != _eventOwnerId ||
+          profile?.role != UserRole.admin) {
+        return;
+      }
+    }
+    if (!mounted) return;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('¿Reiniciar la Profedex?'),
-        content: const Text(
-          'Se borrarán las capturas y encuentros de esta demo. '
-          'Tu avatar, música y sesión seguirán igual.',
+        content: Text(
+          demo
+              ? 'Se borrarán las capturas y encuentros de esta demo. '
+                    'Tu avatar, música y sesión seguirán igual.'
+              : 'Se borrarán todas tus capturas y encuentros de esta cuenta. '
+                    'Podrás volver a capturar a los 10 profesores. '
+                    'No afectará a otros jugadores. Esta acción no se puede deshacer.',
         ),
         actions: [
           TextButton(
@@ -85,11 +100,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _resetting = true);
     try {
-      await repo.state.reset();
+      await repo.resetMyCollection();
       if (!mounted) return;
       invalidateCollection(ref);
       messenger.showSnackBar(
-        const SnackBar(content: Text('Profedex demo reiniciada')),
+        SnackBar(
+          content: Text(
+            demo ? 'Profedex demo reiniciada' : 'Tu Profedex fue reiniciada',
+          ),
+        ),
       );
     } catch (e) {
       messenger.showSnackBar(
@@ -99,6 +118,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       if (mounted) setState(() => _resetting = false);
     }
   }
+
+  Future<void> _resetDemoProgress() => _resetProgress(demo: true);
+
+  Future<void> _resetAdminProgress() => _resetProgress(demo: false);
 
   Future<void> _updateAvatar(Future<void> Function() change) async {
     try {
@@ -125,6 +148,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final name =
         profile?.nameOrEmail ?? _fallbackName(user?.displayName, email);
     final isAdmin = profile?.role == UserRole.admin;
+    final showAdminTools =
+        !AppConfig.isDemoMode &&
+        isAdmin &&
+        user?.id == _eventOwnerId &&
+        profile?.id == _eventOwnerId;
     final showDemoTools =
         AppConfig.isDemoMode &&
         ref.watch(professorRepositoryProvider) is MockProfessorRepository;
@@ -489,6 +517,34 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
             ),
           ],
+          if (showAdminTools) ...[
+            const SizedBox(height: 24),
+            PixelCard(
+              borderColor: AppColors.accentAlt,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text('OPCIONES DE ADMIN', style: textTheme.titleMedium),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Reinicia solo tu Profedex para volver a demostrar las capturas.',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  PixelButton(
+                    key: ProfileScreen.resetAdminKey,
+                    label: 'Reiniciar mi Profedex',
+                    icon: PixelIcons.restart,
+                    variant: PixelButtonVariant.secondary,
+                    loading: _resetting,
+                    onPressed: _resetAdminProgress,
+                  ),
+                ],
+              ),
+            ),
+          ],
           const SizedBox(height: 24),
           Text(
             'Profesor GO v$kAppVersion',
@@ -509,6 +565,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return email.isEmpty ? 'Jugador' : email;
   }
 }
+
+const String _eventOwnerId = '37b8f998-df0e-454e-bc4d-76714e0ad9dc';
 
 class _AvatarChoices extends StatelessWidget {
   const _AvatarChoices({required this.title, required this.choices});

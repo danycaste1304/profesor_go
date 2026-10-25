@@ -46,4 +46,10 @@ class MockProfessorRepository implements ProfessorRepository {
     await cache.saveProgress(p);
     return p;
   }
+
+  @override
+  Future<void> resetMyCollection() async {
+    await state.reset();
+    await cache.clear();
+  }
 }

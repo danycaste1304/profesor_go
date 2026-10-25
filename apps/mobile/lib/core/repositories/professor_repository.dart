@@ -18,6 +18,10 @@ abstract class ProfessorRepository {
   /// `collection_progress()`.
   Future<CollectionProgress> getProgress();
 
+  /// Clears this account's captures and encounters, when permitted by the
+  /// backend. Does not alter other players' collections.
+  Future<void> resetMyCollection();
+
   /// Last known values (memory + optional SharedPreferences) for offline UI.
   ProfessorCache get cache;
 }

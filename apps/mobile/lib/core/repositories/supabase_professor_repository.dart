@@ -27,7 +27,7 @@ import 'professor_repository.dart';
 /// expired session or a permission error is surfaced so the UI can react.
 class SupabaseProfessorRepository implements ProfessorRepository {
   SupabaseProfessorRepository(this._client, {ProfessorCache? cache})
-      : cache = cache ?? ProfessorCache();
+    : cache = cache ?? ProfessorCache();
 
   final SupabaseClient _client;
 
@@ -35,14 +35,25 @@ class SupabaseProfessorRepository implements ProfessorRepository {
   final ProfessorCache cache;
 
   @override
+  Future<void> resetMyCollection() async {
+    try {
+      await _client.rpc<dynamic>('reset_my_profedex');
+      await cache.clear();
+    } catch (e) {
+      throw AppException.from(e);
+    }
+  }
+
+  @override
   Future<List<Professor>> getActiveProfessors() async {
     await cache.ensureLoaded();
     try {
       final rows = await _client.from('professors').select().eq('active', true);
-      final list = rows
-          .map((r) => Professor.fromJson(r.cast<String, dynamic>()))
-          .toList()
-        ..sort(compareProfessors);
+      final list =
+          rows
+              .map((r) => Professor.fromJson(r.cast<String, dynamic>()))
+              .toList()
+            ..sort(compareProfessors);
       await cache.saveProfessors(list);
       return list;
     } catch (e) {
@@ -91,7 +102,8 @@ class SupabaseProfessorRepository implements ProfessorRepository {
   /// [AppException] so the UI shows the real reason (session expired, …).
   static T _orCache<T>(Object error, T? fallback, String what) {
     final mapped = AppException.from(error);
-    final recoverable = mapped.code == AppException.noInternet ||
+    final recoverable =
+        mapped.code == AppException.noInternet ||
         mapped.code == AppException.serverUnavailable;
     if (recoverable && fallback != null) {
       debugPrint('$what: using last known state after ${mapped.code}');

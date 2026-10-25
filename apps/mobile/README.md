@@ -70,6 +70,11 @@ Con `DEMO_MODE=true` (el valor por defecto) la app funciona 100 % en memoria:
 * **Reiniciar Profedex demo** en `/profile` (también en la APK de prueba): tras
   confirmarlo, borra capturas y encuentros del `DemoGameState` y su registro
   local. Conserva sesión, aspecto del avatar y preferencia de música.
+* **Reiniciar mi Profedex** en producción: solo aparece en el perfil de la
+  cuenta administradora del organizador. Tras confirmarlo, una función de
+  Supabase verifica el identificador y rol de esa cuenta, borra exclusivamente
+  sus capturas y encuentros y permite volver a capturar a los 10 profesores.
+  Las colecciones de otros jugadores permanecen intactas.
 * **Simular movimiento** en el mapa: inicia / pausa el paseo del
   `MockLocationService` por la ruta demo.
 * **MÚSICA NO / SÍ** en el mapa: activa o silencia la música del mapa, el
@@ -113,18 +118,21 @@ Los diez profesores usan sprites chibi de cuerpo completo durante el encuentro
 y retratos pixelados basados en sus fotos para la colección. Conservan sus
 rasgos personales con expresiones más juguetonas.
 
-El mapa principal de los Cuadrángulos es `assets/map/campus_map.png`. Los
-marcadores de la carpa y del laboratorio se dibujan encima desde
-`lib/features/map/presentation/widgets/fair_landmarks_painter.dart`, sin
-modificar la imagen. En modo real, `FairRouteProjection.usfq` usa dos pines
+El mapa principal de los Cuadrángulos es `assets/map/campus_map.png`. Las
+carpas, los stands y la entrada del laboratorio se muestran encima desde
+`lib/features/map/presentation/widgets/fair_map_labels.dart`, sin modificar
+la imagen. En modo real, `FairRouteProjection.usfq` usa dos pines
 aproximados para mostrar el avance del jugador entre la carpa y la entrada
 del laboratorio. El recorrido se ilustra en perspectiva y requiere una prueba
 de GPS caminando en el campus. Los profesores llevan los NFC y no tienen una
 posición fija en el mapa. `assets/map/campus_map.svg` es el mapa retro anterior;
 `bash tool/generate_retro_map.sh` solo regenera `campus_map_old.png` y requiere
 `rsvg-convert`. La
-partitura y síntesis de las tres piezas están en `tool/generate_soundtrack.py`;
-`python3 tool/generate_soundtrack.py` actualiza sus WAV sin dependencias externas.
+partitura y síntesis de las piezas originales están en
+`tool/generate_soundtrack.py`; `python3 tool/generate_soundtrack.py` actualiza
+sus WAV sin dependencias externas. La batalla usa la pista de Pokémon incluida
+para esta prueba; hay que resolver sus derechos antes de distribuir la APK
+públicamente.
 Los cinco efectos originales se generan con `python3 tool/generate_sound_effects.py`.
 La escena de encuentro muestra una guía de puntería proyectada y una etiqueta
 animada de calidad mientras se arrastra la bola, un destello cuadrado al impactar, una barra de tiempo con

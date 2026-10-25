@@ -76,7 +76,7 @@ final gameMusicControllerProvider =
       GameMusicController.new,
     );
 
-/// The saved opt-in controls all three original music cues. Route changes
+/// The saved opt-in controls the three music cues. Route changes
 /// share a single audio player, so capture cannot dispose the map soundtrack.
 class GameMusicController extends Notifier<GameMusicState>
     with WidgetsBindingObserver {
