@@ -31,6 +31,8 @@ Splash → (auth guard) → Map
 Map → CAPTURAR → NFC Scan → start-encounter → Encounter (minijuego)
 Encounter → resolve-capture → Result → Map | Collection
 Collection completa → Completion
+Profesor vinculado → inicia búsqueda → publica último GPS → estudiantes ven marcador
+Estudiante → NFC Scan → check_in_campus_hunt → hallazgo para la feria
 ```
 
 ## Capas en Flutter
@@ -43,13 +45,15 @@ lib/
 │   ├── di/       Providers Riverpod: eligen Mock vs Supabase según DEMO_MODE
 │   ├── errors/   AppException → mensajes amigables en español
 │   ├── location/ LocationService (Real/Mock)
+│   ├── hunt/     HuntService (sesiones y hallazgos de la feria)
 │   ├── models/   Professor, Rarity, Encounter, Capture, CollectionProgress, Profile
 │   ├── nfc/      NfcService (Real/Mock)
 │   ├── repositories/ ProfessorRepository, CaptureService, AuthRepository (Supabase/Mock)
 │   └── widgets/  PixelCard, PixelButton, RarityBadge, ProfessorSprite, ProgressBar, CaptureBall
 └── features/
     ├── auth/        Splash, Login, Register, AuthController
-    ├── map/         CampusMap, avatar, gpsToMapCoordinates, MapScreen (hub)
+    ├── map/         CampusMap demo, mapa geográfico real, avatar, MapScreen (hub)
+    ├── hunt/        pantalla del profesor anfitrión, publicación GPS en primer plano
     ├── capture/     NFC scan, Encounter + minijuego, ThrowQuality, Result
     ├── collection/  Profedex, detalle de profesor, filtros
     ├── profile/     Perfil, logout
@@ -118,8 +122,9 @@ encuentro y su resolución los crea y decide el servidor (ver
   en un bucket público). Limitación conocida: Storage confía en el `Content-Type` declarado por
   el cliente y no inspecciona los bytes, así que el allowlist frena el caso accidental, no a un
   administrador malicioso; el navegador, aun así, sirve el objeto como la imagen declarada.
-- **PostGIS** está habilitado para futuras funciones geográficas; hoy no existe ninguna
-  columna geográfica y no se guarda ubicación (ver [Privacidad](#privacidad)).
+- **Búsqueda de la feria:** `hunt_publishers`, `hunt_sessions` y `hunt_checkins` con RLS.
+  El profesor publica su último punto mediante RPC y `pg_cron` limpia posiciones
+  vencidas. PostGIS está habilitado, pero esta función usa columnas latitud/longitud.
 
 ## Privacidad
 
@@ -127,21 +132,21 @@ Garantías de diseño, no solo de interfaz; cada una es verificable en el códig
 detallada en [`docs/privacy.md`](privacy.md):
 
 - **Ubicación del jugador:** la app guarda únicamente el último punto conocido y solo en
-  memoria (`MapState.current`); no persiste historial de posiciones ni lo envía nunca al
-  servidor — los únicos cuerpos que salen del móvil son `{tag_identifier}` y
-  `{encounter_id, throw_quality}`, y no hay columna de coordenadas en el esquema.
-- **Ubicación de los profesores:** no se almacena ni se expone. Solo existe el mapeo
-  tag → profesor en `nfc_tags`, invisible para los jugadores por RLS (política solo admin).
+  memoria (`MapState.current`); no persiste historial ni lo envía al servidor.
+- **Ubicación del profesor anfitrión:** solo la última posición de una sesión voluntaria
+  de 30 minutos. La RLS solo la muestra fresca y activa a usuarios autenticados; se
+  borra al detener o expirar la actividad.
 - **Sin biometría, cámara ni fotos:** no hay dependencias ni permisos de ese tipo; los
   permisos de la app son exactamente NFC, ubicación *when in use* e internet.
-- **Datos personales persistidos:** email y `display_name` opcional en `public.profiles`,
-  más el progreso de juego. Sin analítica, telemetría ni crash reporting.
+- **Datos personales persistidos:** email, `display_name`, progreso y hallazgos NFC
+  de la feria. Sin analítica, telemetría ni crash reporting.
 
 ## Admin
 
 Next.js App Router con `@supabase/ssr`. El middleware refresca la sesión y solo deja pasar
 perfiles con `role = 'admin'`. Las operaciones CRUD usan las políticas RLS de admin; el
-registro de tags NFC pasa por la Edge Function `admin-register-nfc`.
+registro de tags NFC pasa por la Edge Function `admin-register-nfc`. La ruta `/hunt`
+vincula la cuenta del profesor y muestra/exporta los hallazgos.
 
 ## Extensión futura
 

@@ -11,6 +11,7 @@ import '../../../core/audio/game_music_controller.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/di/providers.dart';
 import '../../../core/errors/app_exception.dart';
+import '../../../core/hunt/hunt_service.dart';
 import '../../../core/models/profile.dart';
 import '../../../core/nfc/mock_nfc_service.dart';
 import '../../../core/nfc/nfc_service.dart';
@@ -33,6 +34,7 @@ enum _ScanStatus {
   unsupported,
   disabled,
   offline,
+  found,
   error,
 }
 
@@ -169,11 +171,29 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
     _starting = true;
     _session++;
     _set(_ScanStatus.starting);
+    HuntCheckin? huntCheckin;
     try {
+      // The hunt's attendance record is separate from the once-per-professor
+      // Profedex capture. A player who already caught this professor still
+      // receives credit for finding them at this event.
+      if (!AppConfig.isDemoMode) {
+        huntCheckin = await ref.read(huntServiceProvider).checkIn(tag);
+      }
       final encounter = await ref
           .read(captureServiceProvider)
           .startEncounter(tag);
       if (!mounted) return;
+      if (huntCheckin != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              huntCheckin.alreadyRegistered
+                  ? 'Este hallazgo ya estaba registrado para la feria.'
+                  : '¡Hallazgo registrado para la feria!',
+            ),
+          ),
+        );
+      }
       // The battle music starts with the wipe, as in a wild encounter; the
       // encounter screen keeps it playing without restarting it.
       unawaited(
@@ -188,6 +208,16 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
       );
     } catch (e) {
       final error = AppException.from(e);
+      if (error.code == AppException.alreadyCaptured && huntCheckin != null) {
+        _set(
+          _ScanStatus.found,
+          message: huntCheckin.alreadyRegistered
+              ? 'Ya registramos que encontraste al profesor en esta búsqueda.'
+              : '¡Encontraste al profesor! Tu hallazgo quedó registrado '
+                    'para la actividad, aunque ya estaba en tu Profedex.',
+        );
+        return;
+      }
       String? unregisteredTag;
       if (!AppConfig.isDemoMode && error.code == AppException.tagNotFound) {
         try {
@@ -200,7 +230,10 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
       if (!mounted) return;
       _set(
         _ScanStatus.error,
-        message: error.message,
+        message: huntCheckin == null
+            ? error.message
+            : 'Tu hallazgo para la feria quedó registrado. '
+                  'El encuentro no pudo abrirse: ${error.message}',
         unregisteredTag: unregisteredTag,
       );
     } finally {
@@ -312,6 +345,14 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
           title: 'Sin conexión',
           message: AppException.messages[AppException.noInternet]!,
           onRetry: _begin,
+        );
+      case _ScanStatus.found:
+        return _MessageView(
+          icon: PixelIcons.badge,
+          iconColor: AppColors.success,
+          title: '¡Profesor encontrado!',
+          message: _errorMessage ?? 'Tu hallazgo quedó registrado.',
+          onDone: () => context.go(AppRoutes.map),
         );
       case _ScanStatus.error:
         return _MessageView(
@@ -434,6 +475,7 @@ class _MessageView extends StatelessWidget {
     this.iconColor = AppColors.danger,
     this.onRetry,
     this.onOpenSettings,
+    this.onDone,
     this.unregisteredTag,
   });
 
@@ -445,6 +487,7 @@ class _MessageView extends StatelessWidget {
 
   /// When set, the primary action opens the system settings.
   final Future<void> Function()? onOpenSettings;
+  final VoidCallback? onDone;
   final String? unregisteredTag;
 
   @override
@@ -504,6 +547,14 @@ class _MessageView extends StatelessWidget {
                     ? PixelButtonVariant.tertiary
                     : PixelButtonVariant.secondary,
                 onPressed: () => unawaited(onRetry!()),
+              ),
+            ],
+            if (onDone != null) ...[
+              const SizedBox(height: 24),
+              PixelButton(
+                label: 'Volver al mapa',
+                icon: PixelIcons.map,
+                onPressed: onDone,
               ),
             ],
           ],

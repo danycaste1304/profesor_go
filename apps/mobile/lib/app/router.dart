@@ -14,6 +14,7 @@ import '../features/capture/presentation/encounter_screen.dart';
 import '../features/capture/presentation/nfc_scan_screen.dart';
 import '../features/collection/presentation/collection_screen.dart';
 import '../features/collection/presentation/professor_detail_screen.dart';
+import '../features/hunt/presentation/hunt_host_screen.dart';
 import '../features/map/presentation/map_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/progress/presentation/completion_screen.dart';
@@ -24,6 +25,7 @@ abstract final class AppRoutes {
   static const login = '/login';
   static const register = '/register';
   static const map = '/map';
+  static const huntHost = '/hunt-host';
   static const scan = '/scan';
   static const encounterPattern = '/encounter/:encounterId';
   static const result = '/result';
@@ -97,6 +99,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.map,
         builder: (context, state) => const MapScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.huntHost,
+        builder: (context, state) => const HuntHostScreen(),
       ),
       GoRoute(
         path: AppRoutes.scan,

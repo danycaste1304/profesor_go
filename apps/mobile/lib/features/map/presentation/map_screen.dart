@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -7,13 +8,16 @@ import 'package:go_router/go_router.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../core/audio/game_music_controller.dart';
+import '../../../core/config/app_config.dart';
 import '../../../core/di/providers.dart';
 import '../../../core/errors/app_exception.dart';
+import '../../../core/hunt/hunt_service.dart';
 import '../../../core/models/collection_progress.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../avatar/avatar_style.dart';
 import 'completion_banner_state.dart';
 import 'map_controller.dart';
+import 'widgets/campus_live_map.dart';
 import 'widgets/campus_map.dart';
 
 /// Home hub: collection progress, connectivity, the campus map with the
@@ -32,15 +36,22 @@ class _MapScreenState extends ConsumerState<MapScreen>
     with WidgetsBindingObserver {
   /// Below this height the hub scrolls instead of squeezing the map.
   static const double _minContentHeight = 560;
+  Timer? _huntRefreshTimer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    if (!AppConfig.isDemoMode) {
+      _huntRefreshTimer = Timer.periodic(const Duration(seconds: 10), (_) {
+        if (mounted) ref.invalidate(activeHuntsProvider);
+      });
+    }
   }
 
   @override
   void dispose() {
+    _huntRefreshTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -56,6 +67,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
 
   Future<void> _refresh() async {
     invalidateCollection(ref);
+    if (!AppConfig.isDemoMode) ref.invalidate(activeHuntsProvider);
     if (!ref.read(mapControllerProvider).isAvailable) {
       ref.read(mapControllerProvider.notifier).retry();
     }
@@ -69,6 +81,11 @@ class _MapScreenState extends ConsumerState<MapScreen>
   @override
   Widget build(BuildContext context) {
     final mapState = ref.watch(mapControllerProvider);
+    final hunts = AppConfig.isDemoMode
+        ? const <HuntSession>[]
+        : (ref.watch(activeHuntsProvider).value ?? const <HuntSession>[]);
+    final canPublish =
+        !AppConfig.isDemoMode && ref.watch(huntPublisherProvider).value != null;
     final online = ref.watch(connectivityProvider).value ?? true;
     final progressAsync = ref.watch(collectionProgressProvider);
     final progress =
@@ -97,7 +114,9 @@ class _MapScreenState extends ConsumerState<MapScreen>
                   padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
                   child: Stack(
                     children: [
-                      Positioned.fill(child: _MapPanel(state: mapState)),
+                      Positioned.fill(
+                        child: _MapPanel(state: mapState, hunts: hunts),
+                      ),
                       Positioned(
                         left: 8,
                         right: 8,
@@ -111,6 +130,26 @@ class _MapScreenState extends ConsumerState<MapScreen>
                             ),
                             const SizedBox(height: 8),
                             _StatusPills(online: online),
+                            if (hunts.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              PixelPill(
+                                label: 'Busca a ${hunts.first.professorName}',
+                                icon: PixelIcons.pin,
+                                color: AppColors.accent,
+                                tinted: true,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Ubicación aproximada · actualizada hace '
+                                '${DateTime.now().toUtc().difference(hunts.first.locatedAt!).inSeconds.clamp(0, 29)} s '
+                                '· precisión ±${(hunts.first.accuracyMeters ?? 0).round()} m',
+                                style: const TextStyle(
+                                  color: AppColors.text,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
                             if (showBanner) ...[
                               const SizedBox(height: 8),
                               _CompletionBanner(
@@ -158,6 +197,16 @@ class _MapScreenState extends ConsumerState<MapScreen>
                                     ? () => context.push(AppRoutes.scan)
                                     : null,
                               ),
+                              if (canPublish) ...[
+                                const SizedBox(height: 9),
+                                PixelButton(
+                                  label: 'Compartir ubicación',
+                                  icon: PixelIcons.pin,
+                                  variant: PixelButtonVariant.secondary,
+                                  onPressed: () =>
+                                      context.push(AppRoutes.huntHost),
+                                ),
+                              ],
                               if (!online)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 6),
@@ -438,9 +487,10 @@ class _LocationNotice extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _MapPanel extends ConsumerWidget {
-  const _MapPanel({required this.state});
+  const _MapPanel({required this.state, required this.hunts});
 
   final MapState state;
+  final List<HuntSession> hunts;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -450,10 +500,12 @@ class _MapPanel extends ConsumerWidget {
       statusText = 'Buscando tu ubicación…';
     } else if (state.isAvailable && state.current == null) {
       statusText = 'Esperando señal GPS…';
-    } else if (state.isAvailable && !state.isInsideCampus) {
+    } else if (AppConfig.isDemoMode &&
+        state.isAvailable &&
+        !state.isInsideCampus) {
       statusText = 'Ubicación fuera del mapa actual';
-    } else if (state.isAvailable && state.config.isApproximate) {
-      statusText = 'Ubicación aproximada';
+    } else if (state.isAvailable && !AppConfig.isDemoMode) {
+      statusText = 'GPS aproximado';
     } else {
       statusText = null;
     }
@@ -466,11 +518,13 @@ class _MapPanel extends ConsumerWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            CampusMap(
-              avatarOffset: state.mapOffset,
-              config: state.config,
-              avatarStyle: ref.watch(avatarStyleProvider),
-            ),
+            AppConfig.isDemoMode
+                ? CampusMap(
+                    avatarOffset: state.mapOffset,
+                    config: state.config,
+                    avatarStyle: ref.watch(avatarStyleProvider),
+                  )
+                : CampusLiveMap(playerPosition: state.current, hunts: hunts),
             if (statusText != null)
               Positioned(
                 left: 8,

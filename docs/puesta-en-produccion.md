@@ -1,7 +1,51 @@
 # Paso de demo a operación real
 
-Estado: 25 de octubre de 2026. Este documento es la secuencia de salida para
+Estado: 26 de octubre de 2026. Este documento es la secuencia de salida para
 la feria; ningún emulador sustituye la última prueba con los dispositivos.
+
+## Candidato beta 9: búsqueda por todo el campus
+
+El código local de `0.1.0+9` incorpora mapa geográfico, publicación voluntaria
+de la última posición durante 30 minutos, hallazgo NFC independiente de la
+Profedex y lista/exportación de participantes en `/hunt`. La migración
+`20261026021215_campus_hunt.sql` se aplicó al Supabase de producción el
+25 de octubre (hora de Ecuador); creó las tablas con RLS y programó la limpieza
+de ubicaciones. La APK beta 9 ya puede llamar a `check_in_campus_hunt`, pero
+todavía requiere la prueba física antes de distribuirse.
+
+Verificación en producción: las tres tablas tienen RLS, los RPC públicos están
+disponibles solo para cuentas autenticadas y `pg_cron` ejecutó la limpieza con
+estado `succeeded`. Una prueba dentro de una transacción revertida confirmó
+sesión de 30 minutos, ubicación visible para un alumno mientras estaba activa,
+un solo hallazgo al tocar dos veces la tarjeta de un profesor ya capturado,
+ocultación al detener y borrado del último punto. Tras el rollback quedaron
+cero usuarios, sesiones y hallazgos de prueba; las diez capturas previas siguen
+presentes. Otra transacción revertida confirmó que la cuenta administradora
+puede crear una asignación mediante RLS. La prueba pgTAP completa sigue
+pendiente por falta de Docker local.
+
+Secuencia para habilitarla:
+
+1. Ejecutar `supabase/tests/007_campus_hunt.test.sql` en un entorno de prueba
+   cuando Docker esté disponible; las comprobaciones de producción anteriores
+   ya pasaron.
+2. Probar un Gmail nuevo en dos Android con la APK beta 9, cerrar/reabrir la app
+   y confirmar que la sesión persiste. No hay un fallo de login reproducido aún.
+3. Hacer que el profesor entre en la app con Google, vincular su correo desde
+   `/hunt`, registrar su tarjeta NFC pequeña y comprobar la lectura física.
+4. Recorrer todo el campus con dos estudiantes: marcador y precisión GPS,
+   desaparición a los 30 segundos sin señal, hallazgo de quien ya capturó al
+   profesor, fin manual y automático, y exportación CSV.
+5. Distribuir la APK solo después de completar esas pruebas. La compilación
+   local usa la firma debug mientras no exista `android/key.properties`.
+
+Si Noel usa iPhone, la página de anfitrión está en `docs/anfitrion.html`. Para
+habilitarla: publicar `docs/` por HTTPS en GitHub Pages, añadir exactamente
+`https://danycaste1304.github.io/profesor_go/anfitrion.html` a las Redirect URLs
+de Supabase Auth sin quitar los retornos existentes, y probar Google OAuth y
+GPS en Safari. La página usa una clave pública, verifica por RLS la cuenta
+vinculada y deja de publicar al bloquearse Safari; el marcador caduca a los
+30 segundos. Noel debe iniciar sesión una vez antes de vincular su cuenta.
 
 ## Estado de la beta 8
 

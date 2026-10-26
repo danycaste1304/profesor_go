@@ -28,7 +28,7 @@
 	<key>NFCReaderUsageDescription</key>
 	<string>Profesor GO usa NFC para leer las tarjetas de los profesores y comenzar un encuentro.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Profesor GO usa tu ubicación para mostrarte en el mapa del campus. No se guarda ningún historial.</string>
+	<string>Profesor GO usa tu ubicación para mostrarte en el mapa. Si eres el profesor anfitrión y activas una búsqueda, comparte tu última posición durante 30 minutos. No se guarda un recorrido.</string>
 	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
 	<array>
 		<string>D2760000850101</string>

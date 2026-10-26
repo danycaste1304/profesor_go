@@ -22,22 +22,24 @@
     <main>
       <a href="index.html">← Profesor GO</a>
       <h1>Política de privacidad</h1>
-      <p class="date">Última actualización: 25 de octubre de 2026</p>
+      <p class="date">Última actualización: 26 de octubre de 2026</p>
       <p>Profesor GO es un juego móvil para una feria universitaria en la USFQ. El contacto del proyecto para preguntas sobre privacidad es <a href="mailto:danycaste1304@gmail.com">danycaste1304@gmail.com</a>.</p>
 
       <h2>Datos que usamos</h2>
       <ul>
         <li>Al entrar con Google, usamos tu dirección de correo y datos básicos de perfil, como tu nombre, para crear e identificar tu cuenta. Google y Supabase procesan ese inicio de sesión.</li>
-        <li>Guardamos tu progreso: encuentros, capturas, profesores capturados y fechas relacionadas. Al leer un beacon NFC, enviamos su identificador al servidor para abrir el encuentro.</li>
+        <li>Guardamos tu progreso: encuentros, capturas, profesores capturados y fechas relacionadas. Al leer una tarjeta NFC, enviamos su identificador al servidor para abrir el encuentro y, durante una búsqueda, registrar un hallazgo.</li>
         <li>Si permites la ubicación, la usamos para mostrar tu avatar en el mapa. La app no guarda un historial de ubicación ni envía tus coordenadas al servidor del juego.</li>
-        <li>Las preferencias del avatar y la sesión se conservan en tu teléfono para que puedas seguir jugando.</li>
+        <li>Si eres el profesor anfitrión y activas la búsqueda, tu teléfono envía voluntariamente la última ubicación y su precisión. Los jugadores con sesión pueden verla mientras esté actualizada, por un máximo de 30 minutos. No guardamos el recorrido. El marcador se oculta si pasan 30 segundos sin actualización; la ubicación se elimina al detener o dentro de aproximadamente un minuto tras expirar.</li>
+        <li>Durante la búsqueda guardamos una constancia por alumno que lea la tarjeta NFC: cuenta, profesor, hora y sesión. No incluye la ubicación del alumno.</li>
+        <li>Las preferencias del avatar y la sesión se conservan en tu teléfono para que puedas seguir jugando. Si el profesor usa la página de anfitrión en Safari, su sesión se conserva en el almacenamiento local del navegador hasta que cierre sesión o caduque; allí no se guardan coordenadas.</li>
       </ul>
 
       <h2>Para qué los usamos y con quién se comparten</h2>
-      <p>Usamos estos datos para autenticarte, mostrar tu perfil, guardar tu Profedex y procesar las capturas. La cuenta y el progreso se alojan en Supabase; Google interviene en el inicio de sesión. No incorporamos publicidad ni herramientas de analítica de terceros en la app.</p>
+      <p>Usamos estos datos para autenticarte, mostrar tu perfil, guardar tu Profedex, procesar las capturas y verificar los hallazgos de la feria para el punto extra. La cuenta, el progreso y los hallazgos se alojan en Supabase; Google interviene en el inicio de sesión. No incorporamos publicidad ni herramientas de analítica de terceros en la app.</p>
 
       <h2>Acceso y conservación</h2>
-      <p>Los jugadores solo pueden consultar su propio progreso y los datos públicos de los profesores participantes. Las personas administradoras del proyecto pueden gestionar el juego y las cuentas. No hay un plazo de eliminación automática establecido para las cuentas y capturas.</p>
+      <p>Los jugadores pueden consultar su propio progreso, los datos públicos de los profesores y la ubicación reciente del anfitrión durante la búsqueda activa. Las personas administradoras pueden consultar los hallazgos y exportar nombre, correo y hora para revisar el punto extra. No hay un plazo de eliminación automática establecido para las cuentas, capturas y hallazgos.</p>
 
       <h2>Eliminar tus datos</h2>
       <p>Puedes pedir acceso o eliminación de tu cuenta y progreso escribiendo desde el correo con el que juegas a <a href="mailto:danycaste1304@gmail.com">danycaste1304@gmail.com</a>. Al eliminar la cuenta, se eliminan también sus perfiles, encuentros y capturas de la base de datos del juego; los registros técnicos del servidor pueden conservar identificadores de eventos durante su período de retención.</p>
