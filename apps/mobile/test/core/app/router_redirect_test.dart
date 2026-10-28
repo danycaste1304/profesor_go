@@ -40,4 +40,8 @@ void main() {
     expect(AppRoutes.encounter('abc'), '/encounter/abc');
     expect(AppRoutes.professorDetail('p1'), '/collection/p1');
   });
+
+  test('QR fragment has a route for an already-running web app', () {
+    expect(AppRoutes.qrLinkPattern, '/qr=:code');
+  });
 }

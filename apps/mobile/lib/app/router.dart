@@ -13,6 +13,7 @@ import '../features/capture/domain/capture_result_args.dart';
 import '../features/capture/presentation/capture_result_screen.dart';
 import '../features/capture/presentation/encounter_screen.dart';
 import '../features/capture/presentation/nfc_scan_screen.dart';
+import '../features/capture/presentation/qr_link_screen.dart';
 import '../features/capture/presentation/qr_scan_screen.dart';
 import '../features/collection/presentation/collection_screen.dart';
 import '../features/collection/presentation/professor_detail_screen.dart';
@@ -30,6 +31,7 @@ abstract final class AppRoutes {
   static const huntHost = '/hunt-host';
   static const scan = '/scan';
   static const scanQr = '/scan-qr';
+  static const qrLinkPattern = '/qr=:code';
   static const encounterPattern = '/encounter/:encounterId';
   static const result = '/result';
   static const collection = '/collection';
@@ -86,6 +88,9 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: kDebugMode,
     redirect: (context, state) {
       final auth = ref.read(authStateProvider);
+      // A QR opened in an existing Safari tab is a hash-route navigation.
+      // Let the route save and remove it before the auth redirect runs.
+      if (state.uri.path.startsWith('/qr=')) return null;
       if (auth.value != null &&
           PendingQr.hasCode &&
           state.matchedLocation != AppRoutes.scan) {
@@ -94,6 +99,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       return appRedirect(auth, state.matchedLocation);
     },
     routes: [
+      GoRoute(
+        path: AppRoutes.qrLinkPattern,
+        builder: (context, state) =>
+            QrLinkScreen(code: state.pathParameters['code'] ?? ''),
+      ),
       GoRoute(
         path: AppRoutes.splash,
         builder: (context, state) => const SplashScreen(),
