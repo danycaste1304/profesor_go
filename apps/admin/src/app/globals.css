@@ -29,3 +29,9 @@ body {
   outline: 3px solid #28c6d7;
   outline-offset: 3px;
 }
+
+@media print {
+  body * { visibility: hidden; }
+  .qr-sheet, .qr-sheet * { visibility: visible; }
+  .qr-sheet { position: absolute; inset: 0; border: 0; box-shadow: none; }
+}

@@ -29,13 +29,19 @@ abstract class ProfessorRepository {
 /// Last-known-value cache. Memory first; optionally mirrored to
 /// SharedPreferences so the collection can be shown without network.
 class ProfessorCache {
-  ProfessorCache({this.persistent = true});
+  ProfessorCache({this.persistent = true, this.userId});
 
   static const _kProfessors = 'cache.professors';
   static const _kCaptures = 'cache.captures';
   static const _kProgress = 'cache.progress';
 
   final bool persistent;
+
+  /// User-specific keys prevent one account from seeing another's captures.
+  final String? userId;
+  String get _captureKey => userId == null ? _kCaptures : '$_kCaptures.$userId';
+  String get _progressKey =>
+      userId == null ? _kProgress : '$_kProgress.$userId';
 
   List<Professor>? _professors;
   List<Capture>? _captures;
@@ -59,13 +65,13 @@ class ProfessorCache {
             .map((e) => Professor.fromJson((e as Map).cast<String, dynamic>()))
             .toList();
       }
-      final c = prefs.getString(_kCaptures);
+      final c = prefs.getString(_captureKey);
       if (c != null) {
         _captures = (jsonDecode(c) as List)
             .map((e) => Capture.fromJson((e as Map).cast<String, dynamic>()))
             .toList();
       }
-      final g = prefs.getString(_kProgress);
+      final g = prefs.getString(_progressKey);
       if (g != null) {
         _progress = CollectionProgress.fromJson(
           (jsonDecode(g) as Map).cast<String, dynamic>(),
@@ -83,12 +89,12 @@ class ProfessorCache {
 
   Future<void> saveCaptures(List<Capture> value) {
     _captures = List.unmodifiable(value);
-    return _persist(_kCaptures, value.map((c) => c.toJson()).toList());
+    return _persist(_captureKey, value.map((c) => c.toJson()).toList());
   }
 
   Future<void> saveProgress(CollectionProgress value) {
     _progress = value;
-    return _persist(_kProgress, value.toJson());
+    return _persist(_progressKey, value.toJson());
   }
 
   Future<void> clear() async {
@@ -99,8 +105,8 @@ class ProfessorCache {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_kProfessors);
-      await prefs.remove(_kCaptures);
-      await prefs.remove(_kProgress);
+      await prefs.remove(_captureKey);
+      await prefs.remove(_progressKey);
     } catch (_) {}
   }
 

@@ -2,15 +2,16 @@ import 'dart:math' as math;
 
 /// Immutable geographic coordinate (degrees).
 class LatLng {
-  const LatLng(this.latitude, this.longitude);
+  const LatLng(this.latitude, this.longitude, {this.accuracyMeters});
 
-  factory LatLng.fromJson(Map<String, dynamic> json) => LatLng(
-        (json['lat'] as num).toDouble(),
-        (json['lng'] as num).toDouble(),
-      );
+  factory LatLng.fromJson(Map<String, dynamic> json) =>
+      LatLng((json['lat'] as num).toDouble(), (json['lng'] as num).toDouble());
 
   final double latitude;
   final double longitude;
+
+  /// GPS uncertainty for the latest fix; never persisted for students.
+  final double? accuracyMeters;
 
   Map<String, dynamic> toJson() => {'lat': latitude, 'lng': longitude};
 
@@ -19,7 +20,8 @@ class LatLng {
     const earthRadius = 6371000.0;
     final dLat = _rad(other.latitude - latitude);
     final dLng = _rad(other.longitude - longitude);
-    final a = math.sin(dLat / 2) * math.sin(dLat / 2) +
+    final a =
+        math.sin(dLat / 2) * math.sin(dLat / 2) +
         math.cos(_rad(latitude)) *
             math.cos(_rad(other.latitude)) *
             math.sin(dLng / 2) *
@@ -33,10 +35,11 @@ class LatLng {
   bool operator ==(Object other) =>
       other is LatLng &&
       other.latitude == latitude &&
-      other.longitude == longitude;
+      other.longitude == longitude &&
+      other.accuracyMeters == accuracyMeters;
 
   @override
-  int get hashCode => Object.hash(latitude, longitude);
+  int get hashCode => Object.hash(latitude, longitude, accuracyMeters);
 
   @override
   String toString() => 'LatLng($latitude, $longitude)';

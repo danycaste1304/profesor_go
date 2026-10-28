@@ -10,70 +10,71 @@ verificar leyendo el código, no confiando en la documentación.
 |----------------------------------------|--------------------------------------|-------|
 | Posición GPS del jugador               | **No** (solo el último punto, en RAM)| `MapState.current` |
 | Historial de posiciones / recorrido    | **No**                               | — |
-| Posición de los profesores             | **No**                               | — |
-| Biometría, cámara, fotos               | **No** (no se piden permisos)        | — |
+| Última posición del profesor anfitrión | Sí, solo durante la búsqueda         | `public.hunt_sessions` |
+| Cámara para escanear QR                 | Permiso mientras se usa; no se suben imágenes | `QrScanScreen` |
+| Biometría, fotos guardadas, audio grabado | **No** | — |
 | Email                                  | Sí                                   | `auth.users`, `public.profiles.email` |
 | Nombre visible (`display_name`)        | Sí, opcional                         | `public.profiles.display_name` |
 | Progreso de juego (encuentros/capturas)| Sí                                   | `public.encounters`, `public.captures` |
-| Identificador del tag NFC leído        | Sí, asociado al encuentro            | `public.nfc_tags`, `public.encounters` |
+| Identificador de NFC                   | Sí, como relación con profesor       | `public.nfc_tags` |
+| Credencial QR impresa                  | Solo hash en servidor; pendiente temporal en el dispositivo | `public.professor_qr_codes`, `PendingQr` |
+| Hallazgo de la feria                   | Sí, una vez por alumno y búsqueda    | `public.hunt_checkins` |
 
 ## 1. Ubicación (GPS)
 
-La app pide la ubicación con un único fin: **dibujar el avatar del jugador sobre el mapa
-del campus**. Sobre ese dato:
+Para los jugadores, la app usa la ubicación para dibujar su avatar sobre el mapa del campus.
+Sobre ese dato:
 
 - **Solo se conserva el último punto conocido, y solo en memoria.** El estado del mapa
   (`apps/mobile/lib/features/map/presentation/map_controller.dart`) tiene un único campo
   `current` de tipo `LatLng?`; no hay lista, cola ni buffer de posiciones. Al cerrar la
   pantalla el estado se descarta.
-- **No se persiste nunca.** No hay clave de `SharedPreferences` con coordenadas y no
-  existe ninguna columna de latitud/longitud, `geography` o `geometry` en el esquema
-  (`supabase/migrations/20260916000200_schema.sql`).
-- **No se envía nunca al servidor.** Los únicos cuerpos que la app manda a las Edge
-  Functions son `{"tag_identifier": …}` y `{"encounter_id": …, "throw_quality": …}`
-  (`docs/CONTRACTS.md` §4, `apps/mobile/lib/core/repositories/supabase_capture_service.dart`).
-  El servidor no tiene forma de saber dónde estaba el jugador.
-- **La captura no depende del GPS.** Lo que autoriza un encuentro es la lectura NFC del
-  tag físico, no una comprobación de proximidad por coordenadas, así que el backend no
+- **No se persiste ni se envía al servidor.** No hay clave de `SharedPreferences` ni
+  columna para las coordenadas del jugador. Las coordenadas de `hunt_sessions` son
+  únicamente las que publica la cuenta vinculada al profesor anfitrión.
+- **La captura no depende del GPS.** Lo que autoriza un encuentro es la lectura NFC o QR
+  del profesor, no una comprobación de proximidad por coordenadas, así que el backend no
   necesita la ubicación ni siquiera de forma transitoria.
-- **PostGIS está instalado pero no se usa para almacenar nada.** La extensión se habilita
-  en `supabase/migrations/20260916000100_extensions.sql` pensando en funciones geográficas
-  futuras; hoy no hay ninguna columna geográfica que pudiera alimentar.
+- **PostGIS no almacena recorridos.** El evento conserva un solo par latitud/longitud
+  en `hunt_sessions`, sin historial de puntos.
 - **En modo demo no se toca el GPS real:** `MockLocationService` recorre una ruta simulada
   (`DEMO_MODE=true`, ver `docs/architecture.md`).
 
 Textos de permiso que ve el usuario:
 
 - iOS (`apps/mobile/ios/Runner/Info.plist`), `NSLocationWhenInUseUsageDescription`:
-  «Profesor GO usa tu ubicación para mostrarte en el mapa del campus. No se guarda ningún
-  historial.» Es *when in use*: no hay permiso de ubicación en segundo plano.
+  explica el mapa del jugador y la búsqueda voluntaria del profesor. Es *when in use*:
+  no hay permiso de ubicación en segundo plano.
 - Android (`apps/mobile/android/app/src/main/AndroidManifest.xml`):
   `ACCESS_FINE_LOCATION` y `ACCESS_COARSE_LOCATION`. No se declara
   `ACCESS_BACKGROUND_LOCATION`.
 
 ## 2. Posiciones de los profesores
 
-**No se almacena ni se expone la ubicación física de ningún profesor.** La tabla
-`public.professors` guarda solo `name`, `display_name`, `description`, `rarity`,
-`sprite_url`, `active` y `base_capture_rate`: no hay coordenadas ni referencia a un aula,
-stand o edificio. Lo único que relaciona a un profesor con un punto del campus es la
-tarjeta NFC pegada allí, y esa relación vive en `public.nfc_tags` (`tag_identifier` →
-`professor_id`), que **los jugadores no pueden leer**: `nfc_tags` tiene RLS activada y una
-única política, solo para administradores (`supabase/migrations/20260916000500_rls.sql`).
-Un jugador autenticado que consulte la tabla recibe cero filas.
+El profesor anfitrión inicia voluntariamente una búsqueda de 30 minutos desde su cuenta
+vinculada y mantiene abierta la pantalla de publicación. `hunt_sessions` guarda solo su
+última posición, precisión y hora. La app intenta actualizarla cada 10 segundos; rechaza
+una precisión peor que 100 metros. Los estudiantes autenticados solo pueden consultar la
+posición mientras la sesión esté activa y la ubicación tenga menos de 30 segundos. Al
+detenerse, se borra inmediatamente; al expirar, la RLS deja de exponerla y una tarea
+programada la borra dentro de aproximadamente un minuto. No se guarda el recorrido.
 
-Consecuencia práctica: la app no puede pintar «dónde está cada profesor» ni un jugador
-puede deducirlo consultando la API. Hay que recorrer el campus y encontrar el tag.
+El marcador representa una posición GPS aproximada; no garantiza que el profesor siga
+exactamente allí. El QR impreso se puede fotografiar y compartir: escanearlo registra el
+hallazgo, pero no demuestra presencia física. El administrador puede desactivarlo o
+reemplazarlo. Las credenciales QR se guardan solo como hash; los estudiantes no pueden
+listar los códigos ni los identificadores de `nfc_tags`.
 
-## 3. Biometría, cámara y fotos
+## 3. Cámara, biometría y fotos
 
-**No se usa biometría, ni cámara, ni fotos, ni grabación de audio.** No hay ninguna dependencia de
-cámara, galería o autenticación biométrica en `apps/mobile/pubspec.yaml` (ni
-`camera`, ni `image_picker`, ni `local_auth`), y no se declara ningún permiso de ese tipo.
-El conjunto completo de permisos de la app es:
+La cámara se solicita al abrir el lector QR en Android o Safari. `mobile_scanner` procesa
+los fotogramas en el dispositivo para extraer la URL; la app envía al backend solo la
+credencial del QR y no sube imágenes ni vídeo. La URL se quita de la barra del navegador
+al abrir el juego. No se usa biometría, galería ni grabación de audio.
 
-- Android: `INTERNET`, `NFC`, `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`.
-- iOS: `NFCReaderUsageDescription` y `NSLocationWhenInUseUsageDescription`.
+- Android: `INTERNET`, `CAMERA`, `NFC`, `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`.
+- Safari: permiso del navegador para cámara y ubicación opcional; requiere HTTPS.
+- iOS nativo, si se compila: `NFCReaderUsageDescription` y `NSLocationWhenInUseUsageDescription`.
 
 El jugador no sube ni un solo fichero: su avatar se dibuja en la app y sus elecciones
 cosméticas se guardan por cuenta en el dispositivo con `SharedPreferences`. Los únicos
@@ -88,6 +89,8 @@ Son los mínimos para tener una cuenta y un progreso:
 - `public.profiles`: `email`, `display_name` (opcional, lo elige el jugador al registrarse),
   `role`, `created_at` y `collection_completed_at`.
 - `public.encounters` y `public.captures`: qué profesor, cuándo, con qué resultado.
+- `public.hunt_checkins`: alumno, sesión, tarjeta NFC o profesor del QR y hora de hallazgo. Se conserva para
+  verificar el punto extra; no contiene coordenadas del alumno.
 
 No se recoge teléfono, fecha de nacimiento, dirección, identificador de dispositivo ni
 publicitario. **No hay SDK de analítica, telemetría ni crash reporting** en la app móvil ni
@@ -98,6 +101,9 @@ en el panel admin (ni Firebase, ni Sentry, ni Crashlytics, ni equivalentes en
 
 - La sesión de Supabase Auth (tokens + PKCE) en `SharedPreferences`, escrita por
   `Supabase.initialize` (`apps/mobile/lib/main.dart`). Se borra al cerrar sesión.
+- Si el profesor usa la página web de anfitrión, Safari conserva su sesión de
+  Supabase en el almacenamiento local de ese navegador hasta que cierre sesión
+  allí o caduque. La página no guarda coordenadas en ese almacenamiento.
 - Una caché de juego: profesores, capturas y progreso
   (`apps/mobile/lib/core/repositories/professor_repository.dart`) y, en modo demo, el
   estado simulado (`apps/mobile/lib/core/mock/demo_game_state.dart`).
@@ -110,13 +116,11 @@ Lo impone la RLS, no la interfaz (resumen completo en `docs/database.md`):
 
 - Un jugador solo lee **su** fila de `profiles`, **sus** encuentros y **sus** capturas, y
   los profesores activos. No puede leer las filas de otros jugadores ni `nfc_tags`.
-- Un jugador no puede escribir en `captures` ni en `encounters`: solo escribe
-  `service_role` desde las Edge Functions.
-- Un administrador puede leer `profiles` (incluido el email) por RLS, pero **el panel no
-  muestra ninguna lista de jugadores**: el dashboard solo consulta `admin_stats()`, que
-  devuelve agregados (`total_players`, `total_captures`, `active_professors`,
-  `completed_collections`) y ninguna fila individual
-  (`apps/admin/src/app/(app)/dashboard/page.tsx`).
+- Un jugador no puede escribir en `captures`, `encounters` ni directamente en las tablas
+  de búsqueda. El hallazgo se crea mediante la RPC `check_in_campus_hunt` al leer un tag
+  de una búsqueda activa.
+- Un administrador puede leer `profiles` y el panel de búsqueda muestra y exporta los
+  nombres/correos de quienes registraron hallazgo, para entregar el punto extra.
 - Los usuarios anónimos no leen nada: todas las políticas son `to authenticated`.
 
 ## 7. Registros del servidor
@@ -130,12 +134,11 @@ con forma de JWT. **No se registran emails ni coordenadas.**
 ## 8. Borrado de datos
 
 Borrar el usuario en `auth.users` elimina en cascada su fila de `profiles` y, desde ahí,
-sus `encounters` y `captures` (`on delete cascade` en
-`supabase/migrations/20260916000200_schema.sql`). No queda ningún dato del jugador salvo
-las líneas de log del servidor, que contienen solo su UUID.
+sus `encounters`, `captures` y `hunt_checkins` (`on delete cascade`). Si era una cuenta
+publicadora, se eliminan también su asignación y sus sesiones. No queda ningún dato del jugador salvo las
+líneas de log del servidor, que contienen solo su UUID.
 
 ## 9. Si esto cambia
 
-Cualquier cambio que añada coordenadas, biometría, fotos o un SDK de analítica invalida
-este documento: hay que actualizarlo en el mismo cambio y revisar `docs/CONTRACTS.md` §2,
-porque implicaría tocar el esquema.
+Cualquier cambio que añada historial de coordenadas, biometría, fotos o analítica requiere
+revisar este documento y `docs/CONTRACTS.md`.

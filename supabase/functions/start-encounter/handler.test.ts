@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertNotEquals, assertThrows } from "@std/assert";
-import type { Row } from "../_shared/db.ts";
+import type { DbResult, Row } from "../_shared/db.ts";
 import { AppError } from "../_shared/errors.ts";
 import { MAX_BODY_BYTES } from "../_shared/http.ts";
 import { loadAppSettings } from "../_shared/settings.ts";
@@ -25,6 +25,7 @@ import { isUuid } from "../_shared/types.ts";
 import {
   createHttpHandler,
   handleStartEncounter,
+  handleStartEncounterAtomic,
   parseStartEncounterBody,
   type StartEncounterDeps,
 } from "./handler.ts";
@@ -34,6 +35,54 @@ function makeDeps(db: FakeDb = seededDb()): StartEncounterDeps {
 }
 
 const playerInput = (tagIdentifier: string) => ({ userId: PLAYER_ID, tagIdentifier });
+
+class AtomicDb extends FakeDb {
+  outcome: Record<string, unknown> = {
+    outcome: "SUCCESS",
+    encounter_id: "00000000-0000-4000-8000-000000000001",
+    expires_at: "2026-10-29T12:03:00Z",
+    professor: {
+      id: PROF_COMMON_ID, display_name: "Prof. Ada", rarity: "COMMON",
+      sprite_url: null, description: null,
+    },
+  };
+  args: Record<string, unknown> | null = null;
+
+  override rpc(fn: string, args: Record<string, unknown> = {}): Promise<DbResult<unknown>> {
+    if (fn !== "start_encounter_tx") return super.rpc(fn, args);
+    this.args = args;
+    return Promise.resolve({ data: this.outcome, error: null });
+  }
+}
+
+Deno.test("start-encounter: QR and NFC are mutually exclusive", () => {
+  const code = "A".repeat(43);
+  assertEquals(parseStartEncounterBody({ qr_code: code }), { qrCode: code });
+  assertThrows(() => parseStartEncounterBody({ qr_code: code, tag_identifier: TAG_COMMON }), AppError);
+  assertThrows(() => parseStartEncounterBody({ qr_code: "short" }), AppError);
+});
+
+Deno.test("start-encounter: QR reaches atomic RPC without logging its secret", async () => {
+  const db = new AtomicDb();
+  const code = "A".repeat(43);
+  const response = await handleStartEncounterAtomic(makeDeps(db), {
+    userId: PLAYER_ID, qrCode: code,
+  });
+  assertEquals(response.professor.id, PROF_COMMON_ID);
+  assertEquals(db.args, {
+    p_user_id: PLAYER_ID, p_tag_identifier: null, p_qr_code: code,
+    p_expiration_seconds: 180,
+  });
+});
+
+Deno.test("start-encounter: atomic rate limit is HTTP 429", async () => {
+  const db = new AtomicDb();
+  db.outcome = { outcome: "RATE_LIMITED" };
+  await expectAppError(
+    () => handleStartEncounterAtomic(makeDeps(db), { userId: PLAYER_ID, qrCode: "A".repeat(43) }),
+    "RATE_LIMITED", 429,
+  );
+});
 
 // ---------------------------------------------------------------- pure handler
 

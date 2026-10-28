@@ -98,6 +98,7 @@ class AppException implements Exception {
   static const professorDisabled = 'PROFESSOR_DISABLED';
   static const alreadyCaptured = 'ALREADY_CAPTURED';
   static const invalidInput = 'INVALID_INPUT';
+  static const rateLimited = 'RATE_LIMITED';
   static const encounterNotFound = 'ENCOUNTER_NOT_FOUND';
   static const encounterNotActive = 'ENCOUNTER_NOT_ACTIVE';
   static const encounterExpired = 'ENCOUNTER_EXPIRED';
@@ -118,25 +119,26 @@ class AppException implements Exception {
   /// Canonical user-facing messages (Spanish).
   static const Map<String, String> messages = {
     noInternet: 'Sin conexión. No puedes iniciar una captura sin conexión.',
-    serverUnavailable:
-        'El servidor no responde ahora mismo. Inténtalo de nuevo en unos segundos.',
+    serverUnavailable: 'El servidor no responde ahora mismo. Inténtalo de nuevo en unos segundos.',
     nfcUnsupported: 'Este dispositivo no tiene NFC.',
     nfcDisabled: 'El NFC está desactivado. Actívalo en los ajustes del móvil.',
     nfcCancelled: 'Lectura NFC cancelada.',
     nfcReadError: 'No se pudo leer la tarjeta. Acércala de nuevo al móvil.',
-    tagNotFound: 'Esta tarjeta no es válida',
-    tagDisabled: 'Esta tarjeta está desactivada.',
+    tagNotFound: 'Este QR o tarjeta no es válido.',
+    tagDisabled: 'Este QR o tarjeta está desactivado.',
     professorDisabled: 'Este profesor no está disponible ahora mismo.',
     alreadyCaptured: 'Ya capturaste a este profesor',
-    encounterExpired: 'El encuentro expiró. Vuelve a leer la tarjeta NFC.',
+    encounterExpired: 'El encuentro expiró. Vuelve a escanear al profesor.',
     encounterNotActive:
-        'Este encuentro ya terminó. Vuelve a leer la tarjeta NFC.',
-    encounterNotFound: 'No encontramos este encuentro. Vuelve a leer la tarjeta.',
+        'Este encuentro ya terminó. Vuelve a escanear al profesor.',
+    encounterNotFound:
+        'No encontramos este encuentro. Vuelve a escanear al profesor.',
     forbidden: 'No tienes permiso para hacer esto.',
     unauthorized: 'Tu sesión ha caducado. Inicia sesión de nuevo.',
     invalidInput: 'Datos no válidos. Inténtalo de nuevo.',
-    locationDenied:
-        'Sin permiso de ubicación. Puedes seguir jugando, pero no te veremos en el mapa.',
+    rateLimited:
+        'Demasiados intentos. Espera un momento antes de volver a escanear.',
+    locationDenied: 'Sin permiso de ubicación. Puedes seguir jugando, pero no te veremos en el mapa.',
     locationDisabled: 'La ubicación del móvil está desactivada.',
     invalidCredentials: 'Correo o contraseña incorrectos.',
     emailTaken: 'Ya existe una cuenta con ese correo.',
@@ -155,7 +157,9 @@ class AppException implements Exception {
   static String? _codeFromFunctionDetails(Object? details) {
     if (details is Map) {
       final code = details['error'] ?? details['code'];
-      if (code is String && code.isNotEmpty && messages.containsKey(code.toUpperCase())) {
+      if (code is String &&
+          code.isNotEmpty &&
+          messages.containsKey(code.toUpperCase())) {
         return code;
       }
       return null;
@@ -176,12 +180,12 @@ class AppException implements Exception {
   /// (TAG_NOT_FOUND vs ENCOUNTER_NOT_FOUND, ALREADY_CAPTURED vs
   /// ENCOUNTER_NOT_ACTIVE), so they stay generic.
   static String _codeForHttpStatus(int status) => switch (status) {
-        400 => invalidInput,
-        401 => unauthorized,
-        403 => forbidden,
-        410 => encounterExpired,
-        _ => serverUnavailable,
-      };
+    400 => invalidInput,
+    401 => unauthorized,
+    403 => forbidden,
+    410 => encounterExpired,
+    _ => serverUnavailable,
+  };
 
   static bool _isHttpClientException(Object error) =>
       error.runtimeType.toString().contains('ClientException');
@@ -203,8 +207,11 @@ class AppException implements Exception {
     if (code == 'invalid_credentials' ||
         msg.contains('invalid login credentials') ||
         msg.contains('invalid credentials')) {
-      return AppException(invalidCredentials, messages[invalidCredentials]!,
-          cause: error);
+      return AppException(
+        invalidCredentials,
+        messages[invalidCredentials]!,
+        cause: error,
+      );
     }
     if (code == 'user_already_exists' ||
         code == 'email_exists' ||
@@ -228,8 +235,11 @@ class AppException implements Exception {
     if (msg.contains('socket') || msg.contains('failed host lookup')) {
       return AppException(noInternet, messages[noInternet]!, cause: error);
     }
-    return AppException(serverUnavailable, messages[serverUnavailable]!,
-        cause: error);
+    return AppException(
+      serverUnavailable,
+      messages[serverUnavailable]!,
+      cause: error,
+    );
   }
 
   @override

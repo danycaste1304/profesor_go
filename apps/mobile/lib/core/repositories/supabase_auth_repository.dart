@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthUser;
 
 import '../errors/app_exception.dart';
 import '../models/auth_user.dart';
 import '../models/profile.dart';
 import 'auth_repository.dart';
+import 'professor_repository.dart';
 
 /// [AuthRepository] over Supabase Auth + the `profiles` table.
 ///
@@ -42,7 +44,9 @@ class SupabaseAuthRepository implements AuthRepository {
     try {
       final launched = await _client.auth.signInWithOAuth(
         OAuthProvider.google,
-        redirectTo: 'profesorgo://login-callback',
+        redirectTo: kIsWeb
+            ? '${Uri.base.origin}${Uri.base.path}'
+            : 'profesorgo://login-callback',
         authScreenLaunchMode: LaunchMode.externalApplication,
       );
       if (!launched) {
@@ -91,6 +95,8 @@ class SupabaseAuthRepository implements AuthRepository {
   @override
   Future<void> signOut() async {
     try {
+      final userId = _client.auth.currentUser?.id;
+      if (userId != null) await ProfessorCache(userId: userId).clear();
       await _client.auth.signOut();
     } catch (e) {
       throw AppException.from(e);

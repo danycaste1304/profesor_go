@@ -37,7 +37,20 @@ class SupabaseCaptureService extends CaptureService {
   Future<Encounter> startEncounter(String tagIdentifier) async {
     final id = tagIdentifier.trim();
     if (id.isEmpty) throw AppException.fromCode(AppException.invalidInput);
-    final data = await _invoke('start-encounter', {'tag_identifier': id});
+    return _start({'tag_identifier': id});
+  }
+
+  @override
+  Future<Encounter> startQrEncounter(String qrCode) async {
+    final code = qrCode.trim();
+    if (!RegExp(r'^[A-Za-z0-9_-]{43}$').hasMatch(code)) {
+      throw AppException.fromCode(AppException.invalidInput);
+    }
+    return _start({'qr_code': code});
+  }
+
+  Future<Encounter> _start(Map<String, dynamic> credential) async {
+    final data = await _invoke('start-encounter', credential);
     final encounter = _parse(data, Encounter.fromJson);
     rememberEncounter(encounter);
     return encounter;
@@ -59,8 +72,9 @@ class SupabaseCaptureService extends CaptureService {
     if (cached != null) {
       updateCachedEncounter(
         cached.copyWith(
-          status:
-              result.success ? EncounterStatus.success : EncounterStatus.failed,
+          status: result.success
+              ? EncounterStatus.success
+              : EncounterStatus.failed,
         ),
       );
     }
@@ -72,8 +86,9 @@ class SupabaseCaptureService extends CaptureService {
     Map<String, dynamic> body,
   ) async {
     try {
-      final response =
-          await _client.functions.invoke(name, body: body).timeout(timeout);
+      final response = await _client.functions
+          .invoke(name, body: body)
+          .timeout(timeout);
       final data = response.data;
       if (data is Map) return data.cast<String, dynamic>();
       throw AppException.fromCode(AppException.serverUnavailable);

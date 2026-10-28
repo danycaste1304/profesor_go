@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-function NavIcon({ kind }: { kind: "grid" | "people" | "nfc" }) {
+function NavIcon({ kind }: { kind: "grid" | "people" | "nfc" | "qr" | "hunt" }) {
   const paths = {
     grid: <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>,
     people: <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2H3Z" /><path d="M17 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 5v1h-3" /></>,
     nfc: <><rect x="3" y="3" width="18" height="18" rx="3" /><path d="M7 17V7l10 10V7M10 10l4 4" /></>,
+    qr: <><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h2m3 0h2m-7 4h3m2 0h2m-7 3h2m3 0h2" /></>,
+    hunt: <><path d="M12 22s8-6.2 8-13a8 8 0 1 0-16 0c0 6.8 8 13 8 13Z" /><circle cx="12" cy="9" r="2.5" /></>,
   };
   return <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[kind]}</svg>;
 }
@@ -16,6 +18,8 @@ const links = [
   { href: "/dashboard", label: "Resumen", icon: "grid" },
   { href: "/professors", label: "Profesores", icon: "people" },
   { href: "/nfc", label: "Tarjetas NFC", icon: "nfc" },
+  { href: "/qr", label: "Códigos QR", icon: "qr" },
+  { href: "/hunt", label: "Búsqueda", icon: "hunt" },
 ];
 
 export function NavLinks() {
@@ -33,7 +37,7 @@ export function NavLinks() {
                 active ? "bg-[#ffd447] text-[#101b34] shadow-[3px_3px_0_#02091d]" : "text-[#cbd6ec] hover:bg-white/10 hover:text-white"
               }`}
             >
-              <NavIcon kind={link.icon as "grid" | "people" | "nfc"} />
+              <NavIcon kind={link.icon as "grid" | "people" | "nfc" | "qr" | "hunt"} />
               {link.label}
             </Link>
           </li>

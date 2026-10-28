@@ -16,11 +16,14 @@ export interface StartEncounterDeps {
   db: Db;
   now: () => Date;
   loadSettings: () => Promise<AppSettings>;
+  /** Production uses the transactional RPC; old fake-query tests exercise the adapter. */
+  atomic?: boolean;
 }
 
 export interface StartEncounterInput {
   userId: string;
-  tagIdentifier: string;
+  tagIdentifier?: string;
+  qrCode?: string;
 }
 
 /** Response 200 of `start-encounter` (CONTRACTS §4). */
@@ -40,8 +43,59 @@ export interface StartEncounterResponse {
  * `{ tag_identifier: string }` (CONTRACTS §4). Validation rules live in
  * `_shared/validate.ts`; unknown extra fields are ignored.
  */
-export function parseStartEncounterBody(body: Record<string, unknown>): { tagIdentifier: string } {
+export function parseStartEncounterBody(
+  body: Record<string, unknown>,
+): { tagIdentifier?: string; qrCode?: string } {
+  const hasTag = body.tag_identifier !== undefined;
+  const hasQr = body.qr_code !== undefined;
+  if (hasTag === hasQr) throw new AppError("INVALID_INPUT", "Envía una tarjeta NFC o un QR.");
+  if (hasQr) {
+    if (typeof body.qr_code !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(body.qr_code)) {
+      throw new AppError("INVALID_INPUT", "El código QR no es válido.");
+    }
+    return { qrCode: body.qr_code };
+  }
   return { tagIdentifier: parseTagIdentifier(body.tag_identifier) };
+}
+
+/** Maps the privileged, atomic SQL result to the stable HTTP contract. */
+export async function handleStartEncounterAtomic(
+  deps: StartEncounterDeps,
+  input: StartEncounterInput,
+): Promise<StartEncounterResponse> {
+  const settings = await deps.loadSettings();
+  const raw = unwrap(await deps.db.rpc("start_encounter_tx", {
+    p_user_id: input.userId,
+    p_tag_identifier: input.tagIdentifier ?? null,
+    p_qr_code: input.qrCode ?? null,
+    p_expiration_seconds: settings.encounterExpirationSeconds,
+  }), "rpc.start_encounter_tx");
+  if (!raw || typeof raw !== "object") throw new AppError("INTERNAL_ERROR");
+  const data = raw as Record<string, unknown>;
+  switch (data.outcome) {
+    case "TAG_NOT_FOUND": throw new AppError("TAG_NOT_FOUND");
+    case "TAG_DISABLED": throw new AppError("TAG_DISABLED");
+    case "PROFESSOR_DISABLED": throw new AppError("PROFESSOR_DISABLED");
+    case "ALREADY_CAPTURED": throw new AppError("ALREADY_CAPTURED");
+    case "RATE_LIMITED": throw new AppError("RATE_LIMITED");
+    case "SUCCESS": {
+      if (typeof data.encounter_id !== "string" || typeof data.expires_at !== "string" ||
+          !data.professor || typeof data.professor !== "object") {
+        throw new AppError("INTERNAL_ERROR");
+      }
+      logEvent("encounter_started", {
+        user_id: input.userId,
+        encounter_id: data.encounter_id,
+        credential_type: input.qrCode ? "qr" : "nfc",
+      });
+      return {
+        encounter_id: data.encounter_id,
+        expires_at: data.expires_at,
+        professor: data.professor as StartEncounterResponse["professor"],
+      };
+    }
+    default: throw new AppError("INTERNAL_ERROR");
+  }
 }
 
 type TagLookup = Pick<NfcTagRow, "id" | "professor_id" | "active">;
@@ -61,6 +115,7 @@ export async function handleStartEncounter(
 ): Promise<StartEncounterResponse> {
   const { db } = deps;
   const { userId, tagIdentifier } = input;
+  if (tagIdentifier === undefined) return handleStartEncounterAtomic(deps, input);
 
   // 1. Tag lookup.
   const tag = unwrap(
@@ -74,7 +129,6 @@ export async function handleStartEncounter(
   if (!tag) {
     logEvent("invalid_tag", {
       user_id: userId,
-      tag_identifier: tagIdentifier,
       reason: "not_found",
     });
     throw new AppError("TAG_NOT_FOUND");
@@ -183,8 +237,11 @@ export interface StartEncounterHttpDeps extends StartEncounterDeps {
 export function createHttpHandler(deps: StartEncounterHttpDeps): RequestHandler {
   return withHttp("start-encounter", async (req) => {
     const user = await getUserFromRequest(req, deps.auth);
-    const { tagIdentifier } = parseStartEncounterBody(await readJsonBody(req));
-    const result = await handleStartEncounter(deps, { userId: user.id, tagIdentifier });
+    const credential = parseStartEncounterBody(await readJsonBody(req));
+    const input = { userId: user.id, ...credential };
+    const result = deps.atomic
+      ? await handleStartEncounterAtomic(deps, input)
+      : await handleStartEncounter(deps, input);
     return jsonOk(result);
   });
 }

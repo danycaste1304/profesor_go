@@ -33,6 +33,7 @@ final settingsOpenerProvider = Provider<SettingsOpener>(
 /// Default [SettingsOpener]: the location settings when the service is off,
 /// the app settings (permissions) otherwise. Never throws.
 Future<bool> openSystemLocationSettings(LocationStatus status) async {
+  if (kIsWeb) return false;
   try {
     return status == LocationStatus.serviceDisabled
         ? await Geolocator.openLocationSettings()
@@ -96,9 +97,10 @@ class MapState {
 
   /// Whether an "Abrir ajustes" action makes sense for [status].
   bool get canOpenSettings =>
-      status == LocationStatus.denied ||
-      status == LocationStatus.deniedForever ||
-      status == LocationStatus.serviceDisabled;
+      !kIsWeb &&
+      (status == LocationStatus.denied ||
+          status == LocationStatus.deniedForever ||
+          status == LocationStatus.serviceDisabled);
 
   MapState copyWith({
     LocationStatus? status,

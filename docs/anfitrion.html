@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#29214a">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Control privado de la búsqueda de 30 minutos de Profesor GO.">
+    <title>Anfitrión · Profesor GO</title>
+    <style>
+      :root { color-scheme: light; font-family: system-ui, -apple-system, sans-serif; background: #f6f3ff; color: #29214a; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; padding: 16px; }
+      main { width: min(100%, 560px); margin: 18px auto; padding: clamp(22px, 5vw, 38px); background: white; border: 3px solid #29214a; border-radius: 22px; box-shadow: 7px 7px 0 #f4adca; }
+      .eyebrow { margin: 0 0 10px; font-size: .82rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #8748bd; }
+      h1 { margin: 0 0 12px; font-size: clamp(2rem, 8vw, 3rem); line-height: 1.08; }
+      h2 { margin: 20px 0 8px; font-size: 1.3rem; }
+      p { line-height: 1.55; }
+      .muted { color: #544b70; }
+      .account { overflow-wrap: anywhere; font-weight: 700; }
+      .card { padding: 18px; border: 2px solid #29214a; border-radius: 14px; background: #faf8ff; }
+      .countdown { margin: 8px 0; font-size: clamp(2.5rem, 13vw, 4.5rem); line-height: 1; font-weight: 900; font-variant-numeric: tabular-nums; }
+      .status { min-height: 2.8em; padding: 12px 14px; border-radius: 10px; background: #eef0ff; line-height: 1.45; }
+      .status[data-tone="error"] { background: #ffe9e9; color: #8c1c1c; }
+      .status[data-tone="success"] { background: #e6f8ec; color: #155c31; }
+      button { width: 100%; min-height: 50px; margin-top: 12px; padding: 10px 16px; border: 2px solid #29214a; border-radius: 10px; background: #ffd447; color: #172443; font: inherit; font-weight: 800; cursor: pointer; }
+      button.secondary { background: #fff; }
+      button.danger { background: #ffe0e5; }
+      button:disabled { opacity: .55; cursor: wait; }
+      button:focus-visible, a:focus-visible { outline: 3px solid #5d29a8; outline-offset: 3px; }
+      [hidden] { display: none !important; }
+      .small { font-size: .9rem; }
+      a { color: #5d29a8; font-weight: 700; }
+    </style>
+    <script defer src="vendor/supabase-js-2.116.0.js"></script>
+    <script defer src="anfitrion.js"></script>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Profesor GO · feria USFQ</p>
+      <h1>Comparte tu ubicación</h1>
+      <p>Esta página es para el profesor anfitrión. Al iniciar, los estudiantes con sesión verán tu posición aproximada en el mapa durante <strong>30 minutos</strong>. Tú puedes detenerla antes.</p>
+
+      <p id="status" class="status" role="status" aria-live="polite">Comprobando tu sesión…</p>
+
+      <section id="signed-out" hidden>
+        <button id="login" type="button">Continuar con Google</button>
+        <p class="small muted">Entra con la cuenta que el organizador vinculó a tu personaje.</p>
+      </section>
+
+      <section id="signed-in" hidden>
+        <p class="small">Cuenta: <span id="account" class="account"></span></p>
+        <div id="not-linked" class="card" hidden>
+          <h2>Falta vincular tu cuenta</h2>
+          <p>Ya entraste con Google. Pide al organizador que vincule esta cuenta con tu personaje en Profesor GO y vuelve a comprobar.</p>
+          <button id="reload-assignment" class="secondary" type="button">Volver a comprobar</button>
+        </div>
+        <div id="linked" class="card" hidden>
+          <h2 id="professor-name">Profesor</h2>
+          <div id="inactive">
+            <p>Antes de iniciar, permite la ubicación en Safari y mantén esta página abierta y la pantalla encendida durante la búsqueda. Lleva contigo la tarjeta NFC que los estudiantes tocarán.</p>
+            <button id="start" type="button">Iniciar búsqueda de 30 minutos</button>
+          </div>
+          <div id="active" hidden>
+            <p class="muted">Tiempo restante</p>
+            <p id="countdown" class="countdown" aria-live="off">30:00</p>
+            <p id="last-position" class="small">Esperando señal GPS…</p>
+            <button id="update-now" class="secondary" type="button">Actualizar ubicación ahora</button>
+            <button id="stop" class="danger" type="button">Detener búsqueda</button>
+          </div>
+        </div>
+        <button id="logout" class="secondary" type="button">Cerrar sesión</button>
+      </section>
+
+      <p class="small muted">Si Safari pasa a segundo plano o se bloquea la pantalla, las actualizaciones pueden pausarse. El marcador desaparece si pasan 30 segundos sin una posición nueva. No se guarda tu recorrido.</p>
+      <p class="small"><a href="privacidad.html">Política de privacidad</a></p>
+    </main>
+  </body>
+</html>

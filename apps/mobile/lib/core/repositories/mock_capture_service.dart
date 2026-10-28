@@ -33,6 +33,11 @@ class MockCaptureService extends CaptureService {
   }
 
   @override
+  Future<Encounter> startQrEncounter(String qrCode) async {
+    throw AppException.fromCode(AppException.tagNotFound);
+  }
+
+  @override
   Future<Encounter> startEncounter(String tagIdentifier) async {
     await _simulateLatency();
     final id = tagIdentifier.trim();
@@ -43,7 +48,9 @@ class MockCaptureService extends CaptureService {
     if (!tag.active) throw AppException.fromCode(AppException.tagDisabled);
 
     final professor = state.professorById(tag.professorId);
-    if (professor == null) throw AppException.fromCode(AppException.tagNotFound);
+    if (professor == null) {
+      throw AppException.fromCode(AppException.tagNotFound);
+    }
     if (!professor.active) {
       throw AppException.fromCode(AppException.professorDisabled);
     }
@@ -98,7 +105,8 @@ class MockCaptureService extends CaptureService {
     }
 
     final professor = state.professorById(professorId);
-    final baseRate = professor?.baseCaptureRate ??
+    final baseRate =
+        professor?.baseCaptureRate ??
         encounter.professor.rarity.defaultCaptureRate;
     final probability = captureProbability(baseRate, quality);
     final roll = _random.nextDouble();

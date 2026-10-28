@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' hide AuthUser;
 
 import '../config/app_config.dart';
 import '../config/campus_config.dart';
+import '../hunt/hunt_service.dart';
 import '../location/location_service.dart';
 import '../location/mock_location_service.dart';
 import '../location/real_location_service.dart';
@@ -64,7 +65,12 @@ final professorRepositoryProvider = Provider<ProfessorRepository>((ref) {
   if (AppConfig.isDemoMode) {
     return MockProfessorRepository(ref.watch(demoGameStateProvider));
   }
-  return SupabaseProfessorRepository(ref.watch(supabaseClientProvider));
+  final client = ref.watch(supabaseClientProvider);
+  final userId = ref.watch(authStateProvider).value?.id;
+  return SupabaseProfessorRepository(
+    client,
+    cache: ProfessorCache(userId: userId),
+  );
 });
 
 final captureServiceProvider = Provider<CaptureService>((ref) {
@@ -72,6 +78,24 @@ final captureServiceProvider = Provider<CaptureService>((ref) {
     return MockCaptureService(ref.watch(demoGameStateProvider));
   }
   return SupabaseCaptureService(ref.watch(supabaseClientProvider));
+});
+
+/// Campus hunt exists only in the real backend build. Demo screens never read
+/// this provider, so they still work without a Supabase client.
+final huntServiceProvider = Provider<HuntService>(
+  (ref) => SupabaseHuntService(ref.watch(supabaseClientProvider)),
+);
+
+final huntPublisherProvider = FutureProvider<HuntPublisher?>((ref) {
+  if (AppConfig.isDemoMode) return Future<HuntPublisher?>.value();
+  ref.watch(authStateProvider);
+  return ref.watch(huntServiceProvider).myPublisher();
+});
+
+final activeHuntsProvider = FutureProvider<List<HuntSession>>((ref) {
+  if (AppConfig.isDemoMode) return Future.value(const []);
+  ref.watch(authStateProvider);
+  return ref.watch(huntServiceProvider).activeSessions();
 });
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {

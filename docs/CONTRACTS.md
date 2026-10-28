@@ -108,6 +108,9 @@ Probabilidad final (server-side): `p = clamp(base_capture_rate + throw_bonus[qua
 | encounters   | select propias                                      | select todas |
 | captures     | select propias (**no insert/update/delete**)        | select todas |
 | app_settings | select                                              | CRUD         |
+| hunt_publishers | select asignación propia                       | CRUD         |
+| hunt_sessions | select sesión fresca y activa; propia si publica   | select todas |
+| hunt_checkins | select hallazgos propios                           | select todos |
 
 Capturas y encounters se escriben solo con `service_role` desde Edge Functions.
 
@@ -193,7 +196,7 @@ Supabase local: `supabase start` en puertos por defecto (API 54321, DB 54322, St
   inmutables con `fromJson/toJson/copyWith` escritos a mano: **sin `build_runner`** (freezed /
   json_serializable) para mantener el proyecto liviano y evitar codegen compartido.
 - Rutas: `/splash`, `/login`, `/register`, `/map`, `/scan`, `/encounter/:encounterId`,
-  `/result`, `/collection`, `/collection/:professorId`, `/profile`, `/completion`.
+  `/result`, `/collection`, `/collection/:professorId`, `/profile`, `/completion`, `/hunt-host`.
 - `DEMO_MODE=true` → `MockNfcService`, `MockLocationService`, `MockProfessorRepository`,
   `MockCaptureService` (todo en memoria, sin backend). `DEMO_MODE=false` → implementaciones Supabase.
 - Widgets propios: `PixelCard`, `PixelButton`, `RarityBadge`, `ProfessorSprite`, `ProgressBar`, `CaptureBall`.
@@ -203,7 +206,7 @@ Supabase local: `supabase start` en puertos por defecto (API 54321, DB 54322, St
 
 ## 8. Convenciones Admin (Next.js App Router)
 
-Rutas: `/login`, `/dashboard`, `/professors`, `/professors/new`, `/professors/[id]`, `/nfc`.
+Rutas: `/login`, `/dashboard`, `/professors`, `/professors/new`, `/professors/[id]`, `/nfc`, `/hunt`.
 Cliente Supabase con `@supabase/ssr`; solo usuarios con `profiles.role = 'admin'` pasan el guard.
 
 ## 9. RPC atómico `resolve_capture_tx` (firma fija)
@@ -243,3 +246,19 @@ Se ejecuta solo con `service_role` (revocar `execute` a `anon`/`authenticated`).
 `crypto.getRandomValues`, llama a `resolve_capture_tx` con `service_role` y mapea `outcome` →
 respuesta HTTP de §4. `start-encounter` hace sus consultas con `service_role` directamente
 (tag → profesor → captura previa → expirar ACTIVE previos → insertar encounter).
+
+## 11. Búsqueda temporal de la feria
+
+`hunt_publishers(professor_id, user_id)` vincula la cuenta Google del anfitrión con un
+profesor. `hunt_sessions` conserva una sesión por profesor, duración fija de 30 minutos,
+última latitud/longitud, precisión y hora; no conserva recorrido. `hunt_checkins` guarda
+un hallazgo por alumno y sesión, aunque ya exista una captura normal.
+
+RPC públicas para usuarios autenticados: `start_campus_hunt(p_professor_id)`,
+`update_campus_hunt_location(p_session_id, p_latitude, p_longitude, p_accuracy_m)`,
+`stop_campus_hunt(p_session_id)` y `check_in_campus_hunt(p_tag_identifier)`.
+Las tres primeras autorizan al publicador designado; el check-in busca un tag activo de
+una sesión activa y devuelve `{session_id, professor_id, checked_in_at,
+already_registered}` o `null`. Las escrituras directas de sesión y hallazgo están
+revocadas. La RLS solo deja ver posiciones activas actualizadas en los últimos 30
+segundos. La tarea de `pg_cron` borra posiciones vencidas cada minuto.
