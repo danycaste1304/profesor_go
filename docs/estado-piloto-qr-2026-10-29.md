@@ -28,6 +28,16 @@ el corte de salida sigue dependiendo de la prueba física del 28.
   para sesiones voluntarias activas con posición de menos de 30 segundos.
 - La caché de capturas y progreso se separa por cuenta y se borra al salir.
 - Política de privacidad técnica y página pública actualizadas para cámara y QR.
+- GitHub Pages sirve el juego completo en
+  `https://danycaste1304.github.io/profesor_go/jugar/`. El flujo manual
+  «Safari pilot candidate» completó con éxito. Google OAuth devolvió la sesión
+  a la web y cargó el mapa. La prueba real descubrió que un QR recibido por una
+  pestaña ya abierta iba a «Page Not Found»; la ruta `/qr=:code` corrige este
+  caso y necesita repetirse en la próxima publicación.
+- Los diez profesores tienen QR únicos activos en Supabase. La hoja de cinco
+  páginas y el JSON de recuperación están en `pilot-private/` del equipo local,
+  ignorados por Git. Guardar una copia segura antes de imprimir; rotar en el
+  panel cualquier código que se pierda o se comparta fuera del evento.
 
 ## Compilaciones verificadas
 
@@ -45,23 +55,30 @@ el corte de salida sigue dependiendo de la prueba física del 28.
   instalar las Android SDK Command-line Tools oficiales. El archivo firmado
   está en `apps/mobile/build/app/outputs/bundle/release/app-release.aab`.
 
-## Pasos para habilitar la prueba HTTPS
+## Configuración HTTPS completada
 
-1. En el repositorio GitHub, configurar Pages con origen **GitHub Actions**.
-   Crear la variable `SUPABASE_URL` y el secreto `SUPABASE_ANON_KEY` de la
-   instancia Profesor GO. El flujo manual `.github/workflows/web-pages.yml`
-   monta la web en `/profesor_go/jugar/` y conserva portada, privacidad y
-   página de anfitrión. No ejecutarlo como anuncio público; la portada actual
-   seguirá apuntando a la beta anterior hasta el corte de salida.
-2. Autorizar exactamente
-   `https://danycaste1304.github.io/profesor_go/jugar/` como retorno OAuth
-   en Supabase Auth. Confirmar el origen permitido por Google OAuth.
-3. Configurar `NEXT_PUBLIC_GAME_URL` en el panel admin con esa URL HTTPS,
-   desplegar el panel y crear/imprimir los diez QR. Confirmar que un QR
-   desactivado falla y que el código antiguo no funciona tras reemplazarlo.
-4. Vincular la cuenta Google del profesor participante en `hunt_publishers`.
-   La base remota aún no tenía ningún vínculo ni sesión de búsqueda al
-   verificarla; el profesor debe iniciar sesión al menos una vez.
+- Pages usa GitHub Actions; la variable `SUPABASE_URL` y el secreto publicable
+  `SUPABASE_ANON_KEY` están configurados. El flujo conserva la portada y las
+  páginas estáticas dentro de `/profesor_go/`.
+- Supabase Auth permite exactamente la URL web como retorno OAuth. El proveedor
+  Google está habilitado y una sesión existente completó el retorno web.
+- El panel local tiene `NEXT_PUBLIC_GAME_URL` y generó los diez QR. El panel
+  sigue funcionando en local; falta decidir y configurar su alojamiento HTTPS
+  para que el equipo pueda administrar fuera de este computador.
+
+## Pendientes antes de distribuir
+
+1. Publicar y verificar la corrección del QR en pestaña existente, incluidas
+   las rutas con sesión y después de Google OAuth sin sesión.
+2. Imprimir la hoja y probar los diez códigos físicamente. Confirmar QR
+   desactivado y reemplazado con cuentas de ensayo.
+3. Vincular la cuenta Google de cada profesor participante en
+   `hunt_publishers`. Solo existen una cuenta admin y una de estudiante; los
+   profesores deben iniciar sesión al menos una vez. Sin esos vínculos, no
+   habrá marcadores compartidos aunque el QR funcione.
+4. Completar el alta de Google Play Console para `danycaste1304@gmail.com`.
+   La consola muestra el formulario de creación de cuenta de desarrollador;
+   todavía no puede subirse el AAB a Play.
 
 ## Ensayo y corte de distribución
 

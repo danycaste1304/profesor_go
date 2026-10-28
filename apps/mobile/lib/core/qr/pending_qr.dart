@@ -52,6 +52,15 @@ abstract final class PendingQr {
     await prefs.setString(_key, code);
   }
 
+  /// Handles a fragment delivered to an already-running Flutter web app.
+  /// GoRouter sees `#qr=...` as the `/qr=...` route on hash-based hosting.
+  static Future<bool> saveWebRoute(String code) async {
+    if (kIsWeb) url_cleanup.removeQrFragment();
+    if (!_pattern.hasMatch(code)) return false;
+    await save(code);
+    return true;
+  }
+
   static Future<String?> take() async {
     final code = _code;
     _code = null;
