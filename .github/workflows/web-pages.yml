@@ -1,0 +1,54 @@
+name: Safari pilot candidate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}jugar/
+    env:
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Verify build configuration
+        run: |
+          test -n "$SUPABASE_URL"
+          test -n "$SUPABASE_ANON_KEY"
+      - name: Build full Safari game
+        working-directory: apps/mobile
+        run: |
+          flutter pub get
+          flutter build web --release --no-wasm-dry-run \
+            --base-href /profesor_go/jugar/ \
+            --dart-define=DEMO_MODE=false \
+            --dart-define=SUPABASE_URL="$SUPABASE_URL" \
+            --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
+      - name: Assemble current site and hidden pilot path
+        run: |
+          mkdir -p _site/jugar
+          cp -R docs/. _site/
+          cp -R apps/mobile/build/web/. _site/jugar/
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

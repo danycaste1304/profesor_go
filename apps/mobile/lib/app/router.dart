@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../core/config/app_config.dart';
 import '../core/di/providers.dart';
 import '../core/models/auth_user.dart';
+import '../core/qr/pending_qr.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/register_screen.dart';
 import '../features/auth/presentation/splash_screen.dart';
@@ -12,6 +13,7 @@ import '../features/capture/domain/capture_result_args.dart';
 import '../features/capture/presentation/capture_result_screen.dart';
 import '../features/capture/presentation/encounter_screen.dart';
 import '../features/capture/presentation/nfc_scan_screen.dart';
+import '../features/capture/presentation/qr_scan_screen.dart';
 import '../features/collection/presentation/collection_screen.dart';
 import '../features/collection/presentation/professor_detail_screen.dart';
 import '../features/hunt/presentation/hunt_host_screen.dart';
@@ -27,6 +29,7 @@ abstract final class AppRoutes {
   static const map = '/map';
   static const huntHost = '/hunt-host';
   static const scan = '/scan';
+  static const scanQr = '/scan-qr';
   static const encounterPattern = '/encounter/:encounterId';
   static const result = '/result';
   static const collection = '/collection';
@@ -81,8 +84,15 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: AppRoutes.splash,
     refreshListenable: refresh,
     debugLogDiagnostics: kDebugMode,
-    redirect: (context, state) =>
-        appRedirect(ref.read(authStateProvider), state.matchedLocation),
+    redirect: (context, state) {
+      final auth = ref.read(authStateProvider);
+      if (auth.value != null &&
+          PendingQr.hasCode &&
+          state.matchedLocation != AppRoutes.scan) {
+        return AppRoutes.scan;
+      }
+      return appRedirect(auth, state.matchedLocation);
+    },
     routes: [
       GoRoute(
         path: AppRoutes.splash,
@@ -107,6 +117,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.scan,
         builder: (context, state) => const NfcScanScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.scanQr,
+        builder: (context, state) => const QrScanScreen(),
       ),
       GoRoute(
         path: AppRoutes.encounterPattern,

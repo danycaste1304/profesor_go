@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +16,7 @@ import '../../../core/hunt/hunt_service.dart';
 import '../../../core/models/profile.dart';
 import '../../../core/nfc/mock_nfc_service.dart';
 import '../../../core/nfc/nfc_service.dart';
+import '../../../core/qr/pending_qr.dart';
 import '../../../core/widgets/widgets.dart';
 import 'nfc_settings_opener.dart';
 import 'widgets/battle_wipe.dart';
@@ -108,6 +110,17 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
       _set(_ScanStatus.offline);
       return;
     }
+    if (PendingQr.hasCode) {
+      final code = await PendingQr.take();
+      if (code != null && mounted && session == _session) {
+        await _handleCredential(code, qr: true);
+      }
+      return;
+    }
+    if (kIsWeb) {
+      _set(_ScanStatus.unsupported);
+      return;
+    }
     if (AppConfig.isDemoMode && _nfc is MockNfcService) {
       _set(_ScanStatus.choosing);
       return;
@@ -162,11 +175,11 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
       );
       return;
     }
-    await _handleTag(tag);
+    await _handleCredential(tag);
   }
 
   /// Shared by the real scan and the demo picker.
-  Future<void> _handleTag(String tag) async {
+  Future<void> _handleCredential(String tag, {bool qr = false}) async {
     if (_starting) return; // double-submission guard
     _starting = true;
     _session++;
@@ -177,11 +190,14 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
       // Profedex capture. A player who already caught this professor still
       // receives credit for finding them at this event.
       if (!AppConfig.isDemoMode) {
-        huntCheckin = await ref.read(huntServiceProvider).checkIn(tag);
+        huntCheckin = qr
+            ? await ref.read(huntServiceProvider).checkInQr(tag)
+            : await ref.read(huntServiceProvider).checkIn(tag);
       }
-      final encounter = await ref
-          .read(captureServiceProvider)
-          .startEncounter(tag);
+      final capture = ref.read(captureServiceProvider);
+      final encounter = qr
+          ? await capture.startQrEncounter(tag)
+          : await capture.startEncounter(tag);
       if (!mounted) return;
       if (huntCheckin != null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -219,7 +235,9 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
         return;
       }
       String? unregisteredTag;
-      if (!AppConfig.isDemoMode && error.code == AppException.tagNotFound) {
+      if (!qr &&
+          !AppConfig.isDemoMode &&
+          error.code == AppException.tagNotFound) {
         try {
           final profile = await ref.read(profileProvider.future);
           if (profile?.role == UserRole.admin) unregisteredTag = tag;
@@ -245,7 +263,7 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
     final nfc = _nfc;
     if (nfc is MockNfcService) nfc.selectTag(tag.identifier);
     await nfc.cancel();
-    await _handleTag(tag.identifier);
+    await _handleCredential(tag.identifier);
   }
 
   /// Android only: opens the system NFC settings. A missing channel or a
@@ -288,6 +306,15 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildStatus(context),
+                if (!AppConfig.isDemoMode &&
+                    _status != _ScanStatus.starting) ...[
+                  const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: () => context.push(AppRoutes.scanQr),
+                    icon: const Icon(Icons.qr_code_scanner),
+                    label: const Text('Escanear QR del profesor'),
+                  ),
+                ],
                 if (_showDemoPicker) ...[
                   const SizedBox(height: 28),
                   _DemoTagPicker(
@@ -307,7 +334,9 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
   Widget _buildStatus(BuildContext context) {
     switch (_status) {
       case _ScanStatus.checking:
-        return const LoadingView(message: 'Comprobando el NFC…');
+        return LoadingView(
+          message: kIsWeb ? 'Preparando QR…' : 'Comprobando el NFC…',
+        );
       case _ScanStatus.starting:
         return const LoadingView(message: 'Buscando al profesor…');
       case _ScanStatus.scanning:
@@ -323,10 +352,12 @@ class _NfcScanScreenState extends ConsumerState<NfcScanScreen> {
       case _ScanStatus.unsupported:
         return _MessageView(
           icon: PixelIcons.nfc,
-          title: 'Este dispositivo no tiene NFC',
+          title: kIsWeb ? 'Escanea el QR' : 'Este dispositivo no tiene NFC',
           message: _showDemoPicker
               ? 'Elige una tarjeta de demostración para probar el juego.'
-              : 'Necesitas un móvil con NFC para leer las tarjetas de los profesores.',
+              : kIsWeb
+              ? 'Usa la cámara para leer el QR impreso de un profesor.'
+              : 'También puedes escanear el QR impreso del profesor.',
         );
       case _ScanStatus.disabled:
         return _MessageView(

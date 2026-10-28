@@ -10,7 +10,7 @@ void main() {
     test('maps the contract codes to Spanish messages', () {
       expect(
         AppException.fromCode('TAG_NOT_FOUND').message,
-        'Esta tarjeta no es válida',
+        'Este QR o tarjeta no es válido.',
       );
       expect(
         AppException.fromCode('ALREADY_CAPTURED').message,
@@ -18,7 +18,7 @@ void main() {
       );
       expect(
         AppException.fromCode('ENCOUNTER_EXPIRED').message,
-        'El encuentro expiró. Vuelve a leer la tarjeta NFC.',
+        'El encuentro expiró. Vuelve a escanear al profesor.',
       );
       expect(
         AppException.fromCode('NO_INTERNET').message,
@@ -64,18 +64,21 @@ void main() {
       expect(e.message, 'Ya capturaste a este profesor');
     });
 
-    test('maps 401 without body to UNAUTHORIZED and others to server error', () {
-      expect(
-        AppException.from(const FunctionsHttpException(status: 401)).code,
-        AppException.unauthorized,
-      );
-      expect(
-        AppException.from(
-          const FunctionsHttpException(status: 500, details: 'boom'),
-        ).code,
-        AppException.serverUnavailable,
-      );
-    });
+    test(
+      'maps 401 without body to UNAUTHORIZED and others to server error',
+      () {
+        expect(
+          AppException.from(const FunctionsHttpException(status: 401)).code,
+          AppException.unauthorized,
+        );
+        expect(
+          AppException.from(
+            const FunctionsHttpException(status: 500, details: 'boom'),
+          ).code,
+          AppException.serverUnavailable,
+        );
+      },
+    );
 
     test('maps transport failures to NO_INTERNET', () {
       expect(
@@ -97,7 +100,8 @@ void main() {
 
     test('maps auth errors', () {
       expect(
-        AppException.from(const AuthException('Invalid login credentials')).code,
+        AppException.from(const AuthException('Invalid login credentials'))
+            .code,
         AppException.invalidCredentials,
       );
       expect(
@@ -150,7 +154,7 @@ void main() {
         ),
       );
       expect(e.code, AppException.encounterExpired);
-      expect(e.message, 'El encuentro expiró. Vuelve a leer la tarjeta NFC.');
+      expect(e.message, 'El encuentro expiró. Vuelve a escanear al profesor.');
     });
 
     test('an unknown server code falls back to the status, not UNKNOWN', () {

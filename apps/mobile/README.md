@@ -1,7 +1,8 @@
 # Profesor GO — app móvil (Flutter)
 
-Juego de captura de profesores para la feria universitaria: lee la tarjeta NFC
-de un profesor, lanza la bola en el mini-juego y completa tu colección.
+Juego de captura de profesores para la feria universitaria: escanea el QR
+impreso de un profesor o lee su NFC en Android, lanza la bola en el mini-juego
+y completa tu colección. Safari permite el mismo juego con QR.
 
 * Flutter 3.47 / Dart 3.13, Riverpod 3, go_router, supabase_flutter.
 * Sin codegen (freezed / json_serializable): modelos escritos a mano en
@@ -117,18 +118,17 @@ rasgos personales con expresiones más juguetonas.
 El mapa principal de los Cuadrángulos es `assets/map/campus_map.png`. Las
 carpas, los stands y la entrada del laboratorio se muestran encima desde
 `lib/features/map/presentation/widgets/fair_map_labels.dart`, sin modificar
-la imagen. En modo real, `FairRouteProjection.usfq` usa dos pines
-aproximados para mostrar el avance del jugador entre la carpa y la entrada
-del laboratorio. El recorrido se ilustra en perspectiva y requiere una prueba
-de GPS caminando en el campus. Los profesores llevan los NFC y no tienen una
-posición fija en el mapa. `assets/map/campus_map.svg` es el mapa retro anterior;
+la imagen. En modo real, `CampusLiveMap` muestra OpenStreetMap para explorar
+todo el campus, la última posición GPS del estudiante con su precisión y los
+marcadores de profesores que activaron voluntariamente una búsqueda. GPS y
+cobertura del campus requieren una prueba caminando; QR y NFC siguen
+funcionando sin GPS. `assets/map/campus_map.svg` es el mapa retro anterior;
 `bash tool/generate_retro_map.sh` solo regenera `campus_map_old.png` y requiere
 `rsvg-convert`. La
 partitura y síntesis de las piezas originales están en
 `tool/generate_soundtrack.py`; `python3 tool/generate_soundtrack.py` actualiza
-sus WAV sin dependencias externas. La batalla usa la pista de Pokémon incluida
-para esta prueba; hay que resolver sus derechos antes de distribuir la APK
-públicamente.
+sus WAV sin dependencias externas. La batalla usa la pista original generada
+por ese mismo script.
 Los cinco efectos originales se generan con `python3 tool/generate_sound_effects.py`.
 La escena de encuentro muestra una guía de puntería proyectada y una etiqueta
 animada de calidad mientras se arrastra la bola, un destello cuadrado al impactar, una barra de tiempo con

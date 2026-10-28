@@ -1,11 +1,11 @@
 {
-    "name": "profesor_go",
-    "short_name": "profesor_go",
+    "name": "Profesor GO",
+    "short_name": "Profesor GO",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#15203b",
+    "theme_color": "#15203b",
+    "description": "Juego de exploración y captura de profesores de la USFQ.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

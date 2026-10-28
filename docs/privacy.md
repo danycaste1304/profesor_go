@@ -11,11 +11,13 @@ verificar leyendo el código, no confiando en la documentación.
 | Posición GPS del jugador               | **No** (solo el último punto, en RAM)| `MapState.current` |
 | Historial de posiciones / recorrido    | **No**                               | — |
 | Última posición del profesor anfitrión | Sí, solo durante la búsqueda         | `public.hunt_sessions` |
-| Biometría, cámara, fotos               | **No** (no se piden permisos)        | — |
+| Cámara para escanear QR                 | Permiso mientras se usa; no se suben imágenes | `QrScanScreen` |
+| Biometría, fotos guardadas, audio grabado | **No** | — |
 | Email                                  | Sí                                   | `auth.users`, `public.profiles.email` |
 | Nombre visible (`display_name`)        | Sí, opcional                         | `public.profiles.display_name` |
 | Progreso de juego (encuentros/capturas)| Sí                                   | `public.encounters`, `public.captures` |
-| Identificador del tag NFC leído        | Sí, asociado al encuentro            | `public.nfc_tags`, `public.encounters` |
+| Identificador de NFC                   | Sí, como relación con profesor       | `public.nfc_tags` |
+| Credencial QR impresa                  | Solo hash en servidor; pendiente temporal en el dispositivo | `public.professor_qr_codes`, `PendingQr` |
 | Hallazgo de la feria                   | Sí, una vez por alumno y búsqueda    | `public.hunt_checkins` |
 
 ## 1. Ubicación (GPS)
@@ -30,8 +32,8 @@ Sobre ese dato:
 - **No se persiste ni se envía al servidor.** No hay clave de `SharedPreferences` ni
   columna para las coordenadas del jugador. Las coordenadas de `hunt_sessions` son
   únicamente las que publica la cuenta vinculada al profesor anfitrión.
-- **La captura no depende del GPS.** Lo que autoriza un encuentro es la lectura NFC del
-  tag físico, no una comprobación de proximidad por coordenadas, así que el backend no
+- **La captura no depende del GPS.** Lo que autoriza un encuentro es la lectura NFC o QR
+  del profesor, no una comprobación de proximidad por coordenadas, así que el backend no
   necesita la ubicación ni siquiera de forma transitoria.
 - **PostGIS no almacena recorridos.** El evento conserva un solo par latitud/longitud
   en `hunt_sessions`, sin historial de puntos.
@@ -58,19 +60,21 @@ detenerse, se borra inmediatamente; al expirar, la RLS deja de exponerla y una t
 programada la borra dentro de aproximadamente un minuto. No se guarda el recorrido.
 
 El marcador representa una posición GPS aproximada; no garantiza que el profesor siga
-exactamente allí. La tarjeta NFC del profesor confirma el hallazgo presencial. Su
-identificador se consulta dentro de una RPC protegida; los jugadores no pueden listar
-`nfc_tags`.
+exactamente allí. El QR impreso se puede fotografiar y compartir: escanearlo registra el
+hallazgo, pero no demuestra presencia física. El administrador puede desactivarlo o
+reemplazarlo. Las credenciales QR se guardan solo como hash; los estudiantes no pueden
+listar los códigos ni los identificadores de `nfc_tags`.
 
-## 3. Biometría, cámara y fotos
+## 3. Cámara, biometría y fotos
 
-**No se usa biometría, ni cámara, ni fotos, ni grabación de audio.** No hay ninguna dependencia de
-cámara, galería o autenticación biométrica en `apps/mobile/pubspec.yaml` (ni
-`camera`, ni `image_picker`, ni `local_auth`), y no se declara ningún permiso de ese tipo.
-El conjunto completo de permisos de la app es:
+La cámara se solicita al abrir el lector QR en Android o Safari. `mobile_scanner` procesa
+los fotogramas en el dispositivo para extraer la URL; la app envía al backend solo la
+credencial del QR y no sube imágenes ni vídeo. La URL se quita de la barra del navegador
+al abrir el juego. No se usa biometría, galería ni grabación de audio.
 
-- Android: `INTERNET`, `NFC`, `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`.
-- iOS: `NFCReaderUsageDescription` y `NSLocationWhenInUseUsageDescription`.
+- Android: `INTERNET`, `CAMERA`, `NFC`, `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`.
+- Safari: permiso del navegador para cámara y ubicación opcional; requiere HTTPS.
+- iOS nativo, si se compila: `NFCReaderUsageDescription` y `NSLocationWhenInUseUsageDescription`.
 
 El jugador no sube ni un solo fichero: su avatar se dibuja en la app y sus elecciones
 cosméticas se guardan por cuenta en el dispositivo con `SharedPreferences`. Los únicos
@@ -85,7 +89,7 @@ Son los mínimos para tener una cuenta y un progreso:
 - `public.profiles`: `email`, `display_name` (opcional, lo elige el jugador al registrarse),
   `role`, `created_at` y `collection_completed_at`.
 - `public.encounters` y `public.captures`: qué profesor, cuándo, con qué resultado.
-- `public.hunt_checkins`: alumno, sesión, tarjeta y hora de hallazgo. Se conserva para
+- `public.hunt_checkins`: alumno, sesión, tarjeta NFC o profesor del QR y hora de hallazgo. Se conserva para
   verificar el punto extra; no contiene coordenadas del alumno.
 
 No se recoge teléfono, fecha de nacimiento, dirección, identificador de dispositivo ni

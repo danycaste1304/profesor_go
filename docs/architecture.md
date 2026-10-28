@@ -76,8 +76,8 @@ en `SharedPreferences`, como JSON:
 | Dato | Clave de `SharedPreferences` |
 |------|------------------------------|
 | Profesores activos | `cache.professors` |
-| Capturas del jugador | `cache.captures` |
-| Progreso de la colección (`captured/total/completed`) | `cache.progress` |
+| Capturas del jugador | `cache.captures.<userId>` |
+| Progreso de la colección (`captured/total/completed`) | `cache.progress.<userId>` |
 
 `SupabaseProfessorRepository` escribe en la caché cada vez que una petición va bien, y solo
 recurre a ella cuando el fallo es de conectividad (`NO_INTERNET`) o el backend no responde
@@ -136,17 +136,19 @@ detallada en [`docs/privacy.md`](privacy.md):
 - **Ubicación del profesor anfitrión:** solo la última posición de una sesión voluntaria
   de 30 minutos. La RLS solo la muestra fresca y activa a usuarios autenticados; se
   borra al detener o expirar la actividad.
-- **Sin biometría, cámara ni fotos:** no hay dependencias ni permisos de ese tipo; los
-  permisos de la app son exactamente NFC, ubicación *when in use* e internet.
-- **Datos personales persistidos:** email, `display_name`, progreso y hallazgos NFC
+- **Cámara para QR, sin biometría ni fotos guardadas:** el lector procesa la imagen
+  localmente y envía solo el código extraído. Android solicita cámara, NFC,
+  ubicación *when in use* e internet; Safari solicita cámara y ubicación opcional.
+- **Datos personales persistidos:** email, `display_name`, progreso y hallazgos NFC/QR
   de la feria. Sin analítica, telemetría ni crash reporting.
 
 ## Admin
 
 Next.js App Router con `@supabase/ssr`. El middleware refresca la sesión y solo deja pasar
 perfiles con `role = 'admin'`. Las operaciones CRUD usan las políticas RLS de admin; el
-registro de tags NFC pasa por la Edge Function `admin-register-nfc`. La ruta `/hunt`
-vincula la cuenta del profesor y muestra/exporta los hallazgos.
+registro de tags NFC pasa por la Edge Function `admin-register-nfc`. La ruta `/qr`
+rota e imprime credenciales por profesor. La ruta `/hunt` vincula la cuenta del
+profesor y muestra/exporta los hallazgos.
 
 ## Extensión futura
 

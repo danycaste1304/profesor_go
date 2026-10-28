@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app.dart';
 import 'core/config/app_config.dart';
+import 'core/qr/pending_qr.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,7 @@ Future<void> main() async {
 /// closed and show a setup error instead of allowing mock captures.
 @visibleForTesting
 Future<void> bootstrap() async {
+  await PendingQr.initialize();
   if (AppConfig.isDemoMode) {
     debugPrint('[ProfesorGO] DEMO_MODE=true: using in-memory mock services.');
     return;

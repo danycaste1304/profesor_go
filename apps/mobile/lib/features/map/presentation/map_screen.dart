@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -190,13 +191,30 @@ class _MapScreenState extends ConsumerState<MapScreen>
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               PixelButton(
-                                label: 'Capturar',
+                                label: AppConfig.isDemoMode
+                                    ? 'Capturar'
+                                    : 'Escanear QR',
                                 icon: PixelIcons.nfc,
                                 variant: PixelButtonVariant.primary,
                                 onPressed: online
-                                    ? () => context.push(AppRoutes.scan)
+                                    ? () => context.push(
+                                        AppConfig.isDemoMode
+                                            ? AppRoutes.scan
+                                            : AppRoutes.scanQr,
+                                      )
                                     : null,
                               ),
+                              if (!AppConfig.isDemoMode && !kIsWeb) ...[
+                                const SizedBox(height: 9),
+                                PixelButton(
+                                  label: 'Leer NFC',
+                                  icon: PixelIcons.nfc,
+                                  variant: PixelButtonVariant.secondary,
+                                  onPressed: online
+                                      ? () => context.push(AppRoutes.scan)
+                                      : null,
+                                ),
+                              ],
                               if (canPublish) ...[
                                 const SizedBox(height: 9),
                                 PixelButton(

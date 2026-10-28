@@ -108,6 +108,7 @@ abstract class HuntService {
   );
   Future<bool> stop(String sessionId);
   Future<HuntCheckin?> checkIn(String tagIdentifier);
+  Future<HuntCheckin?> checkInQr(String qrCode);
 }
 
 class SupabaseHuntService implements HuntService {
@@ -220,6 +221,12 @@ class SupabaseHuntService implements HuntService {
     final row = await _rpc('check_in_campus_hunt', {
       'p_tag_identifier': tagIdentifier,
     });
+    return row == null ? null : HuntCheckin.fromJson(row);
+  }
+
+  @override
+  Future<HuntCheckin?> checkInQr(String qrCode) async {
+    final row = await _rpc('check_in_campus_hunt_qr', {'p_qr_code': qrCode});
     return row == null ? null : HuntCheckin.fromJson(row);
   }
 

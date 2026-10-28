@@ -71,6 +71,15 @@ class _CampusLiveMapState extends State<CampusLiveMap> {
               ),
               CircleLayer(
                 circles: [
+                  if (player != null && player.accuracyMeters != null)
+                    CircleMarker(
+                      point: geo.LatLng(player.latitude, player.longitude),
+                      radius: math.max(player.accuracyMeters!, 5),
+                      useRadiusInMeter: true,
+                      color: AppColors.accentAlt.withValues(alpha: 0.18),
+                      borderColor: AppColors.accentAlt,
+                      borderStrokeWidth: 2,
+                    ),
                   for (final hunt in visibleHunts)
                     CircleMarker(
                       point: geo.LatLng(

@@ -15,5 +15,6 @@ Deno.serve(
     auth: client.auth,
     now: () => new Date(),
     loadSettings: () => loadAppSettings(db),
+    atomic: true,
   }),
 );

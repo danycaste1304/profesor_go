@@ -14,6 +14,9 @@ abstract class CaptureService {
   /// `PROFESSOR_DISABLED`, `ALREADY_CAPTURED`, `NO_INTERNET`, ...
   Future<Encounter> startEncounter(String tagIdentifier);
 
+  /// Starts the same encounter from a printed professor QR.
+  Future<Encounter> startQrEncounter(String qrCode);
+
   /// `resolve-capture`. Throws `ENCOUNTER_EXPIRED`, `ENCOUNTER_NOT_ACTIVE`,
   /// `ALREADY_CAPTURED`, ...
   Future<CaptureResult> resolveCapture({

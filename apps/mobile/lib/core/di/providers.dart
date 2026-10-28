@@ -65,7 +65,12 @@ final professorRepositoryProvider = Provider<ProfessorRepository>((ref) {
   if (AppConfig.isDemoMode) {
     return MockProfessorRepository(ref.watch(demoGameStateProvider));
   }
-  return SupabaseProfessorRepository(ref.watch(supabaseClientProvider));
+  final client = ref.watch(supabaseClientProvider);
+  final userId = ref.watch(authStateProvider).value?.id;
+  return SupabaseProfessorRepository(
+    client,
+    cache: ProfessorCache(userId: userId),
+  );
 });
 
 final captureServiceProvider = Provider<CaptureService>((ref) {

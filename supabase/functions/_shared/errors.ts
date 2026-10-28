@@ -13,6 +13,7 @@ export type ErrorCode =
   | "ENCOUNTER_NOT_ACTIVE"
   | "ENCOUNTER_EXPIRED"
   | "PROFESSOR_NOT_FOUND"
+  | "RATE_LIMITED"
   | "METHOD_NOT_ALLOWED"
   | "INTERNAL_ERROR";
 
@@ -29,6 +30,7 @@ export const ERROR_STATUS: Record<ErrorCode, number> = {
   ENCOUNTER_NOT_ACTIVE: 409,
   ENCOUNTER_EXPIRED: 410,
   PROFESSOR_NOT_FOUND: 404,
+  RATE_LIMITED: 429,
   METHOD_NOT_ALLOWED: 405,
   INTERNAL_ERROR: 500,
 };
@@ -46,6 +48,7 @@ export const ERROR_MESSAGE: Record<ErrorCode, string> = {
   ENCOUNTER_NOT_ACTIVE: "Este encuentro ya fue resuelto.",
   ENCOUNTER_EXPIRED: "El encuentro ha expirado. Vuelve a escanear el tag NFC.",
   PROFESSOR_NOT_FOUND: "El profesor indicado no existe.",
+  RATE_LIMITED: "Demasiados intentos. Espera un momento antes de volver a probar.",
   METHOD_NOT_ALLOWED: "Método no permitido. Usa POST.",
   INTERNAL_ERROR: "Ha ocurrido un error inesperado. Inténtalo de nuevo.",
 };

@@ -45,6 +45,9 @@ class FakeCaptureService extends CaptureService {
   }
 
   @override
+  Future<Encounter> startQrEncounter(String qrCode) => startEncounter(qrCode);
+
+  @override
   Future<CaptureResult> resolveCapture({
     required String encounterId,
     required ThrowQuality quality,

@@ -1,5 +1,9 @@
 # Plan de beta para la búsqueda del profesor — feria del 29 de octubre de 2026
 
+> Estado histórico del plan NFC inicial. La implementación Android + Safari
+> con QR impreso y sus pendientes se registran en
+> [estado-piloto-qr-2026-10-29.md](estado-piloto-qr-2026-10-29.md).
+
 Fecha de evaluación: domingo 25 de octubre de 2026. Objetivo: tener una beta verificable **antes del miércoles 28** (martes 27 por la noche), probarla en el campus el miércoles y usarla en la feria el jueves 29.
 
 Estado al 25 de octubre por la noche: la APK local beta 9 compiló, la migración
