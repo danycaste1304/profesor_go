@@ -40,10 +40,10 @@ Android y Safari de iPhone.
 - GitHub Pages sirve el juego completo en
   `https://danycaste1304.github.io/profesor_go/jugar/`. En el navegador de
   ensayo, el recorrido QR → Google OAuth → encuentro, mapa y colección funcionó.
-  La corrección de QR en una pestaña ya abierta está publicada. Safari de
-  escritorio mostró una pantalla Flutter en blanco en una prueba posterior;
-  todavía hay que comprobar Safari en un iPhone físico y corregir cualquier
-  fallo reproducible antes de anunciarlo como listo.
+  La corrección de QR en una pestaña ya abierta está publicada. Una primera
+  carga de Safari de escritorio quedó en blanco, pero una comprobación
+  posterior mostró la pantalla de acceso. Todavía hay que completar OAuth,
+  QR y juego en un iPhone físico antes de anunciarlo como listo.
 - Los diez profesores tienen QR únicos activos en Supabase. La hoja de cinco
   páginas y el JSON de recuperación están en `pilot-private/` del equipo local,
   ignorados por Git. Guardar una copia segura antes de imprimir; rotar en el
