@@ -1,7 +1,16 @@
 # Profesor GO: estado del piloto Android + Safari
 
-Actualizado el 27 de octubre de 2026. Este documento registra la implementación;
-el corte de salida sigue dependiendo de la prueba física del 28.
+Actualizado el 28 de octubre de 2026. Este documento registra la beta de
+ensayo; la aceptación para la feria sigue dependiendo de pruebas físicas en
+Android y Safari de iPhone.
+
+## Enlaces de ensayo
+
+- Android: [APK beta 10 firmado](https://github.com/danycaste1304/profesor_go/releases/download/v0.1.0-beta.10/profesor-go-beta10-android.apk), publicado como *pre-release*.
+- iPhone: [juego web en Safari](https://danycaste1304.github.io/profesor_go/jugar/).
+- [Lista de pruebas presenciales](ensayo-campus-2026-10-29.md).
+- La beta 8 usaba firma de depuración; hay que desinstalarla antes de instalar
+  la beta 10. La colección del servidor reaparece al entrar con la misma cuenta.
 
 ## Preparado en código y backend
 
@@ -29,11 +38,12 @@ el corte de salida sigue dependiendo de la prueba física del 28.
 - La caché de capturas y progreso se separa por cuenta y se borra al salir.
 - Política de privacidad técnica y página pública actualizadas para cámara y QR.
 - GitHub Pages sirve el juego completo en
-  `https://danycaste1304.github.io/profesor_go/jugar/`. El flujo manual
-  «Safari pilot candidate» completó con éxito. Google OAuth devolvió la sesión
-  a la web y cargó el mapa. La prueba real descubrió que un QR recibido por una
-  pestaña ya abierta iba a «Page Not Found»; la ruta `/qr=:code` corrige este
-  caso y necesita repetirse en la próxima publicación.
+  `https://danycaste1304.github.io/profesor_go/jugar/`. En el navegador de
+  ensayo, el recorrido QR → Google OAuth → encuentro, mapa y colección funcionó.
+  La corrección de QR en una pestaña ya abierta está publicada. Safari de
+  escritorio mostró una pantalla Flutter en blanco en una prueba posterior;
+  todavía hay que comprobar Safari en un iPhone físico y corregir cualquier
+  fallo reproducible antes de anunciarlo como listo.
 - Los diez profesores tienen QR únicos activos en Supabase. La hoja de cinco
   páginas y el JSON de recuperación están en `pilot-private/` del equipo local,
   ignorados por Git. Guardar una copia segura antes de imprimir; rotar en el
@@ -54,6 +64,9 @@ el corte de salida sigue dependiendo de la prueba física del 28.
 - AAB candidato: `flutter build appbundle --release` completado después de
   instalar las Android SDK Command-line Tools oficiales. El archivo firmado
   está en `apps/mobile/build/app/outputs/bundle/release/app-release.aab`.
+- El APK beta 10 se publicó en GitHub Releases. GitHub muestra el digest
+  `0a90c0ae972abf836c9a70d5d1dab4e84ca3143892655812e55689b2706bb8d0`,
+  igual al archivo local. Aún no se ha instalado en un Android físico.
 
 ## Configuración HTTPS completada
 
@@ -66,17 +79,20 @@ el corte de salida sigue dependiendo de la prueba física del 28.
   sigue funcionando en local; falta decidir y configurar su alojamiento HTTPS
   para que el equipo pueda administrar fuera de este computador.
 
-## Pendientes antes de distribuir
+## Pendientes antes de anunciar disponibilidad general
 
-1. Publicar y verificar la corrección del QR en pestaña existente, incluidas
-   las rutas con sesión y después de Google OAuth sin sesión.
-2. Imprimir la hoja y probar los diez códigos físicamente. Confirmar QR
+1. Probar Safari en un iPhone físico; si se ve una pantalla en blanco, registrar
+   modelo, versión de iOS, captura y hora para corregirla.
+2. Instalar el APK beta 10 en Android físico y repetir el recorrido con una
+   cuenta Google nueva. El enlace es para ensayos, no una aprobación de salida.
+3. Imprimir la hoja y probar los diez códigos físicamente. Confirmar QR
    desactivado y reemplazado con cuentas de ensayo.
-3. Vincular la cuenta Google de cada profesor participante en
-   `hunt_publishers`. Solo existen una cuenta admin y una de estudiante; los
-   profesores deben iniciar sesión al menos una vez. Sin esos vínculos, no
-   habrá marcadores compartidos aunque el QR funcione.
-4. Completar el alta de Google Play Console para `danycaste1304@gmail.com`.
+4. Vincular la cuenta Google de cada profesor participante en
+   `hunt_publishers`. La consulta del 28 de octubre devuelve cero vínculos y
+   la cuenta de Noel aún no existe en `auth.users`; debe entrar una vez con
+   Google antes de que se pueda vincular. Sin estos vínculos no habrá
+   marcadores compartidos aunque el QR funcione.
+5. Completar el alta de Google Play Console para `danycaste1304@gmail.com`.
    La consola muestra el formulario de creación de cuenta de desarrollador;
    todavía no puede subirse el AAB a Play.
 
@@ -96,10 +112,9 @@ el corte de salida sigue dependiendo de la prueba física del 28.
   `apps/mobile/android/key.properties`; ambos están excluidos de Git.
   Guardar ambos en el gestor seguro del equipo antes de distribuir cualquier
   APK. Si se pierden, una actualización directa no se podrá firmar igual.
-- No publicar el enlace web como juego disponible ni repartir el APK/AAB hasta
-  superar la prueba física. Google Play depende de la cuenta, sus requisitos
-  de prueba y su revisión; si no llega a tiempo, publicar solo el APK firmado
-  mediante un enlace HTTPS controlado tras el ensayo.
+- Los enlaces de beta ya están disponibles para ensayos controlados. No
+  presentarlos como versión terminada hasta superar la prueba física. Google
+  Play depende de la cuenta, sus requisitos de prueba y su revisión.
 
 ## Crecimiento posterior
 
