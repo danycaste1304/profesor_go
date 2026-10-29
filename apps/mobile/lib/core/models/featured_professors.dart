@@ -11,6 +11,14 @@ const henryCarvajalId = '00000000-0000-4000-8000-000000000016';
 const diegoMoralesId = '00000000-0000-4000-8000-000000000017';
 const robertoAndradeId = '00000000-0000-4000-8000-000000000018';
 
+// Registrados por el formulario de inscripción (fiesta Némesis).
+const patricioRojasId = '00000000-0000-4000-8000-000000000019';
+const edisonLozaId = '00000000-0000-4000-8000-000000000020';
+const soniaKraemerId = '00000000-0000-4000-8000-000000000021';
+const washingtonLomasId = '00000000-0000-4000-8000-000000000022';
+const rodrigoMunozId = '00000000-0000-4000-8000-000000000023';
+const ximenaFerroId = '00000000-0000-4000-8000-000000000024';
+
 const danielRiofrioPortraitAsset = 'assets/sprites/daniel_riofrio_portrait.png';
 const danielRiofrioFullAsset = 'assets/sprites/daniel_riofrio_full.png';
 const danielRiofrioCatchphrase = 'Todo es un experimento social.';
@@ -44,3 +52,33 @@ const robertoAndradePortraitAsset =
     'assets/sprites/roberto_andrade_portrait.png';
 const robertoAndradeFullAsset = 'assets/sprites/roberto_andrade_full.png';
 const robertoAndradeIntro = '¡Hola! Me alegra encontrarte.';
+
+// Registrados por el formulario de inscripción (fiesta Némesis).
+const patricioRojasPortraitAsset =
+    'assets/sprites/patricio_rojas_portrait.png';
+const patricioRojasFullAsset = 'assets/sprites/patricio_rojas_full.png';
+const patricioRojasIntro =
+    'La cabeza aprende lo que la nalga aguanta.';
+const edisonLozaPortraitAsset =
+    'assets/sprites/edison_loza_portrait.png';
+const edisonLozaFullAsset = 'assets/sprites/edison_loza_full.png';
+const edisonLozaIntro =
+    '¡Dato mata relato!';
+const soniaKraemerPortraitAsset =
+    'assets/sprites/sonia_kraemer_portrait.png';
+const soniaKraemerFullAsset = 'assets/sprites/sonia_kraemer_full.png';
+const soniaKraemerIntro =
+    'En sus clases meditarás o verás muchas obras de arte.';
+const washingtonLomasPortraitAsset =
+    'assets/sprites/washington_lomas_portrait.png';
+const washingtonLomasFullAsset = 'assets/sprites/washington_lomas_full.png';
+const washingtonLomasIntro =
+    "¡Un 'Lanzamiento Excelente' no bastará si no calculaste bien la trayectoria de esa Profeball!!";
+const rodrigoMunozPortraitAsset =
+    'assets/sprites/rodrigo_munoz_portrait.png';
+const rodrigoMunozFullAsset = 'assets/sprites/rodrigo_munoz_full.png';
+const ximenaFerroPortraitAsset =
+    'assets/sprites/ximena_ferro_portrait.png';
+const ximenaFerroFullAsset = 'assets/sprites/ximena_ferro_full.png';
+const ximenaFerroIntro =
+    'Te llevas el mejor premio.';

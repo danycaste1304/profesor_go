@@ -888,6 +888,11 @@ class _EncounterViewState extends ConsumerState<_EncounterView>
                               henryCarvajalId => henryCarvajalIntro,
                               diegoMoralesId => diegoMoralesIntro,
                               robertoAndradeId => robertoAndradeIntro,
+                              patricioRojasId => patricioRojasIntro,
+                              edisonLozaId => edisonLozaIntro,
+                              soniaKraemerId => soniaKraemerIntro,
+                              washingtonLomasId => washingtonLomasIntro,
+                              ximenaFerroId => ximenaFerroIntro,
                               _ => '¡Un nuevo encuentro!',
                             }
                           : 'Desliza hacia arriba y suelta',

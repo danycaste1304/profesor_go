@@ -72,7 +72,7 @@ void main() {
       await updated.ensureLoaded();
       expect(
         updated.progress(),
-        const CollectionProgress(captured: 1, total: 10, completed: false),
+        const CollectionProgress(captured: 1, total: 16, completed: false),
       );
       expect(updated.captures, hasLength(1));
       expect(updated.collectionCompletedAt, isNull);
@@ -157,7 +157,7 @@ void main() {
       await updated.ensureLoaded();
       expect(
         updated.progress(),
-        const CollectionProgress(captured: 4, total: 10, completed: false),
+        const CollectionProgress(captured: 4, total: 16, completed: false),
       );
       expect(updated.captures, hasLength(4));
       expect(updated.collectionCompletedAt, isNull);
@@ -212,7 +212,7 @@ void main() {
       await updated.ensureLoaded();
       expect(
         updated.progress(),
-        const CollectionProgress(captured: 7, total: 10, completed: false),
+        const CollectionProgress(captured: 7, total: 16, completed: false),
       );
       expect(updated.captures, hasLength(7));
       expect(updated.collectionCompletedAt, isNull);
@@ -263,7 +263,7 @@ void main() {
       await updated.ensureLoaded();
       expect(
         updated.progress(),
-        const CollectionProgress(captured: 8, total: 10, completed: false),
+        const CollectionProgress(captured: 8, total: 16, completed: false),
       );
       expect(updated.captures, hasLength(8));
       expect(updated.collectionCompletedAt, isNull);
@@ -309,7 +309,7 @@ void main() {
     await updated.ensureLoaded();
     expect(
       updated.progress(),
-      const CollectionProgress(captured: 9, total: 10, completed: false),
+      const CollectionProgress(captured: 9, total: 16, completed: false),
     );
     expect(updated.captures, hasLength(9));
     expect(updated.collectionCompletedAt, isNull);
@@ -354,7 +354,7 @@ void main() {
     await updated.ensureLoaded();
     expect(
       updated.progress(),
-      const CollectionProgress(captured: 9, total: 10, completed: false),
+      const CollectionProgress(captured: 9, total: 16, completed: false),
     );
     expect(updated.captures, hasLength(9));
     expect(updated.collectionCompletedAt, isNull);

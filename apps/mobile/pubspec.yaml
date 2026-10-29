@@ -67,6 +67,18 @@ flutter:
     - assets/sprites/diego_morales_portrait.png
     - assets/sprites/roberto_andrade_full.png
     - assets/sprites/roberto_andrade_portrait.png
+    - assets/sprites/patricio_rojas_full.png
+    - assets/sprites/patricio_rojas_portrait.png
+    - assets/sprites/edison_loza_full.png
+    - assets/sprites/edison_loza_portrait.png
+    - assets/sprites/sonia_kraemer_full.png
+    - assets/sprites/sonia_kraemer_portrait.png
+    - assets/sprites/washington_lomas_full.png
+    - assets/sprites/washington_lomas_portrait.png
+    - assets/sprites/rodrigo_munoz_full.png
+    - assets/sprites/rodrigo_munoz_portrait.png
+    - assets/sprites/ximena_ferro_full.png
+    - assets/sprites/ximena_ferro_portrait.png
 
   # Silkscreen = display font (h1, buttons); VT323 = body font.
   # Both SIL OFL, licenses in assets/fonts/OFL-*.txt.

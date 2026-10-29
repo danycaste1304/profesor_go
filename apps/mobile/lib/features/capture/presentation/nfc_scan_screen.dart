@@ -595,7 +595,7 @@ class _MessageView extends StatelessWidget {
   }
 }
 
-/// Demo-only list of mock cards (DEMO-TAG-01…10).
+/// Demo-only list of mock cards (DEMO-TAG-01…16).
 class _DemoTagPicker extends StatelessWidget {
   const _DemoTagPicker({
     required this.tags,

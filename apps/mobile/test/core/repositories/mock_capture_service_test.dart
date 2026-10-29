@@ -147,7 +147,7 @@ void main() {
       expect(result.professorId, demoProfessors[3].id);
       expect(
         result.collection,
-        const CollectionProgress(captured: 1, total: 10, completed: false),
+        const CollectionProgress(captured: 1, total: 16, completed: false),
       );
       expect(state.captures.single.throwQuality, ThrowQuality.great);
       expect(state.captures.single.encounterId, e.id);
@@ -214,7 +214,7 @@ void main() {
     });
 
     test('completing the collection sets completed + timestamp', () async {
-      for (var n = 1; n <= 10; n++) {
+      for (var n = 1; n <= 16; n++) {
         final e = await service.startEncounter(
           'DEMO-TAG-${n.toString().padLeft(2, '0')}',
         );
@@ -223,7 +223,7 @@ void main() {
           quality: ThrowQuality.good,
         );
         expect(r.success, isTrue);
-        expect(r.collection!.completed, n == 10);
+        expect(r.collection!.completed, n == 16);
       }
       expect(state.collectionCompletedAt, now);
 
@@ -231,11 +231,11 @@ void main() {
       final progress = await repo.getProgress();
       expect(
         progress,
-        const CollectionProgress(captured: 10, total: 10, completed: true),
+        const CollectionProgress(captured: 16, total: 16, completed: true),
       );
-      expect((await repo.getMyCaptures()).length, 10);
+      expect((await repo.getMyCaptures()).length, 16);
       final professors = await repo.getActiveProfessors();
-      expect(professors.length, 10);
+      expect(professors.length, 16);
       expect(professors.first.rarity, Rarity.legendary); // sorted by rarity
       expect(repo.cache.progress, progress);
     });

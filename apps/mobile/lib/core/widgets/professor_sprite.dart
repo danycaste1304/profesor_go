@@ -85,6 +85,30 @@ class ProfessorSprite extends StatelessWidget {
         pose == ProfessorSpritePose.fullBody
             ? robertoAndradeFullAsset
             : robertoAndradePortraitAsset,
+      patricioRojasId =>
+        pose == ProfessorSpritePose.fullBody
+            ? patricioRojasFullAsset
+            : patricioRojasPortraitAsset,
+      edisonLozaId =>
+        pose == ProfessorSpritePose.fullBody
+            ? edisonLozaFullAsset
+            : edisonLozaPortraitAsset,
+      soniaKraemerId =>
+        pose == ProfessorSpritePose.fullBody
+            ? soniaKraemerFullAsset
+            : soniaKraemerPortraitAsset,
+      washingtonLomasId =>
+        pose == ProfessorSpritePose.fullBody
+            ? washingtonLomasFullAsset
+            : washingtonLomasPortraitAsset,
+      rodrigoMunozId =>
+        pose == ProfessorSpritePose.fullBody
+            ? rodrigoMunozFullAsset
+            : rodrigoMunozPortraitAsset,
+      ximenaFerroId =>
+        pose == ProfessorSpritePose.fullBody
+            ? ximenaFerroFullAsset
+            : ximenaFerroPortraitAsset,
       _ => null,
     };
     if (url != null && url.isNotEmpty) {

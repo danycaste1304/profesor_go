@@ -10,13 +10,13 @@ import 'fakes.dart';
 void main() {
   group('filterProfessors', () {
     test('null keeps every active professor', () {
-      expect(filterProfessors(demoProfessors, null).length, 10);
+      expect(filterProfessors(demoProfessors, null).length, 16);
     });
 
     test('narrows to one rarity', () {
       final rare = filterProfessors(demoProfessors, Rarity.rare);
       expect(rare.map((p) => p.displayName), ['Prof. Ricardo', 'Prof. Diego']);
-      expect(filterProfessors(demoProfessors, Rarity.common).length, 3);
+      expect(filterProfessors(demoProfessors, Rarity.common).length, 9);
       expect(filterProfessors(demoProfessors, Rarity.epic).length, 3);
       expect(filterProfessors(demoProfessors, Rarity.legendary).length, 2);
     });

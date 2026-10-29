@@ -18,7 +18,7 @@ class DemoTagSeed {
 String demoProfessorId(int n) =>
     '00000000-0000-4000-8000-${n.toString().padLeft(12, '0')}';
 
-/// The 10 campus professors (CONTRACTS §5), fixed UUIDs.
+/// The campus professors (CONTRACTS §5), fixed UUIDs.
 final List<Professor> demoProfessors = List.unmodifiable([
   Professor(
     id: henryCarvajalId,
@@ -122,11 +122,60 @@ final List<Professor> demoProfessors = List.unmodifiable([
     rarity: Rarity.common,
     baseCaptureRate: 0.80,
   ),
+  // Inscritos por el formulario (fiesta Némesis).
+  Professor(
+    id: patricioRojasId,
+    name: 'Patricio Rojas',
+    displayName: 'Pato',
+    description: 'Profe de Biotecnología.',
+    rarity: Rarity.common,
+    baseCaptureRate: 0.80,
+  ),
+  Professor(
+    id: edisonLozaId,
+    name: 'Edison Loza',
+    displayName: 'El Eddy',
+    description: 'Profe de Administración de Empresas.',
+    rarity: Rarity.common,
+    baseCaptureRate: 0.80,
+  ),
+  Professor(
+    id: soniaKraemerId,
+    name: 'Sonia Kraemer',
+    displayName: 'Sonia',
+    description: 'Profe de Artes Liberales.',
+    rarity: Rarity.common,
+    baseCaptureRate: 0.80,
+  ),
+  Professor(
+    id: washingtonLomasId,
+    name: 'Washington Lomas',
+    displayName: 'Washo',
+    description: 'Profe de Física.',
+    rarity: Rarity.common,
+    baseCaptureRate: 0.80,
+  ),
+  Professor(
+    id: rodrigoMunozId,
+    name: 'Rodrigo Muñoz',
+    displayName: 'Rod',
+    description: 'Profe de Diseño Comunicacional.',
+    rarity: Rarity.common,
+    baseCaptureRate: 0.80,
+  ),
+  Professor(
+    id: ximenaFerroId,
+    name: 'Ximena Ferro',
+    displayName: 'LaXime',
+    description: 'Profe de Publicidad.',
+    rarity: Rarity.common,
+    baseCaptureRate: 0.80,
+  ),
 ]);
 
-/// DEMO-TAG-01..10 → the ten campus professors.
+/// DEMO-TAG-01..16 → the campus professors.
 final List<DemoTagSeed> demoTagSeeds = List.unmodifiable([
-  for (var n = 1; n <= 10; n++)
+  for (var n = 1; n <= 16; n++)
     DemoTagSeed(
       identifier: 'DEMO-TAG-${n.toString().padLeft(2, '0')}',
       professorId: switch (n) {
@@ -140,6 +189,12 @@ final List<DemoTagSeed> demoTagSeeds = List.unmodifiable([
         8 => erickNaunayId,
         9 => diegoMoralesId,
         10 => robertoAndradeId,
+        11 => patricioRojasId,
+        12 => edisonLozaId,
+        13 => soniaKraemerId,
+        14 => washingtonLomasId,
+        15 => rodrigoMunozId,
+        16 => ximenaFerroId,
         _ => null,
       },
     ),
